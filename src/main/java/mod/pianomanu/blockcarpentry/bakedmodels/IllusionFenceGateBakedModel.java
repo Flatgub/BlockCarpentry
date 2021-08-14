@@ -5,17 +5,16 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Direction;
 import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.HorizontalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -39,7 +38,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
-        return Minecraft.getInstance().getAtlasSpriteGetter(TextureAtlas.LOCATION_BLOCKS).apply(TEXTURE);
+        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(TEXTURE);
     }
 
     @Nonnull
@@ -47,9 +46,9 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
-            ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
+            ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             if (location != null && state != null) {
-                IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+                BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
                     return getMimicQuads(state, side, rand, extraData, model);
                 }
@@ -59,7 +58,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
     }
 
     @Nonnull
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, IModelData extraData, IBakedModel model) {
+    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, IModelData extraData, BakedModel model) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         if (side != null) {
@@ -75,7 +74,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
             List<BakedQuad> quads = new ArrayList<>();
             if (design == 0 || design == 3) {
                 if (state.getValue(FenceGateBlock.OPEN)) {
-                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(FenceGateBlock.FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -130,7 +129,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                             break;
                     }
                 } else {
-                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(FenceGateBlock.FACING)) {
                         case NORTH:
                         case SOUTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -152,7 +151,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
             }
             if (design == 1) {
                 if (state.getValue(FenceGateBlock.OPEN)) {
-                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(FenceGateBlock.FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -191,7 +190,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                             break;
                     }
                 } else {
-                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(FenceGateBlock.FACING)) {
                         case NORTH:
                         case SOUTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -211,7 +210,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
             }
             if (design == 2) {
                 if (state.getValue(FenceGateBlock.OPEN)) {
-                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(FenceGateBlock.FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -258,7 +257,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                             break;
                     }
                 } else {
-                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(FenceGateBlock.FACING)) {
                         case NORTH:
                         case SOUTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -279,7 +278,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 3) {
-                switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                switch (state.getValue(FenceGateBlock.FACING)) {
                     case NORTH:
                     case SOUTH:
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 0f, 1f, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -299,7 +298,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                     w = 0;
                 }
                 if (state.getValue(FenceGateBlock.OPEN)) {
-                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(FenceGateBlock.FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -354,7 +353,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                             break;
                     }
                 } else {
-                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(FenceGateBlock.FACING)) {
                         case NORTH:
                         case SOUTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -380,7 +379,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
+    public boolean useAmbientOcclusion() {
         return false;
     }
 
@@ -390,23 +389,23 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean func_230044_c_() {
+    public boolean usesBlockLight() {
         return false;
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
+    public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture() {
+    public TextureAtlasSprite getParticleIcon() {
         return getTexture();
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.EMPTY;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 }
 //========SOLI DEO GLORIA========//

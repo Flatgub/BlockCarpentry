@@ -6,16 +6,19 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.state.properties.Half;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.level.block.StairsBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -37,7 +40,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
-        return Minecraft.getInstance().getAtlasSpriteGetter(TextureAtlas.LOCATION_BLOCKS).apply(TEXTURE);
+        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(TEXTURE);
     }
 
     @Nonnull
@@ -45,9 +48,9 @@ public class StairsBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
-            ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
+            ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             if (location != null) {
-                IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+                BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
                     return getMimicQuads(state, side, rand, extraData, model);
                 }
@@ -65,7 +68,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
      * @param extraData contains data from tile entity (in this case only for the contained block)
      * @return baked quads, that will be used to display the model
      */
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
+    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, BakedModel model) {
         if (side != null) {
             return Collections.emptyList();
         }
@@ -80,7 +83,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
             }
             if (textureList.size() == 0) {
                 if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
+                    Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
                 }
                 return Collections.emptyList();
             }
@@ -90,14 +93,14 @@ public class StairsBakedModel implements IDynamicBakedModel {
             float yl = 0f;
             float yh = 0.5f;
             boolean cullUpDown = false;
-            if (state.getValue(StairsBlock.HALF).equals(Half.TOP)) {
+            if (state.getValue(StairBlock.HALF).equals(Half.TOP)) {
                 yl = 0.5f;
                 yh = 1f;
                 cullUpDown = true;
             }
-            switch (state.getValue(StairsBlock.SHAPE)) {
+            switch (state.getValue(StairBlock.SHAPE)) {
                 case STRAIGHT:
-                    switch (state.getValue(StairsBlock.FACING)) {
+                    switch (state.getValue(StairBlock.FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0f, 0.5f, texture, tintIndex, true, true, false, true, cullUpDown, !cullUpDown));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0.5f, 1f, texture, tintIndex, true, true, true, false, true, true));
@@ -121,7 +124,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                     }
                     break;
                 case INNER_LEFT:
-                    switch (state.getValue(StairsBlock.FACING)) {
+                    switch (state.getValue(StairBlock.FACING)) {
                         case NORTH:
                             //bottom part
                             quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, texture, tintIndex, true, false, false, true, cullUpDown, !cullUpDown));
@@ -169,7 +172,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                     }
                     break;
                 case INNER_RIGHT:
-                    switch (state.getValue(StairsBlock.FACING)) {
+                    switch (state.getValue(StairBlock.FACING)) {
                         case WEST:
                             //bottom part
                             quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, texture, tintIndex, true, false, false, true, cullUpDown, !cullUpDown));
@@ -217,7 +220,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                     }
                     break;
                 case OUTER_LEFT:
-                    switch (state.getValue(StairsBlock.FACING)) {
+                    switch (state.getValue(StairBlock.FACING)) {
                         case NORTH:
                             //bottom part
                             quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, texture, tintIndex, true, false, false, true, cullUpDown, !cullUpDown));
@@ -257,7 +260,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                     }
                     break;
                 case OUTER_RIGHT:
-                    switch (state.getValue(StairsBlock.FACING)) {
+                    switch (state.getValue(StairBlock.FACING)) {
                         case WEST:
                             //bottom part
                             quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, texture, tintIndex, true, false, false, true, cullUpDown, !cullUpDown));
@@ -299,9 +302,9 @@ public class StairsBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                switch (state.getValue(StairsBlock.SHAPE)) {
+                switch (state.getValue(StairBlock.SHAPE)) {
                     case STRAIGHT:
-                        switch (state.getValue(StairsBlock.FACING)) {
+                        switch (state.getValue(StairBlock.FACING)) {
                             case NORTH:
                                 quads.addAll(ModelHelper.createOverlay(0f, 1f, yl, yh, 0f, 0.5f, overlayIndex, true, true, false, true, cullUpDown, !cullUpDown, false));
                                 quads.addAll(ModelHelper.createOverlay(0f, 1f, yl, yh, 0.5f, 1f, overlayIndex, true, true, true, false, true, true, !cullUpDown));
@@ -325,7 +328,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                         }
                         break;
                     case INNER_LEFT:
-                        switch (state.getValue(StairsBlock.FACING)) {
+                        switch (state.getValue(StairBlock.FACING)) {
                             case NORTH:
                                 //bottom part
                                 quads.addAll(ModelHelper.createOverlay(0f, 0.5f, yl, yh, 0f, 0.5f, overlayIndex, true, false, false, true, cullUpDown, !cullUpDown, false));
@@ -373,7 +376,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                         }
                         break;
                     case INNER_RIGHT:
-                        switch (state.getValue(StairsBlock.FACING)) {
+                        switch (state.getValue(StairBlock.FACING)) {
                             case WEST:
                                 //bottom part
                                 quads.addAll(ModelHelper.createOverlay(0f, 0.5f, yl, yh, 0f, 0.5f, overlayIndex, true, false, false, true, cullUpDown, !cullUpDown, false));
@@ -421,7 +424,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                         }
                         break;
                     case OUTER_LEFT:
-                        switch (state.getValue(StairsBlock.FACING)) {
+                        switch (state.getValue(StairBlock.FACING)) {
                             case NORTH:
                                 //bottom part
                                 quads.addAll(ModelHelper.createOverlay(0f, 0.5f, yl, yh, 0f, 0.5f, overlayIndex, true, false, false, true, cullUpDown, !cullUpDown, false));
@@ -461,7 +464,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                         }
                         break;
                     case OUTER_RIGHT:
-                        switch (state.getValue(StairsBlock.FACING)) {
+                        switch (state.getValue(StairBlock.FACING)) {
                             case WEST:
                                 //bottom part
                                 quads.addAll(ModelHelper.createOverlay(0f, 0.5f, yl, yh, 0f, 0.5f, overlayIndex, true, false, false, true, cullUpDown, !cullUpDown, false));
@@ -508,7 +511,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
+    public boolean useAmbientOcclusion() {
         return true;
     }
 
@@ -518,28 +521,23 @@ public class StairsBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean func_230044_c_() {
+    public boolean usesBlockLight() {
         return false;
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
+    public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture() {
+    public TextureAtlasSprite getParticleIcon() {
         return getTexture();
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.EMPTY;
-    }
-
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return ItemCameraTransforms.DEFAULT;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 }
 //========SOLI DEO GLORIA========//

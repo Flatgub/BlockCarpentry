@@ -13,18 +13,18 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.World;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.WallHeight;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.WallSide;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -54,11 +54,11 @@ public class WallFrameBlock extends WallBlock {
         this.stateToCollisionShapeMap = this.func_235624_a_(4.0F, 3.0F, 24.0F, 0.0F, 24.0F, 24.0F);
     }
 
-    private static VoxelShape func_235631_a_(VoxelShape p_235631_0_, WallHeight p_235631_1_, VoxelShape p_235631_2_, VoxelShape p_235631_3_) {
-        if (p_235631_1_ == WallHeight.TALL) {
+    private static VoxelShape func_235631_a_(VoxelShape p_235631_0_, WallSide p_235631_1_, VoxelShape p_235631_2_, VoxelShape p_235631_3_) {
+        if (p_235631_1_ == WallSide.TALL) {
             return Shapes.or(p_235631_0_, p_235631_3_);
         } else {
-            return p_235631_1_ == WallHeight.LOW ? Shapes.or(p_235631_0_, p_235631_2_) : p_235631_0_;
+            return p_235631_1_ == WallSide.LOW ? Shapes.or(p_235631_0_, p_235631_2_) : p_235631_0_;
         }
     }
 
@@ -80,10 +80,10 @@ public class WallFrameBlock extends WallBlock {
 
         for (int lightlevel = 0; lightlevel < 16; lightlevel++) {
             for (Boolean obool : UP.getAllowedValues()) {
-                for (WallHeight wallheight : WALL_HEIGHT_EAST.getAllowedValues()) {
-                    for (WallHeight wallheight1 : WALL_HEIGHT_NORTH.getAllowedValues()) {
-                        for (WallHeight wallheight2 : WALL_HEIGHT_WEST.getAllowedValues()) {
-                            for (WallHeight wallheight3 : WALL_HEIGHT_SOUTH.getAllowedValues()) {
+                for (WallSide wallheight : EAST_WALL.getAllowedValues()) {
+                    for (WallSide wallheight1 : NORTH_WALL.getAllowedValues()) {
+                        for (WallSide wallheight2 : WEST_WALL.getAllowedValues()) {
+                            for (WallSide wallheight3 : SOUTH_WALL.getAllowedValues()) {
                                 VoxelShape voxelshape9 = Shapes.empty();
                                 voxelshape9 = func_235631_a_(voxelshape9, wallheight, voxelshape4, voxelshape8);
                                 voxelshape9 = func_235631_a_(voxelshape9, wallheight2, voxelshape3, voxelshape7);
@@ -93,7 +93,7 @@ public class WallFrameBlock extends WallBlock {
                                     voxelshape9 = Shapes.or(voxelshape9, voxelshape);
                                 }
 
-                                BlockState blockstate = this.defaultBlockState().setValue(UP, obool).setValue(WALL_HEIGHT_EAST, wallheight).setValue(WALL_HEIGHT_WEST, wallheight2).setValue(WALL_HEIGHT_NORTH, wallheight1).setValue(WALL_HEIGHT_SOUTH, wallheight3);
+                                BlockState blockstate = this.defaultBlockState().setValue(UP, obool).setValue(EAST_WALL, wallheight).setValue(WEST_WALL, wallheight2).setValue(NORTH_WALL, wallheight1).setValue(SOUTH_WALL, wallheight3);
                                 builder.put(blockstate.setValue(WATERLOGGED, Boolean.valueOf(false)).setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, lightlevel), voxelshape9);
                                 builder.put(blockstate.setValue(WATERLOGGED, Boolean.valueOf(true)).setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, lightlevel), voxelshape9);
                                 builder.put(blockstate.setValue(WATERLOGGED, Boolean.valueOf(false)).setValue(CONTAINS_BLOCK, true).setValue(LIGHT_LEVEL, lightlevel), voxelshape9);
@@ -110,7 +110,7 @@ public class WallFrameBlock extends WallBlock {
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(UP, WALL_HEIGHT_NORTH, WALL_HEIGHT_EAST, WALL_HEIGHT_WEST, WALL_HEIGHT_SOUTH, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
+        builder.add(UP, NORTH_WALL, EAST_WALL, WEST_WALL, SOUTH_WALL, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     @Override
@@ -178,7 +178,7 @@ public class WallFrameBlock extends WallBlock {
                 FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
+                    worldIn.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
@@ -215,7 +215,7 @@ public class WallFrameBlock extends WallBlock {
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, IBlockReader world, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }

@@ -8,13 +8,13 @@ import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.*;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -64,7 +64,7 @@ public class LadderFrameBlock extends LadderBlock {
     @Override
     @Nonnull
     @SuppressWarnings("deprecation")
-    public InteractionResult use(@Nullable BlockState state, World world, @Nullable BlockPos pos, PlayerEntity player, @Nullable Hand hand, @Nullable BlockRayTraceResult trace) {
+    public InteractionResult use(@Nullable BlockState state, World world, @Nullable BlockPos pos, Player player, @Nullable Hand hand, @Nullable BlockRayTraceResult trace) {
         ItemStack item = player.getItemInHand(Objects.requireNonNull(hand));
         if (!world.isClientSide && state != null && pos != null) {
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
@@ -105,7 +105,7 @@ public class LadderFrameBlock extends LadderBlock {
                 FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
+                    worldIn.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
@@ -142,7 +142,7 @@ public class LadderFrameBlock extends LadderBlock {
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, IBlockReader world, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }

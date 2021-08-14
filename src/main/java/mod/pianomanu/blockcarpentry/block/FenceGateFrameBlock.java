@@ -7,17 +7,17 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.util.Direction;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.World;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.IWaterLoggable;
@@ -76,7 +76,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
                     state = state.setValue(OPEN, Boolean.TRUE);
                 }
                 world.setBlock(pos, state, 10);
-                world.playEvent(player, state.getValue(OPEN) ? 1008 : 1014, pos, 0);
+                world.levelEvent(player, state.getValue(OPEN) ? 1008 : 1014, pos, 0);
                 //return InteractionResult.SUCCESS;
             } else {
                 if (item.getItem() instanceof BlockItem) {
@@ -119,7 +119,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
                 FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
+                    worldIn.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
@@ -156,7 +156,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, IBlockReader world, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }

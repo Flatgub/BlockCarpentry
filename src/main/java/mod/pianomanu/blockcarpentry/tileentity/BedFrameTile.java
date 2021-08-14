@@ -1,12 +1,9 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateBlockEntityPacket;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -16,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
 
@@ -52,17 +48,7 @@ public class BedFrameTile extends BlockEntity {
         super(BED_FRAME_TILE.get());
     }
 
-    public void setMimic(BlockState mimic) {
-        this.mimic = mimic;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-    }
-
-    public BlockState getMimic() {
-        return this.mimic;
-    }
-
-    private static Integer readInteger(CompoundNBT tag) {
+    private static Integer readInteger(CompoundTag tag) {
         if (!tag.contains("number", 8)) {
             return 0;
         } else {
@@ -75,44 +61,54 @@ public class BedFrameTile extends BlockEntity {
         }
     }
 
+    public BlockState getMimic() {
+        return this.mimic;
+    }
+
+    private static CompoundTag writeInteger(Integer tag) {
+        CompoundTag compoundnbt = new CompoundTag();
+        compoundnbt.putString("number", tag.toString());
+        return compoundnbt;
+    }
+
     public Integer getPillowColor() {
         return this.pillowColor;
     }
 
-    public void setPillowColor(Integer pillowColor) {
-        this.pillowColor = pillowColor;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setMimic(BlockState mimic) {
+        this.mimic = mimic;
+        setChanged();
+        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
     public Integer getBlanketColor() {
         return this.blanketColor;
     }
 
-    public void setBlanketColor(Integer blanketColor) {
-        this.blanketColor = blanketColor;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setPillowColor(Integer pillowColor) {
+        this.pillowColor = pillowColor;
+        setChanged();
+        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
     public Integer getDesign() {
         return this.design;
     }
 
-    public void setDesign(Integer design) {
-        this.design = design;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setBlanketColor(Integer blanketColor) {
+        this.blanketColor = blanketColor;
+        setChanged();
+        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
     public Integer getDesignTexture() {
         return this.designTexture;
     }
 
-    public void setDesignTexture(Integer designTexture) {
-        this.designTexture = designTexture;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setDesign(Integer design) {
+        this.design = design;
+        setChanged();
+        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
     public Integer getTexture() {
@@ -131,40 +127,20 @@ public class BedFrameTile extends BlockEntity {
         this.rotation = rotation;
     }
 
+    public void setDesignTexture(Integer designTexture) {
+        this.designTexture = designTexture;
+        setChanged();
+        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    }
+
     @Nullable
     @Override
-    public SUpdateBlockEntityPacket getUpdatePacket() {
-        return new SUpdateBlockEntityPacket(pos, 1, getUpdateTag());
+    public net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket(this.worldPosition, 1, getUpdateTag());
     }
 
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
-        if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (blanketColor != null) {
-            tag.put("blanket", writeInteger(blanketColor));
-        }
-        if (pillowColor != null) {
-            tag.put("pillow", writeInteger(pillowColor));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
-        return tag;
-    }
-
-    @Override
+    //TODO
+    /*@Override
     public void onDataPacket(NetworkManager net, SUpdateBlockEntityPacket pkt) {
         BlockState oldMimic = mimic;
         Integer oldTexture = texture;
@@ -173,57 +149,57 @@ public class BedFrameTile extends BlockEntity {
         Integer oldDesign = design;
         Integer oldDesignTexture = designTexture;
         Integer oldRotation = rotation;
-        CompoundNBT tag = pkt.getNbtCompound();
+        CompoundTag tag = pkt.getNbtCompound();
         if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
         if (tag.contains("texture")) {
             texture = readInteger(tag.getCompound("texture"));
             if (!Objects.equals(oldTexture, texture)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
         if (tag.contains("blanket")) {
             blanketColor = readInteger(tag.getCompound("blanket"));
             if (!Objects.equals(oldBlanket, blanketColor)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
         if (tag.contains("pillow")) {
             pillowColor = readInteger(tag.getCompound("pillow"));
             if (!Objects.equals(oldPillow, pillowColor)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
         if (tag.contains("design")) {
             design = readInteger(tag.getCompound("design"));
             if (!Objects.equals(oldDesign, design)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
         if (tag.contains("design_texture")) {
             designTexture = readInteger(tag.getCompound("design_texture"));
             if (!Objects.equals(oldDesignTexture, designTexture)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
         if (tag.contains("rotation")) {
             rotation = readInteger(tag.getCompound("rotation"));
             if (!Objects.equals(oldRotation, rotation)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
-    }
+    }*/
 
     @Nonnull
     @Override
@@ -240,36 +216,10 @@ public class BedFrameTile extends BlockEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
-        if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-        }
-        if (tag.contains("blanket")) {
-            blanketColor = readInteger(tag.getCompound("blanket"));
-        }
-        if (tag.contains("pillow")) {
-            pillowColor = readInteger(tag.getCompound("pillow"));
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-        }
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        super.write(tag);
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
         if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
+            tag.put("mimic", NbtUtils.writeBlockState(mimic));
         }
         if (texture != null) {
             tag.put("texture", writeInteger(texture));
@@ -292,10 +242,57 @@ public class BedFrameTile extends BlockEntity {
         return tag;
     }
 
-    private static CompoundNBT writeInteger(Integer tag) {
-        CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        if (tag.contains("mimic")) {
+            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
+        }
+        if (tag.contains("texture")) {
+            texture = readInteger(tag.getCompound("texture"));
+        }
+        if (tag.contains("blanket")) {
+            blanketColor = readInteger(tag.getCompound("blanket"));
+        }
+        if (tag.contains("pillow")) {
+            pillowColor = readInteger(tag.getCompound("pillow"));
+        }
+        if (tag.contains("design")) {
+            design = readInteger(tag.getCompound("design"));
+        }
+        if (tag.contains("design_texture")) {
+            designTexture = readInteger(tag.getCompound("design_texture"));
+        }
+        if (tag.contains("rotation")) {
+            rotation = readInteger(tag.getCompound("rotation"));
+        }
+    }
+
+    @Override
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);
+        if (mimic != null) {
+            tag.put("mimic", NbtUtils.writeBlockState(mimic));
+        }
+        if (texture != null) {
+            tag.put("texture", writeInteger(texture));
+        }
+        if (blanketColor != null) {
+            tag.put("blanket", writeInteger(blanketColor));
+        }
+        if (pillowColor != null) {
+            tag.put("pillow", writeInteger(pillowColor));
+        }
+        if (design != null) {
+            tag.put("design", writeInteger(design));
+        }
+        if (designTexture != null) {
+            tag.put("design_texture", writeInteger(designTexture));
+        }
+        if (rotation != null) {
+            tag.put("rotation", writeInteger(rotation));
+        }
+        return tag;
     }
 
     public void clear() {

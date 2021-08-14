@@ -2,15 +2,14 @@ package mod.pianomanu.blockcarpentry.container;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.Objects;
 
@@ -25,7 +24,7 @@ public class ChestFrameContainer extends ChestMenu {
     public final ChestFrameBlockEntity tileEntity;
     private final IWorldPosCallable canInteractWithCallable;
 
-    public ChestFrameContainer(final int windowId, final PlayerInventory playerInventory, final ChestFrameBlockEntity tileEntity) {
+    public ChestFrameContainer(final int windowId, final Inventory playerInventory, final ChestFrameBlockEntity tileEntity) {
         super(Registration.CHEST_FRAME_CONTAINER.get(), windowId);
         this.tileEntity = tileEntity;
         this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
@@ -57,32 +56,32 @@ public class ChestFrameContainer extends ChestMenu {
         }
     }
 
-    public ChestFrameContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
-        this(windowId,playerInventory,getBlockEntity(playerInventory, data));
+    public ChestFrameContainer(final int windowId, final Inventory playerInventory, final PacketBuffer data) {
+        this(windowId, playerInventory, getBlockEntity(playerInventory, data));
     }
 
-    private static ChestFrameBlockEntity getBlockEntity(final PlayerInventory playerInventory, final PacketBuffer data) {
+    private static ChestFrameBlockEntity getBlockEntity(final Inventory playerInventory, final PacketBuffer data) {
         Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final BlockEntity tileAtPos = playerInventory.player.world.getBlockEntity(data.readBlockPos());
-        if (tileAtPos instanceof  ChestFrameBlockEntity) {
+        final BlockEntity tileAtPos = playerInventory.player.level.getBlockEntity(data.readBlockPos());
+        if (tileAtPos instanceof ChestFrameBlockEntity) {
             return (ChestFrameBlockEntity) tileAtPos;
         }
-        throw new IllegalStateException("BlockEntity should be of type ChestFrameBlockEntity but is "+tileAtPos);
+        throw new IllegalStateException("BlockEntity should be of type ChestFrameBlockEntity but is " + tileAtPos);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean canInteractWith(Player playerIn) {
         return isWithinUsableDistance(canInteractWithCallable, playerIn, Registration.CHEST_FRAMEBLOCK.get()) || isWithinUsableDistance(canInteractWithCallable, playerIn, Registration.CHEST_ILLUSIONBLOCK.get());
     }
 
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack transferStackInSlot(Player playerIn, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack itemStack1 = slot.getStack();
             itemStack = itemStack1.copy();
-            if(index < 27) {
+            if (index < 27) {
                 if (this.mergeItemStack(itemStack1, 27, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }

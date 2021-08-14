@@ -1,22 +1,8 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateBlockEntityPacket;
-import net.minecraft.tileentity.SignBlockEntity;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.util.Constants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Objects;
 
 /**
  * BlockEntity for {@link mod.pianomanu.blockcarpentry.block.StandingSignFrameBlock} and {@link mod.pianomanu.blockcarpentry.block.WallSignFrameBlock}
@@ -26,7 +12,14 @@ import java.util.Objects;
  * @version 1.0 09/24/20
  */
 public class SignFrameTile extends SignBlockEntity {
+    //TODO delete later
+    public SignFrameTile(BlockPos p_155700_, BlockState p_155701_) {
+        super(p_155700_, p_155701_);
+    }
+
+    //TODO
     //===================================FRAME STUFF===================================//
+    /*
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
@@ -49,13 +42,13 @@ public class SignFrameTile extends SignBlockEntity {
         System.out.println("new sign tile");
     }
 
-    private static CompoundNBT writeInteger(Integer tag) {
-        CompoundNBT compoundnbt = new CompoundNBT();
+    private static CompoundTag writeInteger(Integer tag) {
+        CompoundTag compoundnbt = new CompoundTag();
         compoundnbt.putString("number", tag.toString());
         return compoundnbt;
     }
 
-    private static Integer readInteger(CompoundNBT tag) {
+    private static Integer readInteger(CompoundTag tag) {
         if (!tag.contains("number", 8)) {
             return 0;
         } else {
@@ -74,7 +67,7 @@ public class SignFrameTile extends SignBlockEntity {
 
     public void setMimic(BlockState mimic) {
         this.mimic = mimic;
-        markDirty();
+        setChanged();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
@@ -84,7 +77,7 @@ public class SignFrameTile extends SignBlockEntity {
 
     public void setDesign(Integer design) {
         this.design = design;
-        markDirty();
+        setChanged();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
@@ -94,7 +87,7 @@ public class SignFrameTile extends SignBlockEntity {
 
     public void setDesignTexture(Integer designTexture) {
         this.designTexture = designTexture;
-        markDirty();
+        setChanged();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
@@ -104,7 +97,7 @@ public class SignFrameTile extends SignBlockEntity {
 
     public void setTexture(Integer texture) {
         this.texture = texture;
-        markDirty();
+        setChanged();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
@@ -117,10 +110,10 @@ public class SignFrameTile extends SignBlockEntity {
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
         if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
+            tag.put("mimic", NbtUtils.writeBlockState(mimic));
         }
         if (texture != null) {
             tag.put("texture", writeInteger(texture));
@@ -150,9 +143,9 @@ public class SignFrameTile extends SignBlockEntity {
         Integer oldDesign = design;
         Integer oldDesignTexture = designTexture;
         Integer oldGlassColor = glassColor;
-        CompoundNBT tag = pkt.getNbtCompound();
+        CompoundTag tag = pkt.getNbtCompound();
         if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
                 ModelDataManager.requestModelDataRefresh(this);
                 world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
@@ -201,10 +194,10 @@ public class SignFrameTile extends SignBlockEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
+    public void read(BlockState state, CompoundTag tag) {
         super.read(state, tag);
         if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
         }
         if (tag.contains("texture")) {
             texture = readInteger(tag.getCompound("texture"));
@@ -221,9 +214,9 @@ public class SignFrameTile extends SignBlockEntity {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
+            tag.put("mimic", NbtUtils.writeBlockState(mimic));
         }
         if (texture != null) {
             tag.put("texture", writeInteger(texture));
@@ -246,6 +239,6 @@ public class SignFrameTile extends SignBlockEntity {
         this.setDesign(0);
         this.setDesign(0);
         this.setGlassColor(0);
-    }
+    }*/
 }
 //========SOLI DEO GLORIA========//

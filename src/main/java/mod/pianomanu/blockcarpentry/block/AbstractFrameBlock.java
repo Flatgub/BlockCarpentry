@@ -121,7 +121,7 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock {
     }
 
 
-    public int getLightValue(BlockState state, Level level, BlockPos pos) {
+    public int getLightEmission(BlockState state, Level level, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }

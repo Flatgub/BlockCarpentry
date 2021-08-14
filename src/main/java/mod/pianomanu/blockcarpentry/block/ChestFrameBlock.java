@@ -7,20 +7,19 @@ import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.entity.player.ServerPlayer;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.World;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -86,12 +85,13 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockState state, IBlockReader world) {
-        return Registration.CHEST_FRAME_TILE.get().create();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        //return Registration.CHEST_FRAME_TILE.get().create();
+        return new ChestFrameBlockEntity(Registration.CHEST_FRAME_TILE.get(), pos, state);
     }
 
     @Override
-    public InteractionResult use(BlockState state, World world, BlockPos pos, PlayerEntity player,
+    public InteractionResult use(BlockState state, World world, BlockPos pos, Player player,
                                  Hand hand, BlockRayTraceResult result) {
         ItemStack item = player.getItemInHand(hand);
         if (!world.isClientSide) {
@@ -123,7 +123,7 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
             BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
                 if (!(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, (ChestFrameBlockEntity) tileEntity, pos);
+                    NetworkHooks.openGui((ServerPlayer) player, (ChestFrameBlockEntity) tileEntity, pos);
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -139,7 +139,7 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
                 ChestFrameBlockEntity frameBlockEntity = (ChestFrameBlockEntity) tileentity;
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
+                    worldIn.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;

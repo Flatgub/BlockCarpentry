@@ -2,13 +2,12 @@ package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.tileentity.SignFrameTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.WoodType;
@@ -51,7 +50,7 @@ public class WallSignFrameBlock extends WallSignBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, World worldIn, BlockPos pos, Player player, Hand handIn, BlockRayTraceResult hit) {
         BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof SignFrameTile) {
             SignFrameTile signTile = (SignFrameTile) tile;

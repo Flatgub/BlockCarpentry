@@ -8,13 +8,13 @@ import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -71,12 +71,12 @@ public class BedFrameBlock extends BedBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!world.isClientSide) {
-            if ((state.getValue(CONTAINS_BLOCK) && !item.getItem().isIn(Tags.Items.DYES) && !item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) || item.isEmpty()) {
+            if ((state.getValue(CONTAINS_BLOCK) && !item.getItem().is(Tags.Items.DYES) && !item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) || item.isEmpty()) {
                 //Taken from BedBlock, should work similar to vanilla beds
                 if (state.getValue(PART) != BedPart.HEAD) {
                     pos = pos.offset(state.getValue(HORIZONTAL_FACING));
                     state = world.getBlockState(pos);
-                    if (!state.isIn(this)) {
+                    if (!state.is(this)) {
                         return InteractionResult.CONSUME;
                     }
                 }
@@ -84,7 +84,7 @@ public class BedFrameBlock extends BedBlock {
                 if (!func_235330_a_(world)) {
                     world.removeBlock(pos, false);
                     BlockPos blockpos = pos.offset(state.getValue(HORIZONTAL_FACING).getOpposite());
-                    if (world.getBlockState(blockpos).isIn(this)) {
+                    if (world.getBlockState(blockpos).is(this)) {
                         world.removeBlock(blockpos, false);
                     }
 
@@ -92,14 +92,14 @@ public class BedFrameBlock extends BedBlock {
                     return InteractionResult.SUCCESS;
                 } else if (state.getValue(OCCUPIED)) {
                     if (!this.func_226861_a_(world, pos)) {
-                        player.sendStatusMessage(new TranslationTextComponent("block.minecraft.bed.occupied"), true);
+                        player.displayClientMessage(new TranslatableComponent("block.minecraft.bed.occupied"), true);
                     }
 
                     return InteractionResult.SUCCESS;
                 } else {
                     player.trySleep(pos).ifLeft((p_220173_1_) -> {
                         if (p_220173_1_ != null) {
-                            player.sendStatusMessage(p_220173_1_.getMessage(), true);
+                            player.displayClientMessage(p_220173_1_.getMessage(), true);
                         }
 
                     });
@@ -160,7 +160,7 @@ public class BedFrameBlock extends BedBlock {
                 BedFrameTile frameBlockEntity = (BedFrameTile) tileentity;
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
+                    worldIn.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
@@ -197,7 +197,7 @@ public class BedFrameBlock extends BedBlock {
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, IBlockReader world, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }

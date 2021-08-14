@@ -6,14 +6,17 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Direction;
-import net.minecraft.world.level.block.WallHeight;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.WallSide;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -37,9 +40,9 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
-            ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
+            ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             if (location != null) {
-                IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+                BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
                     return getIllusionQuads(state, side, rand, extraData, model);
                 }
@@ -48,7 +51,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
         return Collections.emptyList();
     }
 
-    private List<BakedQuad> getIllusionQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
+    private List<BakedQuad> getIllusionQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, BakedModel model) {
         if (side != null) {
             return Collections.emptyList();
         }
@@ -65,9 +68,9 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
             } else {
                 quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
             }
-            if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL && state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL && state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+            if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL && state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL && state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL) {
                 quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 1f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-            } else if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.NONE && state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.NONE || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.NONE && state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.NONE) {
+            } else if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.NONE && state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.NONE || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.NONE && state.getValue(WallFrameBlock.WEST_WALL) == WallSide.NONE) {
                 quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
             }
 
@@ -76,71 +79,71 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
             float height_east = 1f;
             float height_south = 1f;
             float height_west = 1f;
-            if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW)
+            if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW)
                 height_north = 14 / 16f;
-            if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW)
+            if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW)
                 height_east = 14 / 16f;
-            if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW)
+            if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW)
                 height_south = 14 / 16f;
-            if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW)
+            if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW)
                 height_west = 14 / 16f;
 
             //classic wall design
             if (design == 0) {
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 5 / 16f, 0f, height_west, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
             }
             //wall with hole
             if (design == 1) {
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 4 / 16f, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 10 / 16f, height_north, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 0f, 4 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 10 / 16f, height_east, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 4 / 16f, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 10 / 16f, height_south, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 5 / 16f, 0f, 4 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 5 / 16f, 10 / 16f, height_west, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
             }
             //fence-like design
             if (design == 2) {
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 3 / 16f, 7 / 16f, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 10 / 16f, height_north, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 3 / 16f, 7 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 10 / 16f, height_east, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 3 / 16f, 7 / 16f, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 10 / 16f, height_south, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 5 / 16f, 3 / 16f, 7 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 5 / 16f, 10 / 16f, height_west, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
             }
             //heart shaped holes in wall
             if (design == 3) {
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL) {
                     //Heart form
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 12 / 16f, height_north, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 11 / 16f, 12 / 16f, 3 / 16f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -152,7 +155,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_north, 4 / 16f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
 
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL) {
                     //Heart form
                     quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, height_east, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(15 / 16f, 1f, 11 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -163,7 +166,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0f, 6 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 12 / 16f, 0f, height_east, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL) {
                     //Heart form
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 12 / 16f, height_south, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 11 / 16f, 12 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -174,7 +177,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 6 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL) {
                     //Heart form
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, height_west, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 4 / 16f, 11 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -188,7 +191,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
             }
             //cross shaped holes in wall
             if (design == 4) {
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL) {
                     //Cross form
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 12 / 16f, height_north, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 10 / 16f, 12 / 16f, 1 / 16f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -196,7 +199,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 2 / 16f, 8 / 16f, 1 / 16f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 2 / 16f, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL) {
                     //Cross form
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 12 / 16f, height_east, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 15 / 16f, 10 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -204,7 +207,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 15 / 16f, 2 / 16f, 8 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 0f, 2 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL) {
                     //Cross form
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 12 / 16f, height_south, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 10 / 16f, 12 / 16f, 11 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -212,7 +215,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 2 / 16f, 8 / 16f, 11 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 2 / 16f, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL) {
                     //Cross form
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 5 / 16f, 12 / 16f, height_west, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 5 / 16f, 10 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -223,24 +226,24 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                if (state.getValue(WallFrameBlock.UP) && !(state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL)) {
+                if (state.getValue(WallFrameBlock.UP) && !(state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL)) {
                     quads.addAll(ModelHelper.createOverlay(4 / 16f, 12 / 16f, 0f, 1f, 4 / 16f, 12 / 16f, overlayIndex));
                 } else {
-                    if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW)
+                    if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW)
                         quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW) {
+                if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW) {
                     //quads.retainAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, texture.get(index), tintIndex, rotation));
                     quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, overlayIndex));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW) {
+                if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW) {
                     //quads.retainAll(ModelHelper.createCuboid(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex, rotation));
                     quads.addAll(ModelHelper.createOverlay(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, overlayIndex));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW) {
+                if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW) {
                     quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 1f, overlayIndex));
                 }
-                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW) {
+                if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW) {
                     quads.addAll(ModelHelper.createOverlay(0f, 5 / 16f, 0f, height_west, 5 / 16f, 11 / 16f, overlayIndex));
                 }
             }
@@ -250,7 +253,7 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
+    public boolean useAmbientOcclusion() {
         return true;
     }
 
@@ -260,28 +263,23 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean func_230044_c_() {
+    public boolean usesBlockLight() {
         return false;
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
+    public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return Minecraft.getInstance().getAtlasSpriteGetter(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
+    public TextureAtlasSprite getParticleIcon() {
+        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.EMPTY;
-    }
-
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return ItemCameraTransforms.DEFAULT;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 }
 //========SOLI DEO GLORIA========//
