@@ -4,16 +4,16 @@ import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.StairsBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.state.properties.Half;
 import net.minecraft.util.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.StairsBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -59,15 +59,15 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
             float yl = 0f;
             float yh = 0.5f;
             boolean cullUpDown = false;
-            if (state.get(StairsBlock.HALF).equals(Half.TOP)) {
+            if (state.getValue(StairsBlock.HALF).equals(Half.TOP)) {
                 yl = 0.5f;
                 yh = 1f;
                 cullUpDown = true;
             }
             List<BakedQuad> quads = new ArrayList<>();
-            switch (state.get(StairsBlock.SHAPE)) {
+            switch (state.getValue(StairsBlock.SHAPE)) {
                 case STRAIGHT:
-                    switch (state.get(StairsBlock.FACING)) {
+                    switch (state.getValue(StairsBlock.FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, yl, yh, 0f, 0.5f, mimic, model, extraData, rand, tintIndex, true, true, false, true, cullUpDown, !cullUpDown, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, yl, yh, 0.5f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, true, true, rotation));
@@ -91,7 +91,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                     }
                     break;
                 case INNER_LEFT:
-                    switch (state.get(StairsBlock.FACING)) {
+                    switch (state.getValue(StairsBlock.FACING)) {
                         case NORTH:
                             //bottom part
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, mimic, model, extraData, rand, tintIndex, true, false, false, true, cullUpDown, !cullUpDown, rotation));
@@ -139,7 +139,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                     }
                     break;
                 case INNER_RIGHT:
-                    switch (state.get(StairsBlock.FACING)) {
+                    switch (state.getValue(StairsBlock.FACING)) {
                         case WEST:
                             //bottom part
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, mimic, model, extraData, rand, tintIndex, true, false, false, true, cullUpDown, !cullUpDown, rotation));
@@ -187,7 +187,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                     }
                     break;
                 case OUTER_LEFT:
-                    switch (state.get(StairsBlock.FACING)) {
+                    switch (state.getValue(StairsBlock.FACING)) {
                         case NORTH:
                             //bottom part
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, mimic, model, extraData, rand, tintIndex, true, false, false, true, cullUpDown, !cullUpDown, rotation));
@@ -227,7 +227,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                     }
                     break;
                 case OUTER_RIGHT:
-                    switch (state.get(StairsBlock.FACING)) {
+                    switch (state.getValue(StairsBlock.FACING)) {
                         case WEST:
                             //bottom part
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, mimic, model, extraData, rand, tintIndex, true, false, false, true, cullUpDown, !cullUpDown, rotation));
@@ -269,9 +269,9 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                switch (state.get(StairsBlock.SHAPE)) {
+                switch (state.getValue(StairsBlock.SHAPE)) {
                     case STRAIGHT:
-                        switch (state.get(StairsBlock.FACING)) {
+                        switch (state.getValue(StairsBlock.FACING)) {
                             case NORTH:
                                 quads.addAll(ModelHelper.createOverlay(0f, 1f, yl, yh, 0f, 0.5f, overlayIndex, true, true, false, true, cullUpDown, !cullUpDown, false));
                                 quads.addAll(ModelHelper.createOverlay(0f, 1f, yl, yh, 0.5f, 1f, overlayIndex, true, true, true, false, true, true, !cullUpDown));
@@ -295,7 +295,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                         }
                         break;
                     case INNER_LEFT:
-                        switch (state.get(StairsBlock.FACING)) {
+                        switch (state.getValue(StairsBlock.FACING)) {
                             case NORTH:
                                 //bottom part
                                 quads.addAll(ModelHelper.createOverlay(0f, 0.5f, yl, yh, 0f, 0.5f, overlayIndex, true, false, false, true, cullUpDown, !cullUpDown, false));
@@ -303,9 +303,9 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                                 quads.addAll(ModelHelper.createOverlay(0.5f, 1f, yl, yh, 0.5f, 1f, overlayIndex, false, true, true, false, true, true, !cullUpDown));
                                 quads.addAll(ModelHelper.createOverlay(0.5f, 1f, yl, yh, 0f, 0.5f, overlayIndex, false, true, false, true, cullUpDown, !cullUpDown, false));
                                 //upper part
-                                quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0.5f,1f, 0f, 0.5f, overlayIndex, true, false, false, true, true, cullUpDown, false));
-                                quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0.5f,1f, 0.5f, 1f, overlayIndex, true, true, true, false, true, cullUpDown, false));
-                                quads.addAll(ModelHelper.createOverlay(0.5f, 1f, 0.5f,1f, 0f, 0.5f, overlayIndex, false, true, true, true, true, cullUpDown, false));
+                                quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0.5f, 1f, 0f, 0.5f, overlayIndex, true, false, false, true, true, cullUpDown, false));
+                                quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0.5f, 1f, 0.5f, 1f, overlayIndex, true, true, true, false, true, cullUpDown, false));
+                                quads.addAll(ModelHelper.createOverlay(0.5f, 1f, 0.5f, 1f, 0f, 0.5f, overlayIndex, false, true, true, true, true, cullUpDown, false));
                                 break;
                             case SOUTH:
                                 //bottom part
@@ -343,7 +343,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                         }
                         break;
                     case INNER_RIGHT:
-                        switch (state.get(StairsBlock.FACING)) {
+                        switch (state.getValue(StairsBlock.FACING)) {
                             case WEST:
                                 //bottom part
                                 quads.addAll(ModelHelper.createOverlay(0f, 0.5f, yl, yh, 0f, 0.5f, overlayIndex, true, false, false, true, cullUpDown, !cullUpDown, false));
@@ -351,9 +351,9 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                                 quads.addAll(ModelHelper.createOverlay(0.5f, 1f, yl, yh, 0.5f, 1f, overlayIndex, false, true, true, false, true, true, !cullUpDown));
                                 quads.addAll(ModelHelper.createOverlay(0.5f, 1f, yl, yh, 0f, 0.5f, overlayIndex, false, true, false, true, cullUpDown, !cullUpDown, false));
                                 //upper part
-                                quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0.5f,1f, 0f, 0.5f, overlayIndex, true, false, false, true, true, cullUpDown, false));
-                                quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0.5f,1f, 0.5f, 1f, overlayIndex, true, true, true, false, true, cullUpDown, false));
-                                quads.addAll(ModelHelper.createOverlay(0.5f, 1f, 0.5f,1f, 0f, 0.5f, overlayIndex, false, true, true, true, true, cullUpDown, false));
+                                quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0.5f, 1f, 0f, 0.5f, overlayIndex, true, false, false, true, true, cullUpDown, false));
+                                quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0.5f, 1f, 0.5f, 1f, overlayIndex, true, true, true, false, true, cullUpDown, false));
+                                quads.addAll(ModelHelper.createOverlay(0.5f, 1f, 0.5f, 1f, 0f, 0.5f, overlayIndex, false, true, true, true, true, cullUpDown, false));
                                 break;
                             case EAST:
                                 //bottom part
@@ -391,7 +391,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                         }
                         break;
                     case OUTER_LEFT:
-                        switch (state.get(StairsBlock.FACING)) {
+                        switch (state.getValue(StairsBlock.FACING)) {
                             case NORTH:
                                 //bottom part
                                 quads.addAll(ModelHelper.createOverlay(0f, 0.5f, yl, yh, 0f, 0.5f, overlayIndex, true, false, false, true, cullUpDown, !cullUpDown, false));
@@ -431,7 +431,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                         }
                         break;
                     case OUTER_RIGHT:
-                        switch (state.get(StairsBlock.FACING)) {
+                        switch (state.getValue(StairsBlock.FACING)) {
                             case WEST:
                                 //bottom part
                                 quads.addAll(ModelHelper.createOverlay(0f, 0.5f, yl, yh, 0f, 0.5f, overlayIndex, true, false, false, true, cullUpDown, !cullUpDown, false));

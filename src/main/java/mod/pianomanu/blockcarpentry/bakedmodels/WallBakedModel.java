@@ -6,8 +6,6 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.WallHeight;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -16,9 +14,11 @@ import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.WallHeight;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -84,14 +84,14 @@ public class WallBakedModel implements IDynamicBakedModel {
             List<BakedQuad> quads = new ArrayList<>();
 
             //Create middle post
-            if (state.get(WallFrameBlock.UP)) {
+            if (state.getValue(WallFrameBlock.UP)) {
                 quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 1f, 4 / 16f, 12 / 16f, texture.get(index), tintIndex));
             } else {
                 quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
             }
-            if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL && state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL && state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+            if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL && state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL && state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
                 quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, 1f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
-            } else if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.NONE && state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.NONE || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.NONE && state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.NONE) {
+            } else if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.NONE && state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.NONE || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.NONE && state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.NONE) {
                 quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
             }
 
@@ -100,71 +100,71 @@ public class WallBakedModel implements IDynamicBakedModel {
             float height_east = 1f;
             float height_south = 1f;
             float height_west = 1f;
-            if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW)
+            if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW)
                 height_north = 14 / 16f;
-            if (state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW)
+            if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW)
                 height_east = 14 / 16f;
-            if (state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW)
+            if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW)
                 height_south = 14 / 16f;
-            if (state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW)
+            if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW)
                 height_west = 14 / 16f;
 
             //classic wall design
             if (design == 0) {
-                if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 1f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(0f, 5 / 16f, 0f, height_west, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                 }
             }
             //wall with hole
             if (design == 1) {
-                if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, 4 / 16f, 0f, 5 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 10 / 16f, height_north, 0f, 5 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 1f, 0f, 4 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 1f, 10 / 16f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, 4 / 16f, 11 / 16f, 1f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 10 / 16f, height_south, 11 / 16f, 1f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(0f, 5 / 16f, 0f, 4 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(0f, 5 / 16f, 10 / 16f, height_west, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                 }
             }
             //fence-like design
             if (design == 2) {
-                if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 3 / 16f, 7 / 16f, 0f, 5 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 10 / 16f, height_north, 0f, 5 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 1f, 3 / 16f, 7 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 1f, 10 / 16f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 3 / 16f, 7 / 16f, 11 / 16f, 1f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 10 / 16f, height_south, 11 / 16f, 1f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
                     quads.addAll(ModelHelper.createCuboid(0f, 5 / 16f, 3 / 16f, 7 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(0f, 5 / 16f, 10 / 16f, height_west, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                 }
             }
             //heart shaped holes in wall
             if (design == 3) {
-                if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
                     //Heart form
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 12 / 16f, height_north, 0f, 4 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 11 / 16f, 12 / 16f, 3 / 16f, 4 / 16f, texture.get(index), tintIndex));
@@ -176,7 +176,7 @@ public class WallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, height_north, 4 / 16f, 5 / 16f, texture.get(index), tintIndex));
 
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
                     //Heart form
                     quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 12 / 16f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 11 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
@@ -187,7 +187,7 @@ public class WallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0f, 6 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 12 / 16f, 0f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
                     //Heart form
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 12 / 16f, height_south, 12 / 16f, 1f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 11 / 16f, 12 / 16f, 15 / 16f, 1f, texture.get(index), tintIndex));
@@ -198,7 +198,7 @@ public class WallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, 6 / 16f, 12 / 16f, 1f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 12 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
                     //Heart form
                     quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 12 / 16f, height_west, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(3 / 16f, 4 / 16f, 11 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
@@ -212,7 +212,7 @@ public class WallBakedModel implements IDynamicBakedModel {
             }
             //cross shaped holes in wall
             if (design == 4) {
-                if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL) {
                     //Cross form
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 12 / 16f, height_north, 0f, 5 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 10 / 16f, 12 / 16f, 1 / 16f, 5 / 16f, texture.get(index), tintIndex));
@@ -220,7 +220,7 @@ public class WallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 2 / 16f, 8 / 16f, 1 / 16f, 5 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, 2 / 16f, 0f, 5 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL) {
                     //Cross form
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 1f, 12 / 16f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 15 / 16f, 10 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
@@ -228,7 +228,7 @@ public class WallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 15 / 16f, 2 / 16f, 8 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(11 / 16f, 1f, 0f, 2 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL) {
                     //Cross form
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 12 / 16f, height_south, 11 / 16f, 1f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 10 / 16f, 12 / 16f, 11 / 16f, 15 / 16f, texture.get(index), tintIndex));
@@ -236,7 +236,7 @@ public class WallBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 2 / 16f, 8 / 16f, 11 / 16f, 15 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, 2 / 16f, 11 / 16f, 1f, texture.get(index), tintIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL) {
                     //Cross form
                     quads.addAll(ModelHelper.createCuboid(0f, 5 / 16f, 12 / 16f, height_west, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createCuboid(1 / 16f, 5 / 16f, 10 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
@@ -247,25 +247,25 @@ public class WallBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                if (state.get(WallFrameBlock.UP) && !(state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL || state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL || state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL)) {
+                if (state.getValue(WallFrameBlock.UP) && !(state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.TALL || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.TALL || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.TALL || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.TALL)) {
                     quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 1f, 4 / 16f, 12 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createOverlay(4 / 16f, 12 / 16f, 0f, 1f, 4 / 16f, 12 / 16f, overlayIndex));
                 } else {
-                    if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW)
-                    quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, 14/16f, 5 / 16f, 11 / 16f, overlayIndex));
+                    if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW || state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW)
+                        quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_NORTH) == WallHeight.LOW) {
                     //quads.retainAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, overlayIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_EAST) == WallHeight.LOW) {
                     //quads.retainAll(ModelHelper.createCuboid(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex));
                     quads.addAll(ModelHelper.createOverlay(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, overlayIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_SOUTH) == WallHeight.LOW) {
                     quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 1f, overlayIndex));
                 }
-                if (state.get(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW) {
+                if (state.getValue(WallFrameBlock.WALL_HEIGHT_WEST) == WallHeight.LOW) {
                     quads.addAll(ModelHelper.createOverlay(0f, 5 / 16f, 0f, height_west, 5 / 16f, 11 / 16f, overlayIndex));
                 }
             }

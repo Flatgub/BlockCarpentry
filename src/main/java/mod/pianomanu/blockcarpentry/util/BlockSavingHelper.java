@@ -1,10 +1,10 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockRenderType;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -22,8 +22,8 @@ public class BlockSavingHelper {
     public static void createValidBlockList() {
         List<Block> blockList = new ArrayList<>();
         for (Block b : ForgeRegistries.BLOCKS) {
-            if (b.getDefaultState().getRenderType() == BlockRenderType.MODEL) {
-                /*if (b.getDefaultState().isSolid() || b.getDefaultState().isTransparent()) {
+            if (b.defaultBlockState().getRenderType() == BlockRenderType.MODEL) {
+                /*if (b.defaultBlockState().isSolid() || b.defaultBlockState().isTransparent()) {
                     blockList.add(b);
                 }
                 if (b instanceof AbstractGlassBlock) {

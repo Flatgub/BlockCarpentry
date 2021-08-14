@@ -6,15 +6,15 @@ import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -125,7 +125,7 @@ public class IllusionChestBakedModel implements IDynamicBakedModel {
                 int[] uhigh = {9, 9, 8, 7, 9, 7};
                 int[] vlow = {4, 7, 4, 4, 4, 4};
                 int[] vhigh = {5, 8, 8, 8, 8, 8};
-                switch (state.get(BlockStateProperties.HORIZONTAL_FACING)) {
+                switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
                     case NORTH:
                         quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 1 / 16f, 15 / 16f, 1 / 16f, 2 / 16f, chestFront, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 1 / 16f, 15 / 16f, 14 / 16f, 15 / 16f, chestSide, tintIndex));

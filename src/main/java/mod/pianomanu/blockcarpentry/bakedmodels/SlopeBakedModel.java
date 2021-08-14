@@ -5,19 +5,19 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.StairsBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.state.properties.Half;
 import net.minecraft.state.properties.StairsShape;
 import net.minecraft.util.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.StairsBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -79,7 +79,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
         }*/
         int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
         double w = 0.5;
-        if (state.get(StairsBlock.HALF) == Half.TOP) {
+        if (state.getValue(StairsBlock.HALF) == Half.TOP) {
             w = -0.5;
         }
         //Eight corners of the block
@@ -93,7 +93,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
         Vector3d SED = v(1, 0.5 - w, 1); //South-East-Down
         //bottom face
         /*quads.add(ModelHelper.createQuad(SED, SWD, NWD, NED, texture.get(index), 0, 16, 0, 16, tintIndex));
-        switch (state.get(StairsBlock.FACING)) {
+        switch (state.getValue(StairsBlock.FACING)) {
             case NORTH:
                 SWU = v(0,0.5-w,1);
                 SEU = v(1,0.5-w,1);
@@ -134,9 +134,9 @@ public class SlopeBakedModel implements IDynamicBakedModel {
         }
         //top face
         quads.add(ModelHelper.createQuad(SWU, SEU, NEU, NWU, texture.get(index), 0, 16, 0, 16, tintIndex));
-        //quads.addAll(ModelHelper.createQuad(0,1,0,1,0,1, texture.get(index), tintIndex,state.get(StairsBlock.FACING), state.get(StairsBlock.HALF))); //TODO remove or fix
+        //quads.addAll(ModelHelper.createQuad(0,1,0,1,0,1, texture.get(index), tintIndex,state.getValue(StairsBlock.FACING), state.getValue(StairsBlock.HALF))); //TODO remove or fix
         */
-        quads.addAll(createSlope(0, 1, 0, 1, 0, 1, texture.get(index), tintIndex, state.get(StairsBlock.FACING), state.get(StairsBlock.SHAPE), state.get(StairsBlock.HALF)));
+        quads.addAll(createSlope(0, 1, 0, 1, 0, 1, texture.get(index), tintIndex, state.getValue(StairsBlock.FACING), state.getValue(StairsBlock.SHAPE), state.getValue(StairsBlock.HALF)));
         return quads;
     }
 

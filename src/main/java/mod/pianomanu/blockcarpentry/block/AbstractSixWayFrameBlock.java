@@ -1,9 +1,9 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import net.minecraft.state.DirectionProperty;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 /**
@@ -20,8 +20,8 @@ public abstract class AbstractSixWayFrameBlock extends AbstractFrameBlock {
         super(properties);
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACING);
     }
 }

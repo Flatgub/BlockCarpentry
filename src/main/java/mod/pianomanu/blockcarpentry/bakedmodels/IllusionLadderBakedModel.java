@@ -5,16 +5,16 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -81,7 +81,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
             TextureAtlasSprite designTexture = designTextureList.get(desTex);
             List<BakedQuad> quads = new ArrayList<>();
             if (design == 5) { //do we use that? I don't really like it
-                switch (state.get(LadderBlock.FACING)) {
+                switch (state.getValue(LadderBlock.FACING)) {
                     case WEST:
                         return new ArrayList<>(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     case SOUTH:
@@ -93,7 +93,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 0 || design == 1 || design == 2) {
-                switch (state.get(LadderBlock.FACING)) {
+                switch (state.getValue(LadderBlock.FACING)) {
                     case WEST:
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -113,7 +113,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 0 || design == 1) {
-                switch (state.get(LadderBlock.FACING)) {
+                switch (state.getValue(LadderBlock.FACING)) {
                     case WEST:
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 2 / 16f, 3 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 6 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -141,7 +141,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 1) {
-                switch (state.get(LadderBlock.FACING)) {
+                switch (state.getValue(LadderBlock.FACING)) {
                     case WEST:
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0 / 16f, 1 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 5 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -169,7 +169,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 2) {
-                switch (state.get(LadderBlock.FACING)) {
+                switch (state.getValue(LadderBlock.FACING)) {
                     case WEST:
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 1 / 16f, 3 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 5 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -197,7 +197,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 3) {
-                switch (state.get(LadderBlock.FACING)) {
+                switch (state.getValue(LadderBlock.FACING)) {
                     case WEST:
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 1 / 16f, 3 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 5 / 16f, 7 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -237,7 +237,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 4) {
-                switch (state.get(LadderBlock.FACING)) {
+                switch (state.getValue(LadderBlock.FACING)) {
                     case WEST:
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 14 / 16f, 1 / 16f, 3 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 14 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -278,7 +278,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                switch (state.get(LadderBlock.FACING)) {
+                switch (state.getValue(LadderBlock.FACING)) {
                     case NORTH:
                         quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));
                         break;

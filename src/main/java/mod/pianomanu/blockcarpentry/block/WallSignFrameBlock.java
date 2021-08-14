@@ -1,20 +1,20 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.tileentity.SignFrameTile;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.WallSignBlock;
-import net.minecraft.world.level.block.WoodType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.StateContainer;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.WoodType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 import javax.annotation.Nullable;
 
@@ -30,11 +30,11 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
 public class WallSignFrameBlock extends WallSignBlock {
     public WallSignFrameBlock(Properties propertiesIn) {
         super(propertiesIn, WoodType.OAK);
-        this.registerDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, Boolean.FALSE).with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0));
+        this.registerDefaultState(this.stateContainer.getBaseState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, Boolean.FALSE).setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, 0));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
@@ -51,14 +51,14 @@ public class WallSignFrameBlock extends WallSignBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof SignFrameTile) {
             SignFrameTile signTile = (SignFrameTile) tile;
             player.openSignEditor(signTile);
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.FAIL;
+        return InteractionResult.FAIL;
     }
 }
 //========SOLI DEO GLORIA========//

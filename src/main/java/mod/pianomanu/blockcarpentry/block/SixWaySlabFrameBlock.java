@@ -7,32 +7,29 @@ import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.IWaterLoggable;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.World;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.IWaterLoggable;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -57,29 +54,29 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     public static final BooleanProperty DOUBLE_SLAB = BCBlockStateProperties.DOUBLE;
     //everything is inverted because when placing, we would need to take the opposite - I figured it out when I completed my work and I don't want to change everything again
-    protected static final VoxelShape BOTTOM = Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape TOP = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
-    protected static final VoxelShape EAST = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 16.0D);
-    protected static final VoxelShape SOUTH = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
-    protected static final VoxelShape WEST = Block.makeCuboidShape(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape NORTH = Block.makeCuboidShape(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape CUBE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape BOTTOM = Block.box(0.0D, 8.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape TOP = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
+    protected static final VoxelShape EAST = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
+    protected static final VoxelShape WEST = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape NORTH = Block.box(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape CUBE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
     public SixWaySlabFrameBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(WATERLOGGED, false).with(DOUBLE_SLAB, false).with(CONTAINS_2ND_BLOCK, false));
+        this.registerDefaultState(this.stateContainer.getBaseState().setValue(FACING, Direction.DOWN).setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false).setValue(DOUBLE_SLAB, false).setValue(CONTAINS_2ND_BLOCK, false));
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(WATERLOGGED, DOUBLE_SLAB, CONTAINS_2ND_BLOCK);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        if (state.get(DOUBLE_SLAB))
+        if (state.getValue(DOUBLE_SLAB))
             return CUBE;
-        switch (state.get(FACING)) {
+        switch (state.getValue(FACING)) {
             case EAST:
                 return EAST;
             case NORTH:
@@ -96,33 +93,33 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos blockpos = context.getPos();
         FluidState fluidstate = context.getWorld().getFluidState(blockpos);
         BlockState blockState = context.getWorld().getBlockState(blockpos);
         if (blockState.getBlock() instanceof SixWaySlabFrameBlock) {
-            return blockState.with(DOUBLE_SLAB, true);
+            return blockState.setValue(DOUBLE_SLAB, true);
         }
-        if (Objects.requireNonNull(context.getPlayer()).isSneaking() && BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get() || !Objects.requireNonNull(context.getPlayer()).isSneaking() && !BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get()) {
+        if (Objects.requireNonNull(context.getPlayer()).isCrouching() && BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get() || !Objects.requireNonNull(context.getPlayer()).isCrouching() && !BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get()) {
             if (fluidstate.getFluid() == Fluids.WATER) {
-                return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED, fluidstate.isSource());
+                return this.defaultBlockState().setValue(FACING, context.getFace()).setValue(WATERLOGGED, fluidstate.isSource());
             } else {
-                return this.getDefaultState().with(FACING, context.getFace());
+                return this.defaultBlockState().setValue(FACING, context.getFace());
             }
         } else {
-            BlockState blockstate1 = this.getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, fluidstate.getFluid() == Fluids.WATER);
+            BlockState blockstate1 = this.defaultBlockState().setValue(FACING, Direction.UP).setValue(WATERLOGGED, fluidstate.getFluid() == Fluids.WATER);
             Direction direction = context.getFace();
-            return direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitVec().y - (double) blockpos.getY() > 0.5D)) ? blockstate1 : blockstate1.with(FACING, Direction.DOWN);
+            return direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitVec().y - (double) blockpos.getY() > 0.5D)) ? blockstate1 : blockstate1.setValue(FACING, Direction.DOWN);
         }
     }
 
-    public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+    public boolean isReplaceable(BlockState state, BlockPlaceContext useContext) {
         ItemStack itemstack = useContext.getItem();
-        boolean isDouble = state.get(DOUBLE_SLAB);
+        boolean isDouble = state.getValue(DOUBLE_SLAB);
         if (!isDouble && itemstack.getItem() == this.asItem()) {
             if (useContext.replacingClickedOnBlock()) {
                 Direction direction = useContext.getFace();
-                switch (state.get(FACING)) {
+                switch (state.getValue(FACING)) {
                     case EAST:
                         return direction == Direction.EAST;
                     case SOUTH:
@@ -156,9 +153,9 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
+        ItemStack item = player.getItemInHand(hand);
+        if (!world.isClientSide) {
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             BlockAppearanceHelper.setDesign(world, pos, player, item);
@@ -166,34 +163,34 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
             BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
-                if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) && !state.get(DOUBLE_SLAB) || state.get(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                    return ActionResultType.PASS;
+                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) && !state.getValue(DOUBLE_SLAB) || state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = world.getBlockEntity(pos);
-                int count = player.getHeldItem(hand).getCount();
+                int count = player.getItemInHand(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof TwoBlocksFrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_2ND_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
+                if (tileEntity instanceof TwoBlocksFrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_2ND_BLOCK)) {
+                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())
-                        player.getHeldItem(hand).setCount(count - 1);
+                        player.getItemInHand(hand).setCount(count - 1);
                     checkForVisibility(state, world, pos, (TwoBlocksFrameBlockTile) tileEntity);
                 }
 
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
                 if (!player.isCreative())
                     this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                state = state.with(CONTAINS_2ND_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
+                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+                state = state.setValue(CONTAINS_2ND_BLOCK, Boolean.FALSE);
+                world.setBlock(pos, state, 2);
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
+        if (!worldIn.isClientSide) {
             BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof TwoBlocksFrameBlockTile) {
                 TwoBlocksFrameBlockTile frameBlockEntity = (TwoBlocksFrameBlockTile) tileentity;
@@ -202,24 +199,24 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
                     worldIn.playEvent(1010, pos, 0);
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d1 = (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
                     double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
+                    itementity.setDefaultPickUpDelay();
+                    worldIn.addFreshEntity(itementity);
                 }
                 blockState = frameBlockEntity.getMimic_2();
                 if (!(blockState == null)) {
                     worldIn.playEvent(1010, pos, 0);
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d1 = (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
                     double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
+                    itementity.setDefaultPickUpDelay();
+                    worldIn.addFreshEntity(itementity);
                 }
                 frameBlockEntity.clear();
             }
@@ -229,15 +226,15 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
         BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof TwoBlocksFrameBlockTile) {
-            if (!state.get(CONTAINS_BLOCK)) {
+            if (!state.getValue(CONTAINS_BLOCK)) {
                 TwoBlocksFrameBlockTile frameBlockEntity = (TwoBlocksFrameBlockTile) tileentity;
                 frameBlockEntity.clear();
                 frameBlockEntity.setMimic_1(handBlock);
-                worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
-            } else if (state.get(DOUBLE_SLAB)) {
+                worldIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            } else if (state.getValue(DOUBLE_SLAB)) {
                 TwoBlocksFrameBlockTile frameBlockEntity = (TwoBlocksFrameBlockTile) tileentity;
                 frameBlockEntity.setMimic_2(handBlock);
-                worldIn.setBlockState(pos, state.with(CONTAINS_2ND_BLOCK, Boolean.TRUE), 2);
+                worldIn.setBlock(pos, state.setValue(CONTAINS_2ND_BLOCK, Boolean.TRUE), 2);
             }
         }
     }
@@ -253,17 +250,17 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        if (state.get(LIGHT_LEVEL) > 15) {
+        if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 
     @Override
     @Nonnull
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override

@@ -8,19 +8,19 @@ import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.GrassBlock;
-import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.state.properties.BedPart;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.GrassBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
@@ -37,29 +37,29 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
-        if (item.getItem() == Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) < 13) {
+        if (item.getItem() == Items.GLOWSTONE_DUST && state.getValue(LIGHT_LEVEL) < 13) {
             int count = player.getHeldItem(hand).getCount();
-            world.setBlockState(pos, state.with(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos) + 3));
+            world.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos) + 3));
             player.getHeldItem(hand).setCount(count - 1);
-            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", (state.get(LIGHT_LEVEL) + 3)), true);
+            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 3)), true);
         }
-        if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL) < 15) {
+        if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) < 15) {
             int count = player.getHeldItem(hand).getCount();
-            world.setBlockState(pos, state.with(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos) + 1));
+            world.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos) + 1));
             player.getHeldItem(hand).setCount(count - 1);
-            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", (state.get(LIGHT_LEVEL) + 1)), true);
+            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 1)), true);
         }
-        if (item.getItem() == Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) >= 13) {
-            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", state.get(LIGHT_LEVEL)), true);
+        if (item.getItem() == Items.GLOWSTONE_DUST && state.getValue(LIGHT_LEVEL) >= 13) {
+            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
         }
-        if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL) == 15) {
-            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", state.get(LIGHT_LEVEL)), true);
+        if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) == 15) {
+            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
         }
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 
     public static void setTexture(ItemStack item, BlockState state, World world, PlayerEntity player, BlockPos pos) {
-        if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK) && mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
+        if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isCrouching() && state.getValue(CONTAINS_BLOCK) && mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
             BlockEntity tileEntity = world.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
@@ -90,7 +90,7 @@ public class BlockAppearanceHelper {
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     if (fte.getTexture_1() < 5) {
                         fte.setTexture_1(fte.getTexture_1() + 1);
                     } else {
@@ -110,7 +110,7 @@ public class BlockAppearanceHelper {
     }
 
     public static void setDesign(World world, BlockPos pos, PlayerEntity player, ItemStack item) {
-        if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
+        if (item.getItem() == Registration.CHISEL.get() && !player.isCrouching()) {
             BlockEntity tileEntity = world.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
@@ -142,7 +142,7 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                 BlockState state = world.getBlockState(pos);
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     if (fte.getDesign_1() < fte.maxDesigns) {
                         fte.setDesign_1(fte.getDesign_1() + 1);
                     } else {
@@ -162,7 +162,7 @@ public class BlockAppearanceHelper {
     }
 
     public static void setDesignTexture(World world, BlockPos pos, PlayerEntity player, ItemStack item) {
-        if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
+        if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isCrouching()) {
             BlockEntity tileEntity = world.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
@@ -257,7 +257,7 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                 BlockState state = world.getBlockState(pos);
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     if (fte.getOverlay_1() == 1) {
                         fte.setOverlay_1(2);
                         player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.grass_overlay_large"), true);
@@ -290,7 +290,7 @@ public class BlockAppearanceHelper {
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 BlockState state = world.getBlockState(pos);
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                     if (fte.getOverlay_1() == 3) {
                         fte.setOverlay_1(4);
@@ -320,7 +320,7 @@ public class BlockAppearanceHelper {
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 BlockState state = world.getBlockState(pos);
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                     fte.setOverlay_1(5);
                     player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.vine_overlay"), true);
@@ -342,7 +342,7 @@ public class BlockAppearanceHelper {
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 BlockState state = world.getBlockState(pos);
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                     if (fte.getOverlay_1() > 5 && fte.getOverlay_1() < 10) {
                         fte.setOverlay_1(fte.getOverlay_1() + 1);
@@ -368,7 +368,7 @@ public class BlockAppearanceHelper {
     }
 
     public static void setRotation(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
-        if (itemStack.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && mod.pianomanu.blockcarpentry.util.Tags.isIllusionBlock(world.getBlockState(pos).getBlock())) {
+        if (itemStack.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isCrouching() && mod.pianomanu.blockcarpentry.util.Tags.isIllusionBlock(world.getBlockState(pos).getBlock())) {
             BlockEntity tileEntity = world.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
@@ -403,7 +403,7 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                 BlockState state = world.getBlockState(pos);
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     if (fte.getRotation_1() < 7) {
                         fte.setRotation_1(fte.getRotation_1() + 1);
                     } else {

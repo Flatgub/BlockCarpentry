@@ -3,14 +3,14 @@ package mod.pianomanu.blockcarpentry.util;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.GrassBlock;
 import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.client.Minecraft;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -84,7 +84,7 @@ public class BlockColorHandler implements BlockColor {
         //TODO does this work?
         if (Objects.requireNonNull(state.getBlock().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID) && blockAndTint != null && pos != null) {
             BlockEntity te = blockAndTint.getBlockEntity(pos);
-            if (te instanceof FrameBlockTile && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
+            if (te instanceof FrameBlockTile && state.getValue(BCBlockStateProperties.CONTAINS_BLOCK)) {
                 BlockState containedBlock = ((FrameBlockTile) te).getMimic();
                 try {
                     if (containedBlock.getBlock() instanceof GrassBlock) {

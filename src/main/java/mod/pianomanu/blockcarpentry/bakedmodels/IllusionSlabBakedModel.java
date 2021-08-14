@@ -5,14 +5,14 @@ import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -56,7 +56,7 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
             int tintIndex_2 = mimic_2 == null ? -1 : BlockAppearanceHelper.setTintIndex(mimic_2);
             int rotation_1 = extraData.getData(TwoBlocksFrameBlockTile.ROTATION_1);
             int rotation_2 = extraData.getData(TwoBlocksFrameBlockTile.ROTATION_2);
-            boolean isDouble = state.get(SixWaySlabFrameBlock.DOUBLE_SLAB);
+            boolean isDouble = state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB);
             boolean renderNorth = side == Direction.NORTH && extraData.getData(TwoBlocksFrameBlockTile.NORTH_VISIBLE);
             boolean renderEast = side == Direction.EAST && extraData.getData(TwoBlocksFrameBlockTile.EAST_VISIBLE);
             boolean renderSouth = side == Direction.SOUTH && extraData.getData(TwoBlocksFrameBlockTile.SOUTH_VISIBLE);
@@ -64,7 +64,7 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
             boolean renderUp = side == Direction.UP && extraData.getData(TwoBlocksFrameBlockTile.UP_VISIBLE);
             boolean renderDown = side == Direction.DOWN && extraData.getData(TwoBlocksFrameBlockTile.DOWN_VISIBLE);
             List<BakedQuad> quads = new ArrayList<>();
-            switch (state.get(SixWaySlabFrameBlock.FACING)) {
+            switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                 case UP:
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, mimic_1, model, extraData, rand, tintIndex_1, renderNorth, renderSouth, renderEast, renderWest, renderUp && !isDouble, renderDown, rotation_1));
                     break;
@@ -84,10 +84,10 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, mimic_1, model, extraData, rand, tintIndex_1, renderNorth, renderSouth, renderEast && !isDouble, renderWest, renderUp, renderDown, rotation_1));
                     break;
             }
-            if (state.get(SixWaySlabFrameBlock.DOUBLE_SLAB) && mimic_2 != null) {
+            if (state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) && mimic_2 != null) {
                 ModelResourceLocation location_2 = BlockModelShapes.getModelLocation(mimic_2);
                 IBakedModel model_2 = Minecraft.getInstance().getModelManager().getModel(location_2);
-                switch (state.get(SixWaySlabFrameBlock.FACING)) {
+                switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                     case UP:
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, mimic_2, model_2, extraData, rand, tintIndex_2, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown && !isDouble, rotation_2));
                         break;
@@ -110,7 +110,7 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex_1 = extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_1);
             if (extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_1) != 0) {
-                switch (state.get(SixWaySlabFrameBlock.FACING)) {
+                switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                     case UP:
                         quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp && !isDouble, renderDown, true));
                         break;
@@ -131,10 +131,10 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
                         break;
                 }
             }
-            if (state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+            if (state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                 int overlayIndex_2 = extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_2);
                 if (extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_2) != 0) {
-                    switch (state.get(SixWaySlabFrameBlock.FACING)) {
+                    switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                         case UP:
                             quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex_2, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown && !isDouble, true));
                             break;

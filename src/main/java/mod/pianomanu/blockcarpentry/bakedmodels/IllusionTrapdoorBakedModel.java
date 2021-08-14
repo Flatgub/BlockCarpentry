@@ -8,16 +8,16 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.state.properties.Half;
 import net.minecraft.util.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -64,17 +64,17 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int rotation = extraData.getData(FrameBlockTile.ROTATION);
             List<BakedQuad> quads = new ArrayList<>();
-            Direction dir = state.get(DoorFrameBlock.FACING);
-            boolean open = state.get(TrapdoorFrameBlock.OPEN);
-            Half half = state.get(TrapDoorBlock.HALF);
+            Direction dir = state.getValue(DoorFrameBlock.FACING);
+            boolean open = state.getValue(TrapdoorFrameBlock.OPEN);
+            Half half = state.getValue(TrapDoorBlock.HALF);
             Half top = Half.TOP;
             Half bottom = Half.BOTTOM;
             Direction west = Direction.WEST;
             Direction east = Direction.EAST;
             Direction north = Direction.NORTH;
             Direction south = Direction.SOUTH;
-            int design = extraData.getData(FrameBlockTile.DESIGN);//int design = state.get(DoorFrameBlock.DESIGN);
-            int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE); //state.get(DoorFrameBlock.DESIGN_TEXTURE);
+            int design = extraData.getData(FrameBlockTile.DESIGN);//int design = state.getValue(DoorFrameBlock.DESIGN);
+            int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE); //state.getValue(DoorFrameBlock.DESIGN_TEXTURE);
 
             if (design == 0 || design == 1) {
                 if (dir == north && open) {

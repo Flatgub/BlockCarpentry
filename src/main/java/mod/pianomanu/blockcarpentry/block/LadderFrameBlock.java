@@ -7,25 +7,21 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.core.BlockPos;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,11 +42,11 @@ public class LadderFrameBlock extends LadderBlock {
 
     public LadderFrameBlock(Properties builder) {
         super(builder);
-        this.registerDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, Boolean.FALSE).with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0));
+        this.registerDefaultState(this.stateContainer.getBaseState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, Boolean.FALSE).setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, 0));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
@@ -68,9 +64,9 @@ public class LadderFrameBlock extends LadderBlock {
     @Override
     @Nonnull
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(@Nullable BlockState state, World world, @Nullable BlockPos pos, PlayerEntity player, @Nullable Hand hand, @Nullable BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(Objects.requireNonNull(hand));
-        if (!world.isRemote && state != null && pos != null) {
+    public InteractionResult use(@Nullable BlockState state, World world, @Nullable BlockPos pos, PlayerEntity player, @Nullable Hand hand, @Nullable BlockRayTraceResult trace) {
+        ItemStack item = player.getItemInHand(Objects.requireNonNull(hand));
+        if (!world.isClientSide && state != null && pos != null) {
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             BlockAppearanceHelper.setDesign(world, pos, player, item);
@@ -78,32 +74,32 @@ public class LadderFrameBlock extends LadderBlock {
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
             BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
-                if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                    return ActionResultType.PASS;
+                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = world.getBlockEntity(pos);
-                int count = player.getHeldItem(hand).getCount();
+                int count = player.getItemInHand(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
+                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())
-                        player.getHeldItem(hand).setCount(count - 1);
+                        player.getItemInHand(hand).setCount(count - 1);
 
                 }
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
                 if (!player.isCreative())
                     this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
+                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+                world.setBlock(pos, state, 2);
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
+        if (!worldIn.isClientSide) {
             BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
                 FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
@@ -113,12 +109,12 @@ public class LadderFrameBlock extends LadderBlock {
                     frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d1 = (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
                     double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
+                    itementity.setDefaultPickUpDelay();
+                    worldIn.addFreshEntity(itementity);
                     frameBlockEntity.clear();
                 }
             }
@@ -131,7 +127,7 @@ public class LadderFrameBlock extends LadderBlock {
             FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
             frameBlockEntity.clear();
             frameBlockEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            worldIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
 
@@ -147,10 +143,10 @@ public class LadderFrameBlock extends LadderBlock {
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        if (state.get(LIGHT_LEVEL) > 15) {
+        if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 
     @Override

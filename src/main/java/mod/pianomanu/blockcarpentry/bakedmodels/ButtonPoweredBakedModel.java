@@ -5,17 +5,17 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.WoodButtonBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.WoodButtonBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -79,14 +79,14 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             float yl = 0f;
             float yh = 1 / 16f;
-            if (state.get(WoodButtonBlock.FACE).equals(AttachFace.CEILING)) {
+            if (state.getValue(WoodButtonBlock.FACE).equals(AttachFace.CEILING)) {
                 yl = 15 / 16f;
                 yh = 1f;
             }
             List<BakedQuad> quads = new ArrayList<>();
-            switch (state.get(WoodButtonBlock.FACE)) {
+            switch (state.getValue(WoodButtonBlock.FACE)) {
                 case WALL:
-                    switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(WoodButtonBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                             quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 15 / 16f, 1f, texture, tintIndex));
                             break;
@@ -103,7 +103,7 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                     break;
                 case FLOOR:
                 case CEILING:
-                    switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(WoodButtonBlock.HORIZONTAL_FACING)) {
                         case EAST:
                         case WEST:
                             quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, texture, tintIndex));
@@ -116,9 +116,9 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                switch (state.get(WoodButtonBlock.FACE)) {
+                switch (state.getValue(WoodButtonBlock.FACE)) {
                     case WALL:
-                        switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                        switch (state.getValue(WoodButtonBlock.HORIZONTAL_FACING)) {
                             case NORTH:
                                 quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 15 / 16f, 1f, overlayIndex));
                                 break;
@@ -135,7 +135,7 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                         break;
                     case FLOOR:
                     case CEILING:
-                        switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                        switch (state.getValue(WoodButtonBlock.HORIZONTAL_FACING)) {
                             case EAST:
                             case WEST:
                                 quads.addAll(ModelHelper.createOverlay(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, overlayIndex));

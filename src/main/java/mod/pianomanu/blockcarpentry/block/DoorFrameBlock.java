@@ -7,26 +7,23 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.state.StateContainer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.World;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -45,10 +42,10 @@ public class DoorFrameBlock extends DoorBlock {
 
     public DoorFrameBlock(Properties builder) {
         super(builder);
-        this.registerDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(OPEN, Boolean.valueOf(false)).with(HINGE, DoorHingeSide.LEFT).with(POWERED, Boolean.valueOf(false)).with(HALF, DoubleBlockHalf.LOWER).with(LIGHT_LEVEL, 0));
+        this.registerDefaultState(this.stateContainer.getBaseState().setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(FACING, Direction.NORTH).setValue(OPEN, Boolean.valueOf(false)).setValue(HINGE, DoorHingeSide.LEFT).setValue(POWERED, Boolean.valueOf(false)).setValue(HALF, DoubleBlockHalf.LOWER).setValue(LIGHT_LEVEL, 0));
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(CONTAINS_BLOCK, FACING, OPEN, HINGE, POWERED, HALF, LIGHT_LEVEL);
     }
 
@@ -64,40 +61,40 @@ public class DoorFrameBlock extends DoorBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
+        ItemStack item = player.getItemInHand(hand);
+        if (!world.isClientSide) {
             if (item.getItem() instanceof BlockItem) {
                 if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                    return ActionResultType.PASS;
+                    return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = world.getBlockEntity(pos);
-                int count = player.getHeldItem(hand).getCount();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
+                int count = player.getItemInHand(hand).getCount();
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.getValue(CONTAINS_BLOCK)) {
 
                     ((FrameBlockTile) tileEntity).clear();
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
+                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())
-                        player.getHeldItem(hand).setCount(count - 1);
-                    return ActionResultType.SUCCESS;
+                        player.getItemInHand(hand).setCount(count - 1);
+                    return InteractionResult.SUCCESS;
                 }
             }
             if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                if (state.get(DoorBlock.OPEN)) {
-                    state = state.with(OPEN, false);
+                if (state.getValue(DoorBlock.OPEN)) {
+                    state = state.setValue(OPEN, false);
                 } else {
-                    state = state.with(OPEN, true);
+                    state = state.setValue(OPEN, true);
                 }
-                world.setBlockState(pos, state, 10);
-                world.playEvent(null, state.get(OPEN) ? 1006 : 1012, pos, 0);
+                world.setBlock(pos, state, 10);
+                world.playEvent(null, state.getValue(OPEN) ? 1006 : 1012, pos, 0);
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
                 if (!player.isCreative())
                     this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
+                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+                world.setBlock(pos, state, 2);
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
@@ -107,11 +104,11 @@ public class DoorFrameBlock extends DoorBlock {
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
             BlockAppearanceHelper.setRotation(world, pos, player, item);
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     private void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
+        if (!worldIn.isClientSide) {
             BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
                 FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
@@ -121,12 +118,12 @@ public class DoorFrameBlock extends DoorBlock {
                     frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d1 = (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
                     double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
+                    itementity.setDefaultPickUpDelay();
+                    worldIn.addFreshEntity(itementity);
                     frameBlockEntity.clear();
                 }
             }
@@ -139,7 +136,7 @@ public class DoorFrameBlock extends DoorBlock {
             FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
             frameBlockEntity.clear();
             frameBlockEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            worldIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
 
@@ -155,10 +152,10 @@ public class DoorFrameBlock extends DoorBlock {
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        if (state.get(LIGHT_LEVEL) > 15) {
+        if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 }
 //========SOLI DEO GLORIA========//

@@ -6,15 +6,15 @@ import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -98,7 +98,7 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
             else texture_2 = null;
             int tintIndex_1 = BlockAppearanceHelper.setTintIndex(mimic_1);
             int tintIndex_2 = mimic_2 == null ? -1 : BlockAppearanceHelper.setTintIndex(mimic_2);
-            boolean isDouble = state.get(SixWaySlabFrameBlock.DOUBLE_SLAB);
+            boolean isDouble = state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB);
             boolean renderNorth = side == Direction.NORTH && extraData.getData(TwoBlocksFrameBlockTile.NORTH_VISIBLE);
             boolean renderEast = side == Direction.EAST && extraData.getData(TwoBlocksFrameBlockTile.EAST_VISIBLE);
             boolean renderSouth = side == Direction.SOUTH && extraData.getData(TwoBlocksFrameBlockTile.SOUTH_VISIBLE);
@@ -106,7 +106,7 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
             boolean renderUp = side == Direction.UP && extraData.getData(TwoBlocksFrameBlockTile.UP_VISIBLE);
             boolean renderDown = side == Direction.DOWN && extraData.getData(TwoBlocksFrameBlockTile.DOWN_VISIBLE);
             List<BakedQuad> quads = new ArrayList<>();
-            switch (state.get(SixWaySlabFrameBlock.FACING)) {
+            switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                 case UP:
                     quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, texture_1, tintIndex_1, renderNorth, renderSouth, renderEast, renderWest, renderUp && !isDouble, renderDown));
                     break;
@@ -126,8 +126,8 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, texture_1, tintIndex_1, renderNorth, renderSouth, renderEast && !isDouble, renderWest, renderUp, renderDown));
                     break;
             }
-            if (state.get(SixWaySlabFrameBlock.DOUBLE_SLAB) && texture_2 != null) {
-                switch (state.get(SixWaySlabFrameBlock.FACING)) {
+            if (state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) && texture_2 != null) {
+                switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                     case UP:
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, texture_2, tintIndex_2, renderNorth, renderSouth, renderEast, renderWest, renderUp, false));
                         break;
@@ -150,7 +150,7 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex_1 = extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_1);
             if (extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_1) != 0) {
-                switch (state.get(SixWaySlabFrameBlock.FACING)) {
+                switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                     case UP:
                         quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp && !isDouble, renderDown, true));
                         break;
@@ -171,10 +171,10 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
                         break;
                 }
             }
-            if (state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+            if (state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                 int overlayIndex_2 = extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_2);
                 if (extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_2) != 0) {
-                    switch (state.get(SixWaySlabFrameBlock.FACING)) {
+                    switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                         case UP:
                             quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex_2, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown && !isDouble, true));
                             break;

@@ -4,9 +4,6 @@ import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.HorizontalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -15,8 +12,11 @@ import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.HorizontalBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -69,13 +69,13 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int rotation = extraData.getData(FrameBlockTile.ROTATION);
             float w = 0;
-            if (state.get(FenceGateBlock.IN_WALL)) {
+            if (state.getValue(FenceGateBlock.IN_WALL)) {
                 w = -3 / 16f;
             }
             List<BakedQuad> quads = new ArrayList<>();
             if (design == 0 || design == 3) {
-                if (state.get(FenceGateBlock.OPEN)) {
-                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                if (state.getValue(FenceGateBlock.OPEN)) {
+                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -130,7 +130,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                             break;
                     }
                 } else {
-                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                         case SOUTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -151,8 +151,8 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 1) {
-                if (state.get(FenceGateBlock.OPEN)) {
-                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                if (state.getValue(FenceGateBlock.OPEN)) {
+                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -191,7 +191,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                             break;
                     }
                 } else {
-                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                         case SOUTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -210,8 +210,8 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 2) {
-                if (state.get(FenceGateBlock.OPEN)) {
-                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                if (state.getValue(FenceGateBlock.OPEN)) {
+                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -258,7 +258,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                             break;
                     }
                 } else {
-                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                         case SOUTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -279,7 +279,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 3) {
-                switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                     case NORTH:
                     case SOUTH:
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 0f, 1f, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -295,11 +295,11 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
             if (design == 4) {
                 //inverts gate height when connected with walls
                 w = -3 / 16f;
-                if (state.get(FenceGateBlock.IN_WALL)) {
+                if (state.getValue(FenceGateBlock.IN_WALL)) {
                     w = 0;
                 }
-                if (state.get(FenceGateBlock.OPEN)) {
-                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                if (state.getValue(FenceGateBlock.OPEN)) {
+                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -354,7 +354,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
                             break;
                     }
                 } else {
-                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
+                    switch (state.getValue(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
                         case SOUTH:
                             quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));

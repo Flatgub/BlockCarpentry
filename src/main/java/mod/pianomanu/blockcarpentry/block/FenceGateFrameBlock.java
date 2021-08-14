@@ -6,27 +6,24 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.IWaterLoggable;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.World;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.IWaterLoggable;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -45,11 +42,11 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggable {
     public FenceGateFrameBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateContainer.getBaseState().with(OPEN, Boolean.FALSE).with(POWERED, Boolean.FALSE).with(IN_WALL, Boolean.FALSE).with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0).with(WATERLOGGED, false));
+        this.registerDefaultState(this.stateContainer.getBaseState().setValue(OPEN, Boolean.FALSE).setValue(POWERED, Boolean.FALSE).setValue(IN_WALL, Boolean.FALSE).setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(WATERLOGGED, HORIZONTAL_FACING, OPEN, POWERED, IN_WALL, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
@@ -65,46 +62,46 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
-            if ((state.get(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
-                if (state.get(OPEN)) {
-                    state = state.with(OPEN, Boolean.FALSE);
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
+        ItemStack item = player.getItemInHand(hand);
+        if (!world.isClientSide) {
+            if ((state.getValue(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
+                if (state.getValue(OPEN)) {
+                    state = state.setValue(OPEN, Boolean.FALSE);
                 } else {
                     Direction direction = player.getHorizontalFacing();
-                    if (state.get(HORIZONTAL_FACING) == direction.getOpposite()) {
-                        state = state.with(HORIZONTAL_FACING, direction);
+                    if (state.getValue(HORIZONTAL_FACING) == direction.getOpposite()) {
+                        state = state.setValue(HORIZONTAL_FACING, direction);
                     }
-                    state = state.with(OPEN, Boolean.TRUE);
+                    state = state.setValue(OPEN, Boolean.TRUE);
                 }
-                world.setBlockState(pos, state, 10);
-                world.playEvent(player, state.get(OPEN) ? 1008 : 1014, pos, 0);
-                //return ActionResultType.SUCCESS;
+                world.setBlock(pos, state, 10);
+                world.playEvent(player, state.getValue(OPEN) ? 1008 : 1014, pos, 0);
+                //return InteractionResult.SUCCESS;
             } else {
                 if (item.getItem() instanceof BlockItem) {
                     if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                        return ActionResultType.PASS;
+                        return InteractionResult.PASS;
                     }
                     BlockEntity tileEntity = world.getBlockEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
+                    int count = player.getItemInHand(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
                         ((FrameBlockTile) tileEntity).clear();
-                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
+                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                         insertBlock(world, pos, state, handBlockState);
                         if (!player.isCreative())
-                            player.getHeldItem(hand).setCount(count - 1);
+                            player.getItemInHand(hand).setCount(count - 1);
 
                     }
                 }
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
                 if (!player.isCreative())
                     this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
+                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+                world.setBlock(pos, state, 2);
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
@@ -112,11 +109,11 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setRotation(world, pos, player, item);
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
+        if (!worldIn.isClientSide) {
             BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
                 FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
@@ -126,12 +123,12 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
                     frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d1 = (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
                     double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
+                    itementity.setDefaultPickUpDelay();
+                    worldIn.addFreshEntity(itementity);
                     frameBlockEntity.clear();
                 }
             }
@@ -144,7 +141,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
             FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
             frameBlockEntity.clear();
             frameBlockEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            worldIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
 
@@ -160,16 +157,16 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        if (state.get(LIGHT_LEVEL) > 15) {
+        if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
@@ -182,12 +179,12 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos blockpos = context.getPos();
         FluidState fluidstate = context.getWorld().getFluidState(blockpos);
         BlockState state = super.getStateForPlacement(context);
         if (fluidstate.getFluid() == Fluids.WATER) {
-            return Objects.requireNonNull(state).with(WATERLOGGED, fluidstate.isSource());
+            return Objects.requireNonNull(state).setValue(WATERLOGGED, fluidstate.isSource());
         } else {
             return state;
         }
