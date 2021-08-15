@@ -3,8 +3,11 @@ package mod.pianomanu.blockcarpentry.tileentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -14,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
 
@@ -141,8 +145,8 @@ public class BedFrameTile extends BlockEntity {
     }
 
     //TODO
-    /*@Override
-    public void onDataPacket(NetworkManager net, SUpdateBlockEntityPacket pkt) {
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         BlockState oldMimic = mimic;
         Integer oldTexture = texture;
         Integer oldPillow = pillowColor;
@@ -150,7 +154,7 @@ public class BedFrameTile extends BlockEntity {
         Integer oldDesign = design;
         Integer oldDesignTexture = designTexture;
         Integer oldRotation = rotation;
-        CompoundTag tag = pkt.getNbtCompound();
+        CompoundTag tag = pkt.getTag();
         if (tag.contains("mimic")) {
             mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
@@ -200,7 +204,7 @@ public class BedFrameTile extends BlockEntity {
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
-    }*/
+    }
 
     @Nonnull
     @Override

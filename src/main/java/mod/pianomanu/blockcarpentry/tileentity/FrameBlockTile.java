@@ -4,12 +4,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
 
@@ -28,7 +32,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * @author PianoManu
  * @version 1.0 08/15/21
  */
-public class FrameBlockTile extends BlockEntity {
+public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
@@ -207,8 +211,8 @@ public class FrameBlockTile extends BlockEntity {
     }
 
     //TODO
-    /*@Override
-    public void onDataPacket(NetworkManager net, SUpdateBlockEntityPacket pkt) {
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         BlockState oldMimic = mimic;
         Integer oldTexture = texture;
         Integer oldDesign = design;
@@ -216,7 +220,7 @@ public class FrameBlockTile extends BlockEntity {
         Integer oldGlassColor = glassColor;
         Integer oldOverlay = overlay;
         Integer oldRotation = rotation;
-        CompoundTag tag = pkt.getNbtCompound();
+        CompoundTag tag = pkt.getTag();
         if (tag.contains("mimic")) {
             mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
@@ -266,7 +270,7 @@ public class FrameBlockTile extends BlockEntity {
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
-    }*/
+    }
 
     @Nonnull
     @Override
