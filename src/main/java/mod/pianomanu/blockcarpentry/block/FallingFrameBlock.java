@@ -1,43 +1,15 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.tileentity.FallingFrameBlockTile;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.entity.item.FallingBlockEntity;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.server.ServerWorld;
-
-import javax.annotation.Nullable;
-import java.util.Random;
-
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
-
 /**
  * Nothing important to see here, this class is currently unused, visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 10/06/20
+ * @version 1.0 08/15/21
  */
-public class FallingFrameBlock extends FallingBlock {
+public class FallingFrameBlock {//extends FallingBlock {
 
     //TODO fix falling block losing tile entity
-    public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
+    /*public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     //public static final BlockContainerProperty CONTAINS = BCBlockStateProperties.CONTAINS;
 
     public FallingFrameBlock(Properties properties) {
@@ -56,8 +28,8 @@ public class FallingFrameBlock extends FallingBlock {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FrameBlockTile(pos, state);
     }
 
     @Override
@@ -93,7 +65,7 @@ public class FallingFrameBlock extends FallingBlock {
         return InteractionResult.SUCCESS;
     }
 
-    private void dropContainedBlock(World worldIn, BlockPos pos) {
+    private void dropContainedBlock(Level worldIn, BlockPos pos) {
         if (!worldIn.isClientSide) {
             BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
@@ -103,9 +75,9 @@ public class FallingFrameBlock extends FallingBlock {
                     worldIn.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d0 = (double) (worldIn.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (worldIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (worldIn.random.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickUpDelay();
@@ -116,7 +88,7 @@ public class FallingFrameBlock extends FallingBlock {
         }
     }
 
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
+    public void insertBlock(Level worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
         BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof FrameBlockTile) {
             FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
@@ -128,11 +100,11 @@ public class FallingFrameBlock extends FallingBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level levelIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             dropContainedBlock(worldIn, pos);
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
@@ -166,11 +138,11 @@ public class FallingFrameBlock extends FallingBlock {
     }
 
     @Override
-    public int getLightEmission(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.getValue(LIGHT_LEVEL);
-    }
+    }*/
 }
 //========SOLI DEO GLORIA========//

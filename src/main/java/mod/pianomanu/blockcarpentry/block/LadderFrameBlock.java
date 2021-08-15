@@ -9,19 +9,23 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,14 +39,14 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 05/01/21
+ * @version 1.0 08/15/21
  */
-public class LadderFrameBlock extends LadderBlock {
+public class LadderFrameBlock extends LadderBlock implements EntityBlock {
     //public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
 
     public LadderFrameBlock(Properties builder) {
         super(builder);
-        this.registerDefaultState(this.stateContainer.getBaseState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, Boolean.FALSE).setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, Boolean.FALSE).setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, 0));
     }
 
     @Override
@@ -50,39 +54,39 @@ public class LadderFrameBlock extends LadderBlock {
         builder.add(FACING, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
-    @Override
+    /*@Override
     public boolean hasBlockEntity(BlockState state) {
         return true;
-    }
+    }*/
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FrameBlockTile(pos, state);
     }
 
     @Override
     @Nonnull
     @SuppressWarnings("deprecation")
-    public InteractionResult use(@Nullable BlockState state, World world, @Nullable BlockPos pos, Player player, @Nullable Hand hand, @Nullable BlockRayTraceResult trace) {
+    public InteractionResult use(@Nullable BlockState state, Level level, @Nullable BlockPos pos, Player player, @Nullable InteractionHand hand, @Nullable BlockHitResult hitResult) {
         ItemStack item = player.getItemInHand(Objects.requireNonNull(hand));
-        if (!world.isClientSide && state != null && pos != null) {
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
+        if (!level.isClientSide && state != null && pos != null) {
+            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
+            BlockAppearanceHelper.setDesign(level, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
+            BlockAppearanceHelper.setOverlay(level, pos, player, item);
+            BlockAppearanceHelper.setRotation(level, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return InteractionResult.PASS;
                 }
-                BlockEntity tileEntity = world.getBlockEntity(pos);
+                BlockEntity tileEntity = level.getBlockEntity(pos);
                 int count = player.getItemInHand(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
-                    insertBlock(world, pos, state, handBlockState);
+                    insertBlock(level, pos, state, handBlockState);
                     if (!player.isCreative())
                         player.getItemInHand(hand).setCount(count - 1);
 
@@ -90,59 +94,59 @@ public class LadderFrameBlock extends LadderBlock {
             }
             if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
                 if (!player.isCreative())
-                    this.dropContainedBlock(world, pos);
+                    this.dropContainedBlock(level, pos);
                 state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlock(pos, state, 2);
+                level.setBlock(pos, state, 2);
             }
         }
         return InteractionResult.SUCCESS;
     }
 
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isClientSide) {
-            BlockEntity tileentity = worldIn.getBlockEntity(pos);
+    protected void dropContainedBlock(Level levelIn, BlockPos pos) {
+        if (!levelIn.isClientSide) {
+            BlockEntity tileentity = levelIn.getBlockEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
                 FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.levelEvent(1010, pos, 0);
+                    levelIn.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d0 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (levelIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
+                    ItemEntity itementity = new ItemEntity(levelIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickUpDelay();
-                    worldIn.addFreshEntity(itementity);
+                    levelIn.addFreshEntity(itementity);
                     frameBlockEntity.clear();
                 }
             }
         }
     }
 
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+    public void insertBlock(Level levelIn, BlockPos pos, BlockState state, BlockState handBlock) {
+        BlockEntity tileentity = levelIn.getBlockEntity(pos);
         if (tileentity instanceof FrameBlockTile) {
             FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
             frameBlockEntity.clear();
             frameBlockEntity.setMimic(handBlock);
-            worldIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onReplaced(BlockState state, @Nullable World worldIn, @Nullable BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, @Nullable Level levelIn, @Nullable BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            dropContainedBlock(Objects.requireNonNull(worldIn), pos);
+            dropContainedBlock(Objects.requireNonNull(levelIn), pos);
 
-            super.onReplaced(state, worldIn, Objects.requireNonNull(pos), newState, isMoving);
+            super.onRemove(state, levelIn, Objects.requireNonNull(pos), newState, isMoving);
         }
     }
 
     @Override
-    public int getLightEmission(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
@@ -150,7 +154,7 @@ public class LadderFrameBlock extends LadderBlock {
     }
 
     @Override
-    public boolean isLadder(@Nullable BlockState state, @Nullable IWorldReader world, @Nullable BlockPos pos, @Nullable LivingEntity entity) {
+    public boolean isLadder(@Nullable BlockState state, @Nullable LevelReader level, @Nullable BlockPos pos, @Nullable LivingEntity entity) {
         return true;
     }
 }

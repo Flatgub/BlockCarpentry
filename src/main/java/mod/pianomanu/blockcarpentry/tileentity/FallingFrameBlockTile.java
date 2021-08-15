@@ -2,10 +2,11 @@ package mod.pianomanu.blockcarpentry.tileentity;
 
 /**
  * Currently unused - BlockEntity for falling blocks, which are not implemented right now (may be removed or rewritten in future)
+ *
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.0 08/15/21
  */
-public class FallingFrameBlockTile extends FrameBlockTile {
+public class FallingFrameBlockTile {//extends FrameBlockTile {
     /*public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
 
     private BlockState mimic;

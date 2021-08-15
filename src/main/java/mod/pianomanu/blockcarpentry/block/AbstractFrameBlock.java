@@ -35,7 +35,7 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.0 06/06/21
+ * @version 1.0 08/15/21
  */
 public abstract class AbstractFrameBlock extends BaseEntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -49,7 +49,7 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock {
         return true;
     }
 
-    //public abstract BlockEntity newBlockEntity(BlockState state, IBlockReader world);
+    //public abstract BlockEntity newBlockEntity(BlockState state, BlockGetter world);
 
     @Override
     @SuppressWarnings("deprecation")

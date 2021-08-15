@@ -1,27 +1,14 @@
 package mod.pianomanu.blockcarpentry.container;
 
-import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
-import java.util.Objects;
-
 /**
  * Here you can find all information about the Chest Illusion Container, like number of slots and stored itemStacks
  *
  * @author PianoManu
- * @version 1.0 09/22/20
+ * @version 1.0 08/15/21
  */
-public class IllusionChestContainer extends Container {
+public class IllusionChestContainer {//extends Container {
 
-    public final ChestFrameBlockEntity tileEntity;
+    /*public final ChestFrameBlockEntity tileEntity;
     private final IWorldPosCallable canInteractWithCallable;
 
     public IllusionChestContainer(final int windowId, final PlayerInventory playerInventory, final ChestFrameBlockEntity tileEntity) {
@@ -97,6 +84,6 @@ public class IllusionChestContainer extends Container {
             }
         }
         return itemStack;
-    }
+    }*/
 }
 //========SOLI DEO GLORIA========//

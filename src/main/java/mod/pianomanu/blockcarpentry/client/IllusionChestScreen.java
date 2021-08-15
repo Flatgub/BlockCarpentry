@@ -1,13 +1,5 @@
 package mod.pianomanu.blockcarpentry.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import mod.pianomanu.blockcarpentry.container.IllusionChestContainer;
-import net.minecraft.client.gui.IHasContainer;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,16 +9,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * The constructor sets values like the vertical size, rows of the chest and where to put the title
  *
  * @author PianoManu
- * @version 1.0 09/22/20
+ * @version 1.0 08/15/21
  */
 @OnlyIn(Dist.CLIENT)
-public class IllusionChestScreen extends ContainerScreen<IllusionChestContainer> implements IHasContainer<IllusionChestContainer> {
+public class IllusionChestScreen {//extends ContainerScreen<IllusionChestContainer> implements IHasContainer<IllusionChestContainer> {
     /** The ResourceLocation containing the chest GUI texture. */
-    private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
+    //private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
     /** Window height is calculated with these values; the more rows, the higher */
-    private final int inventoryRows;
+    //private final int inventoryRows;
 
-    public IllusionChestScreen(IllusionChestContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+    /*public IllusionChestScreen(IllusionChestContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
         this.passEvents = false;
         int i = 222;
@@ -58,6 +50,6 @@ public class IllusionChestScreen extends ContainerScreen<IllusionChestContainer>
         int j = (this.height - this.ySize) / 2;
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.inventoryRows * 18 + 17);
         this.blit(matrixStack, i, j + this.inventoryRows * 18 + 17, 0, 126, this.xSize, 96);
-    }
+    }*/
 }
 //========SOLI DEO GLORIA========//

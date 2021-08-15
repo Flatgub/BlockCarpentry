@@ -9,24 +9,29 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockRenderType;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
@@ -38,7 +43,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 05/27/21
+ * @version 1.0 08/15/21
  */
 public class BedFrameBlock extends BedBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -49,57 +54,57 @@ public class BedFrameBlock extends BedBlock {
 
     public BedFrameBlock(DyeColor colorIn, Properties properties) {
         super(colorIn, properties);
-        this.registerDefaultState(this.stateContainer.getBaseState().setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, 0).setValue(PART, BedPart.FOOT).setValue(OCCUPIED, Boolean.valueOf(false)).setValue(HORIZONTAL_FACING, Direction.NORTH));//.setValue(TEXTURE,0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(CONTAINS_BLOCK, false).setValue(LIGHT_LEVEL, 0).setValue(PART, BedPart.FOOT).setValue(OCCUPIED, Boolean.valueOf(false)).setValue(HORIZONTAL_FACING, Direction.NORTH));//.setValue(TEXTURE,0));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(CONTAINS_BLOCK, LIGHT_LEVEL, PART, OCCUPIED, HORIZONTAL_FACING);//, TEXTURE);
     }
 
-    @Override
+    /*@Override
     public boolean hasBlockEntity(BlockState state) {
         return true;
-    }
+    }*/
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockState state, IBlockReader world) {
-        return new BedFrameTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BedFrameTile(pos, state);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
-        if (!world.isClientSide) {
-            if ((state.getValue(CONTAINS_BLOCK) && !item.getItem().is(Tags.Items.DYES) && !item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) || item.isEmpty()) {
+        if (!level.isClientSide) {
+            if ((state.getValue(CONTAINS_BLOCK) && !item.is(Tags.Items.DYES) && !item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) || item.isEmpty()) {
                 //Taken from BedBlock, should work similar to vanilla beds
                 if (state.getValue(PART) != BedPart.HEAD) {
-                    pos = pos.offset(state.getValue(HORIZONTAL_FACING));
-                    state = world.getBlockState(pos);
+                    pos = pos.relative(state.getValue(HORIZONTAL_FACING));
+                    state = level.getBlockState(pos);
                     if (!state.is(this)) {
                         return InteractionResult.CONSUME;
                     }
                 }
 
-                if (!func_235330_a_(world)) {
-                    world.removeBlock(pos, false);
-                    BlockPos blockpos = pos.offset(state.getValue(HORIZONTAL_FACING).getOpposite());
-                    if (world.getBlockState(blockpos).is(this)) {
-                        world.removeBlock(blockpos, false);
+                if (!canSetSpawn(level)) {
+                    level.removeBlock(pos, false);
+                    BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite());
+                    if (level.getBlockState(blockpos).is(this)) {
+                        level.removeBlock(blockpos, false);
                     }
 
-                    world.createExplosion((Entity) null, DamageSource.func_233546_a_(), (ExplosionContext) null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+                    level.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.BlockInteraction.DESTROY);
                     return InteractionResult.SUCCESS;
                 } else if (state.getValue(OCCUPIED)) {
-                    if (!this.func_226861_a_(world, pos)) {
+                    if (!this.kickVillagerOutOfBed(level, pos)) {
                         player.displayClientMessage(new TranslatableComponent("block.minecraft.bed.occupied"), true);
                     }
 
                     return InteractionResult.SUCCESS;
                 } else {
-                    player.trySleep(pos).ifLeft((p_220173_1_) -> {
-                        if (p_220173_1_ != null) {
-                            player.displayClientMessage(p_220173_1_.getMessage(), true);
+                    player.startSleepInBed(pos).ifLeft((comp) -> {
+                        if (comp != null) {
+                            player.displayClientMessage(comp.getMessage(), true);
                         }
 
                     });
@@ -107,20 +112,20 @@ public class BedFrameBlock extends BedBlock {
                 }
             }
             if (state.getValue(CONTAINS_BLOCK) && player.isCrouching()) {
-                this.dropContainedBlock(world, pos);
+                this.dropContainedBlock(level, pos);
                 state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlock(pos, state, 2);
+                level.setBlock(pos, state, 2);
             } else {
                 if (item.getItem() instanceof BlockItem) {
                     if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                         return InteractionResult.PASS;
                     }
-                    BlockEntity tileEntity = world.getBlockEntity(pos);
+                    BlockEntity tileEntity = level.getBlockEntity(pos);
                     int count = player.getItemInHand(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
                     if (tileEntity instanceof BedFrameTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
-                        insertBlock(world, pos, state, handBlockState);
+                        insertBlock(level, pos, state, handBlockState);
                         if (!player.isCreative())
                             player.getItemInHand(hand).setCount(count - 1);
                     }
@@ -128,76 +133,76 @@ public class BedFrameBlock extends BedBlock {
             }
             if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
                 if (!player.isCreative())
-                    this.dropContainedBlock(world, pos);
+                    this.dropContainedBlock(level, pos);
                 state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlock(pos, state, 2);
+                level.setBlock(pos, state, 2);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setWoolColor(world, pos, player, hand);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
+            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
+            BlockAppearanceHelper.setDesign(level, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
+            BlockAppearanceHelper.setWoolColor(level, pos, player, hand);
+            BlockAppearanceHelper.setOverlay(level, pos, player, item);
+            BlockAppearanceHelper.setRotation(level, pos, player, item);
         }
         return InteractionResult.SUCCESS;
     }
 
-    private boolean func_226861_a_(World world, BlockPos pos) {
-        List<VillagerEntity> list = world.getEntitiesWithinAABB(VillagerEntity.class, new AxisAlignedBB(pos), LivingEntity::isSleeping);
+    private boolean kickVillagerOutOfBed(Level level, BlockPos pos) {
+        List<Villager> list = level.getEntitiesOfClass(Villager.class, new AABB(pos), LivingEntity::isSleeping);
         if (list.isEmpty()) {
             return false;
         } else {
-            list.get(0).wakeUp();
+            list.get(0).stopSleeping();
             return true;
         }
     }
 
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isClientSide) {
-            BlockEntity tileentity = worldIn.getBlockEntity(pos);
+    protected void dropContainedBlock(Level levelIn, BlockPos pos) {
+        if (!levelIn.isClientSide) {
+            BlockEntity tileentity = levelIn.getBlockEntity(pos);
             if (tileentity instanceof BedFrameTile) {
                 BedFrameTile frameBlockEntity = (BedFrameTile) tileentity;
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.levelEvent(1010, pos, 0);
+                    levelIn.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d0 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (levelIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
+                    ItemEntity itementity = new ItemEntity(levelIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickUpDelay();
-                    worldIn.addFreshEntity(itementity);
+                    levelIn.addFreshEntity(itementity);
                 }
                 frameBlockEntity.clear();
             }
         }
     }
 
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+    public void insertBlock(Level levelIn, BlockPos pos, BlockState state, BlockState handBlock) {
+        BlockEntity tileentity = levelIn.getBlockEntity(pos);
         if (tileentity instanceof BedFrameTile) {
             BedFrameTile frameBlockEntity = (BedFrameTile) tileentity;
             frameBlockEntity.clear();
             frameBlockEntity.setMimic(handBlock);
-            worldIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level levelIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            dropContainedBlock(worldIn, pos);
+            dropContainedBlock(levelIn, pos);
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, levelIn, pos, newState, isMoving);
         }
     }
 
     @Override
-    public int getLightEmission(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
@@ -206,8 +211,8 @@ public class BedFrameBlock extends BedBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 }
 //========SOLI DEO GLORIA========//

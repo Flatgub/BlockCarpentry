@@ -44,7 +44,7 @@ import java.util.Objects;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.9 06/06/21
+ * @version 1.0 08/15/21
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock {
@@ -91,10 +91,10 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
      * @param state regardless of its state, it always has a BlockEntity
      * @return regardless of its state, it always has a BlockEntity -> returns true every time
      */
-    @Override
+    /*@Override
     public boolean hasBlockEntity(BlockState state) {
         return true;
-    }
+    }*/
 
     /**
      * When placed, this method is called and a new FrameBlockTile is created
@@ -107,7 +107,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new FrameBlockTile();
+        return new FrameBlockTile(pos, state);
     }
 
     /**

@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.block.ChestFrameBlock;
 import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -35,8 +36,9 @@ import javax.annotation.Nullable;
 /**
  * BlockEntity for {@link mod.pianomanu.blockcarpentry.block.ChestFrameBlock} and all sorts of frame/illusion chest blocks
  * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
+ *
  * @author PianoManu
- * @version 1.2 05/01/21
+ * @version 1.0 08/15/21
  */
 public class ChestFrameBlockEntity extends ChestBlockEntity {
 
@@ -45,12 +47,15 @@ public class ChestFrameBlockEntity extends ChestBlockEntity {
      * The number of players currently using this chest
      */
     protected int numPlayersUsing;
-    privatefinal IItemHandlerModifiable
-    items = createHandler();
+    private final IItemHandlerModifiable items = createHandler();
     private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
 
     public ChestFrameBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
+    }
+
+    public ChestFrameBlockEntity(BlockPos pos, BlockState state) {
+        super(Registration.CHEST_FRAME_TILE.get(), pos, state);
     }
 
     /*public ChestFrameBlockEntity() {
@@ -113,7 +118,7 @@ public class ChestFrameBlockEntity extends ChestBlockEntity {
 
     @Override
     protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
-        return new ChestFrameContainer(id, inventory, this);
+        return ChestFrameContainer.createFrameContainerMenu(id, inventory, this);
     }
 
     /*@Override

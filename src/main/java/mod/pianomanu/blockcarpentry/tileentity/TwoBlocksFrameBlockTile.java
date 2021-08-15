@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -26,7 +27,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.0 08/13/21
+ * @version 1.0 08/15/21
  */
 public class TwoBlocksFrameBlockTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
@@ -116,8 +117,8 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
         return dir;
     }
 
-    public TwoBlocksFrameBlockTile() {
-        super(SLAB_FRAME_TILE.get());
+    public TwoBlocksFrameBlockTile(BlockPos pos, BlockState state) {
+        super(SLAB_FRAME_TILE.get(), pos, state);
     }
 
     private static Integer readInteger(CompoundTag tag) {
