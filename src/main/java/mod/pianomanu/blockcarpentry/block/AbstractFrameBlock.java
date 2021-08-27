@@ -9,10 +9,13 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
@@ -20,15 +23,20 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Basic class for frame blocks (WIP)
@@ -85,6 +93,35 @@ public abstract class AbstractFrameBlock extends Block {
             }
         }
         return ActionResultType.SUCCESS;
+    }
+
+
+    /*
+     * Used on post-place to see if we should automatically set the contained block
+     */
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        if(!worldIn.isRemote) {
+            if(placer != null & placer instanceof ServerPlayerEntity) {
+                ServerPlayerEntity player = (ServerPlayerEntity) placer;
+                ItemStack offhandStack = player.getHeldItemOffhand();
+                //ensure we have something and that its not one of our own blocks
+                if(offhandStack.getItem() instanceof BlockItem & Objects.requireNonNull(offhandStack.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    BlockItem offhandBlock = (BlockItem)offhandStack.getItem();
+                    TileEntity tileEntity = worldIn.getTileEntity(pos);
+                    int count = offhandStack.getCount();
+                    Block heldBlock = offhandBlock.getBlock();
+                    //ensure we have a tileent and that the offhand block is a valid frame candidate
+                    if (tileEntity instanceof FrameBlockTile && !offhandStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock)) {
+                        BlockState handBlockState = heldBlock.getDefaultState();
+                        insertBlock(worldIn, pos, state, handBlockState);
+                        if (!player.isCreative())
+                            offhandStack.setCount(count - 1); //TODO: this shouldn't always be - 1
+                    }
+                }
+            }
+        }
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     protected void dropContainedBlock(World worldIn, BlockPos pos) {
