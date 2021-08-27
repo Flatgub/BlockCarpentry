@@ -66,7 +66,9 @@ public class DaylightDetectorFrameTileEntity extends TileEntity implements ITick
     private Boolean downVisible = true;
 
     public DaylightDetectorFrameTileEntity() {
-        super(Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get());
+        //TODO: Absolutely fix the registration for this
+        //super(Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get());
+        super(null);
     }
 
     private static Integer readInteger(CompoundNBT tag) {
