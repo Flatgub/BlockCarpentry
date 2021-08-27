@@ -33,6 +33,19 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * @version 1.11 08/20/21
  */
 public class BlockAppearanceHelper {
+
+    /**
+     * Shorthand for applying all the appearance helpers at once
+     */
+    public static void setAppearanceDetails(World world, ItemStack item, BlockState state, BlockPos pos, PlayerEntity player, Hand hand ) {
+        BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+        BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+        BlockAppearanceHelper.setDesign(world, pos, player, item);
+        BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+        BlockAppearanceHelper.setOverlay(world, pos, player, item);
+        BlockAppearanceHelper.setRotation(world, pos, player, item);
+    }
+
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (item.getItem() == Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) < 13) {
             int count = player.getHeldItem(hand).getCount();

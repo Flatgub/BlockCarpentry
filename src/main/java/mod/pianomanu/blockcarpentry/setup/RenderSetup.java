@@ -14,6 +14,8 @@ import net.minecraft.client.renderer.RenderTypeLookup;
  */
 public class RenderSetup {
     public static void setup() {
+        //TODO: AAAAA UNDO ALL OF THIS, TRANSLUCENT SHOULD NOT BE ABUSED LIKE THIS
+        //TODO: make a custom model loader that submits quads only on the layer where it matters
         RenderTypeLookup.setRenderLayer(Registration.FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.SLAB_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.STAIRS_FRAMEBLOCK.get(), RenderType.getTranslucent());

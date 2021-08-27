@@ -7,6 +7,7 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.FramedBlockHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -64,28 +65,25 @@ public abstract class AbstractFrameBlock extends Block {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
-            if (item.getItem() instanceof BlockItem) {
-                if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                    return ActionResultType.PASS;
-                }
+            BlockAppearanceHelper.setAppearanceDetails(world, item, state, pos, player, hand);
+
+            //attempt to insert the ItemStack
+            if(FramedBlockHelper.isItemStackValidInsertCandidate(item)) {
+                if(state.get(CONTAINS_BLOCK)) { return ActionResultType.PASS; }
+
                 TileEntity tileEntity = world.getTileEntity(pos);
-                int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
+                if (tileEntity instanceof FrameBlockTile) {
+                    BlockState handBlockState = heldBlock.getDefaultState();
                     insertBlock(world, pos, state, handBlockState);
-                    if (!player.isCreative())
-                        player.getHeldItem(hand).setCount(count - 1);
+                    if (!player.isCreative()) {
+                        item.setCount(item.getCount() - 1);
+                    }
                 }
             }
+
             //hammer is needed to remove the block from the frame - you can change it in the config
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+            if (item.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 if (!player.isCreative())
                     this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
@@ -105,18 +103,15 @@ public abstract class AbstractFrameBlock extends Block {
             if(placer != null & placer instanceof ServerPlayerEntity) {
                 ServerPlayerEntity player = (ServerPlayerEntity) placer;
                 ItemStack offhandStack = player.getHeldItemOffhand();
-                //ensure we have something and that its not one of our own blocks
-                if(offhandStack.getItem() instanceof BlockItem & Objects.requireNonNull(offhandStack.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                if(FramedBlockHelper.isItemStackValidInsertCandidate(offhandStack)) {
                     BlockItem offhandBlock = (BlockItem)offhandStack.getItem();
                     TileEntity tileEntity = worldIn.getTileEntity(pos);
-                    int count = offhandStack.getCount();
-                    Block heldBlock = offhandBlock.getBlock();
-                    //ensure we have a tileent and that the offhand block is a valid frame candidate
-                    if (tileEntity instanceof FrameBlockTile && !offhandStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock)) {
-                        BlockState handBlockState = heldBlock.getDefaultState();
+                    if (tileEntity instanceof FrameBlockTile) {
+                        BlockState handBlockState =  offhandBlock.getBlock().getDefaultState();
                         insertBlock(worldIn, pos, state, handBlockState);
-                        if (!player.isCreative())
-                            offhandStack.setCount(count - 1); //TODO: this shouldn't always be - 1
+                        if (!player.isCreative()) {
+                            offhandStack.setCount(offhandStack.getCount() - 1); //TODO: this shouldn't always be - 1
+                        }
                     }
                 }
             }
