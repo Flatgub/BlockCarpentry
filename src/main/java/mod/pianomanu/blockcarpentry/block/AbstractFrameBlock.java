@@ -4,10 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import mod.pianomanu.blockcarpentry.util.FramedBlockHelper;
+import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -46,7 +43,7 @@ import java.util.UUID;
  * @author PianoManu
  * @version 1.0 06/06/21
  */
-public abstract class AbstractFrameBlock extends Block {
+public abstract class AbstractFrameBlock extends Block implements IFrameableBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
 
@@ -74,11 +71,7 @@ public abstract class AbstractFrameBlock extends Block {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
                 if (tileEntity instanceof FrameBlockTile) {
-                    BlockState handBlockState = heldBlock.getDefaultState();
-                    insertBlock(world, pos, state, handBlockState);
-                    if (!player.isCreative()) {
-                        item.setCount(item.getCount() - 1);
-                    }
+                    attemptInsertBlock(world, item, state, pos,player, hand);
                 }
             }
 
@@ -93,7 +86,6 @@ public abstract class AbstractFrameBlock extends Block {
         return ActionResultType.SUCCESS;
     }
 
-
     /*
      * Used on post-place to see if we should automatically set the contained block
      */
@@ -106,13 +98,11 @@ public abstract class AbstractFrameBlock extends Block {
                 if(FramedBlockHelper.isItemStackValidInsertCandidate(offhandStack)) {
                     BlockItem offhandBlock = (BlockItem)offhandStack.getItem();
                     TileEntity tileEntity = worldIn.getTileEntity(pos);
-                    if (tileEntity instanceof FrameBlockTile) {
-                        BlockState handBlockState =  offhandBlock.getBlock().getDefaultState();
-                        insertBlock(worldIn, pos, state, handBlockState);
-                        if (!player.isCreative()) {
-                            offhandStack.setCount(offhandStack.getCount() - 1); //TODO: this shouldn't always be - 1
-                        }
-                    }
+
+                    //TODO: this will always subtract 1 and it shouldn't
+                    //either that or we dont do this behaviour on doors.
+                    attemptInsertBlock(worldIn, offhandStack, state, pos, player, Hand.OFF_HAND);
+
                 }
             }
         }
@@ -141,17 +131,6 @@ public abstract class AbstractFrameBlock extends Block {
             }
         }
     }
-
-    protected void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
-        }
-    }
-
 
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
         if (state.get(LIGHT_LEVEL) > 15) {
