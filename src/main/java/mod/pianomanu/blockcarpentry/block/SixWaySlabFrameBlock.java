@@ -155,6 +155,8 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
         return new TwoBlocksFrameBlockTile();
     }
 
+
+    //TODO: adapt this
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);

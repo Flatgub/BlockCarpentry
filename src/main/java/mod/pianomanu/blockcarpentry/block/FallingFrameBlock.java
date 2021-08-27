@@ -31,6 +31,8 @@ import java.util.Random;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
+// ----- CURRENTLY NOT IMPLEMENTED -----
+
 /**
  * Nothing important to see here, this class is currently unused, visit {@link FrameBlock} for a better documentation
  *

@@ -6,6 +6,8 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.FramedBlockHelper;
+import mod.pianomanu.blockcarpentry.util.IFrameableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -46,7 +48,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * @author PianoManu
  * @version 1.7 08/18/21
  */
-public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
+public class ChestFrameBlock extends FrameBlock implements IWaterLoggable, IFrameableBlock {
     private static final VoxelShape INNER_CUBE = Block.makeCuboidShape(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
     private static final VoxelShape BOTTOM_NORTH = Block.makeCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 2.0);
     private static final VoxelShape BOTTOM_EAST = Block.makeCuboidShape(14.0, 0.0, 2.0, 16.0, 2.0, 14.0);
@@ -92,9 +94,7 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
         return Registration.CHEST_FRAME_TILE.get().create();
     }
 
-    /**
-     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
-     */
+    //apply custom name and do auto-place behaviour
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (stack.hasDisplayName()) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -102,8 +102,12 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
                 ((ChestFrameTileEntity) tileentity).setCustomName(stack.getDisplayName());
             }
         }
+
+        FramedBlockHelper.onPlace(this, worldIn, pos, state, placer, stack);
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
+    //TODO: this doesn't work at all
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
                                              Hand hand, BlockRayTraceResult result) {
@@ -145,40 +149,8 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
         return ActionResultType.SUCCESS;
     }
 
-    @Override
-    public void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof ChestFrameTileEntity) {
-                ChestFrameTileEntity frameTileEntity = (ChestFrameTileEntity) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
-                    frameTileEntity.clear();
-                    float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                    frameTileEntity.clear();
-                }
-            }
-        }
-    }
 
-    @Override
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof ChestFrameTileEntity) {
-            ChestFrameTileEntity frameTileEntity = (ChestFrameTileEntity) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
-        }
-    }
+
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {

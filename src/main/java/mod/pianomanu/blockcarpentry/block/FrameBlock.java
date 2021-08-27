@@ -1,18 +1,14 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -34,7 +30,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeBlockState;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
@@ -121,8 +116,10 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        return FramedBlockHelper.onRightClick(this, state, world, pos, player, hand, trace);
+        return FramedBlockHelper.doGenericRightClick(this, state, world, pos, player, hand, trace);
     }
+
+
 
     /**
      * This method is called, whenever the state of the block changes (e.g. the block is harvested)

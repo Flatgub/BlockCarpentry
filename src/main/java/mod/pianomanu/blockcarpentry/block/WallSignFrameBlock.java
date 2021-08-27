@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.CONTAINS_BLOCK;
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
+// ----- CURRENTLY NOT IMPLEMENTED -----
+
 /**
  * Main class for wall frame signs - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation

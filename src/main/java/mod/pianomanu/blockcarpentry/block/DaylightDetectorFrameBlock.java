@@ -30,6 +30,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+// ----- CURRENTLY NOT IMPLEMENTED -----
+
 /**
  * Main class for frame carpets - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation

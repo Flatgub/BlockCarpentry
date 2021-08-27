@@ -4,9 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -45,7 +43,7 @@ import java.util.Objects;
  * @author PianoManu
  * @version 1.5 05/27/21
  */
-public class BedFrameBlock extends BedBlock {
+public class BedFrameBlock extends BedBlock implements IFrameableBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
@@ -72,6 +70,8 @@ public class BedFrameBlock extends BedBlock {
         return new BedFrameTile();
     }
 
+    //TODO: adapt this to work the same way as the others
+    //note: this seems to just not work at all?? i can't apply anything to it?
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
@@ -96,7 +96,7 @@ public class BedFrameBlock extends BedBlock {
                     world.createExplosion((Entity) null, DamageSource.causeBedExplosionDamage(), (ExplosionContext) null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
                     return ActionResultType.SUCCESS;
                 } else if (state.get(OCCUPIED)) {
-                    if (!this.func_226861_a_(world, pos)) {
+                    if (!this.tryWakeUpVillager(world, pos)) {
                         player.sendStatusMessage(new TranslationTextComponent("block.minecraft.bed.occupied"), true);
                     }
 
@@ -148,7 +148,8 @@ public class BedFrameBlock extends BedBlock {
         return ActionResultType.SUCCESS;
     }
 
-    private boolean func_226861_a_(World world, BlockPos pos) {
+    //this is an exact copy of super.tryWakeUpVillager but mirroring it is easier than setting up an access transformer
+    private boolean tryWakeUpVillager(World world, BlockPos pos) {
         List<VillagerEntity> list = world.getEntitiesWithinAABB(VillagerEntity.class, new AxisAlignedBB(pos), LivingEntity::isSleeping);
         if (list.isEmpty()) {
             return false;
@@ -158,37 +159,10 @@ public class BedFrameBlock extends BedBlock {
         }
     }
 
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof BedFrameTile) {
-                BedFrameTile frameTileEntity = (BedFrameTile) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
-                    frameTileEntity.clear();
-                    float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                }
-                frameTileEntity.clear();
-            }
-        }
-    }
-
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof BedFrameTile) {
-            BedFrameTile frameTileEntity = (BedFrameTile) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
-        }
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        FramedBlockHelper.onPlace(this, worldIn, pos, state, placer, stack);
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override

@@ -23,6 +23,9 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+/**
+ * Collection of static shared code for framed blocks that doesn't belong in {@link IFrameableBlock}
+ */
 public class FramedBlockHelper {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
@@ -42,6 +45,10 @@ public class FramedBlockHelper {
         if(Objects.requireNonNull(block.getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
             return false;
         }
+
+        //TODO: investigate checking whether a block's voxelshape is opaque as part of this process
+        //other blocks may override isOpaque to return false even on blocks that are a perfect cube, so it's
+        //probably better to check the OPAQUE_CACHE ourselves
         return BlockSavingHelper.isValidBlock(block.getBlock());
     }
 
@@ -60,7 +67,7 @@ public class FramedBlockHelper {
      * @param trace  the raycast from the player's interaction
      * @return the resulting {@link ActionResultType}
      */
-    public static ActionResultType onRightClick(IFrameableBlock block, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+    public static ActionResultType doGenericRightClick(IFrameableBlock block, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
             //this can have a bunch of side effects like consuming the itemstack because its a collection of tool use and modifier functions
