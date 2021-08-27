@@ -166,4 +166,3 @@ public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
         return ItemCameraTransforms.DEFAULT;
     }
 }
-//========SOLI DEO GLORIA========//

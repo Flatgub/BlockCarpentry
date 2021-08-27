@@ -26,4 +26,3 @@ public class FrameSignItem extends SignItem {
         return flag;
     }
 }
-//========SOLI DEO GLORIA========//

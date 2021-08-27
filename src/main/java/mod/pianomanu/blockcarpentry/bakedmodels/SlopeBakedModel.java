@@ -803,4 +803,3 @@ public class SlopeBakedModel implements IDynamicBakedModel {
         return ItemCameraTransforms.DEFAULT;
     }
 }
-//========SOLI DEO GLORIA========//

@@ -212,4 +212,3 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
         return CHEST;
     }
 }
-//========SOLI DEO GLORIA========//

@@ -14,4 +14,3 @@ public class SlopeFrameBlock extends StairsFrameBlock {
         super(state, properties);
     }
 }
-//========SOLI DEO GLORIA========//

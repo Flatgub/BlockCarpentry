@@ -61,4 +61,3 @@ public class WallSignFrameBlock extends WallSignBlock {
         return ActionResultType.FAIL;
     }
 }
-//========SOLI DEO GLORIA========//

@@ -58,4 +58,3 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_carpet_loader"), new IllusionCarpetModelLoader());
     }
 }
-//========SOLI DEO GLORIA========//

@@ -87,4 +87,3 @@ public class BlockColorHandler implements IBlockColor {
         return BiomeColors.getGrassColor(Objects.requireNonNull(lightReader), Objects.requireNonNull(pos));
     }
 }
-//========SOLI DEO GLORIA========//

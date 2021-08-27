@@ -151,4 +151,3 @@ public class StairsFrameBlock extends StairsBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

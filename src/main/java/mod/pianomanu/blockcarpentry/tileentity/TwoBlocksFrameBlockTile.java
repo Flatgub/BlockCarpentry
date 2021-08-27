@@ -541,4 +541,3 @@ public class TwoBlocksFrameBlockTile extends TileEntity {
         this.setRotation_2(0);
     }
 }
-//========SOLI DEO GLORIA========//

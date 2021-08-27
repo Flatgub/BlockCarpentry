@@ -25,4 +25,3 @@ public abstract class AbstractSixWayFrameBlock extends AbstractFrameBlock {
         builder.add(FACING);
     }
 }
-//========SOLI DEO GLORIA========//

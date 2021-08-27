@@ -225,4 +225,3 @@ public class FenceBakedModel implements IDynamicBakedModel {
         return ItemOverrideList.EMPTY;
     }
 }
-//========SOLI DEO GLORIA========//

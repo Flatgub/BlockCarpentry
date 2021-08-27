@@ -225,4 +225,3 @@ public class WallFrameBlock extends WallBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

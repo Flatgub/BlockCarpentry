@@ -367,4 +367,3 @@ public class DoorBakedModel implements IDynamicBakedModel {
         return ItemCameraTransforms.DEFAULT;
     }
 }
-//========SOLI DEO GLORIA========//

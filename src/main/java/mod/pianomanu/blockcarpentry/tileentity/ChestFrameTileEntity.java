@@ -442,4 +442,3 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         }
     }
 }
-//========SOLI DEO GLORIA========//

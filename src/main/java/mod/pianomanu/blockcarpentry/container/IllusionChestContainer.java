@@ -99,4 +99,3 @@ public class IllusionChestContainer extends Container {
         return itemStack;
     }
 }
-//========SOLI DEO GLORIA========//

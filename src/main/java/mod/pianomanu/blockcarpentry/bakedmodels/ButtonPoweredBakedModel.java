@@ -189,4 +189,3 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
         return ItemCameraTransforms.DEFAULT;
     }
 }
-//========SOLI DEO GLORIA========//

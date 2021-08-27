@@ -213,4 +213,3 @@ public class Registration {
     public static final RegistryObject<Item> PAINTBRUSH = ITEMS.register("paintbrush", () -> new Item(new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).maxStackSize(1)));
 
 }
-//========SOLI DEO GLORIA========//

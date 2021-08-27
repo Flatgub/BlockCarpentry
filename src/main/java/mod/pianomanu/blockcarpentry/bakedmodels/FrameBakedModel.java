@@ -128,4 +128,3 @@ public class FrameBakedModel implements IDynamicBakedModel {
         return ItemCameraTransforms.DEFAULT;
     }
 }
-//========SOLI DEO GLORIA========//

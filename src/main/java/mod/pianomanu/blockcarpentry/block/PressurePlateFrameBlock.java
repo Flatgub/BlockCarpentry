@@ -146,4 +146,3 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

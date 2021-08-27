@@ -33,4 +33,3 @@ public class BCBlockStateProperties {
      */
     public static final BooleanProperty DOUBLE = BooleanProperty.create("double");
 }
-//========SOLI DEO GLORIA========//

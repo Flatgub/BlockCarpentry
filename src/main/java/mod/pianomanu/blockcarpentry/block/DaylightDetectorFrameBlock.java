@@ -163,4 +163,3 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

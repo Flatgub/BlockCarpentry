@@ -306,4 +306,3 @@ public class WallBakedModel implements IDynamicBakedModel {
         return ItemOverrideList.EMPTY;
     }
 }
-//========SOLI DEO GLORIA========//

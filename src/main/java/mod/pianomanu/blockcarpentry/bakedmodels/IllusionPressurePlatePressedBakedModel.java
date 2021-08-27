@@ -100,4 +100,3 @@ public class IllusionPressurePlatePressedBakedModel implements IDynamicBakedMode
         return ItemCameraTransforms.DEFAULT;
     }
 }
-//========SOLI DEO GLORIA========//

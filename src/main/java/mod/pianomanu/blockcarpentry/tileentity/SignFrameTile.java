@@ -248,4 +248,3 @@ public class SignFrameTile extends SignTileEntity {
         this.setGlassColor(0);
     }
 }
-//========SOLI DEO GLORIA========//

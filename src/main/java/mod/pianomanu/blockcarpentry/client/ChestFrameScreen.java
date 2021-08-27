@@ -72,4 +72,3 @@ public class ChestFrameScreen extends ContainerScreen<ChestFrameContainer> imple
         this.blit(matrixStack, i, j + this.inventoryRows * 18 + 17, 0, 126, this.xSize, 96);
     }
 }
-//========SOLI DEO GLORIA========//

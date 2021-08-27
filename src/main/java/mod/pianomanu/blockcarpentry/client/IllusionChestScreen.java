@@ -60,4 +60,3 @@ public class IllusionChestScreen extends ContainerScreen<IllusionChestContainer>
         this.blit(matrixStack, i, j + this.inventoryRows * 18 + 17, 0, 126, this.xSize, 96);
     }
 }
-//========SOLI DEO GLORIA========//

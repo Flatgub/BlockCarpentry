@@ -310,4 +310,3 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
         }
     }
 }
-//========SOLI DEO GLORIA========//

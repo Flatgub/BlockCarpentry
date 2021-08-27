@@ -409,4 +409,3 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
         return ItemOverrideList.EMPTY;
     }
 }
-//========SOLI DEO GLORIA========//

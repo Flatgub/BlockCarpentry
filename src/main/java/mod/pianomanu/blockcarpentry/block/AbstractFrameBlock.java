@@ -138,4 +138,3 @@ public abstract class AbstractFrameBlock extends Block {
         builder.add(CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

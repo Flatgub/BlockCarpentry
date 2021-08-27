@@ -165,4 +165,3 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

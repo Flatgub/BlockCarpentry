@@ -60,4 +60,3 @@ public class StandingSignFrameBlock extends StandingSignBlock {
         return ActionResultType.FAIL;
     }
 }
-//========SOLI DEO GLORIA========//

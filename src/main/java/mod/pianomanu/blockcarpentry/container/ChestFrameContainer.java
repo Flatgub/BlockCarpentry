@@ -99,4 +99,3 @@ public class ChestFrameContainer extends Container {
         return itemStack;
     }
 }
-//========SOLI DEO GLORIA========//

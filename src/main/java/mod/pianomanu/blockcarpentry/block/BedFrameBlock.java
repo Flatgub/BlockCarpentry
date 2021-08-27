@@ -215,4 +215,3 @@ public class BedFrameBlock extends BedBlock {
         return BlockRenderType.MODEL;
     }
 }
-//========SOLI DEO GLORIA========//

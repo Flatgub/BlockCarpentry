@@ -308,4 +308,3 @@ public class BedFrameTile extends TileEntity {
         this.setRotation(0);
     }
 }
-//========SOLI DEO GLORIA========//

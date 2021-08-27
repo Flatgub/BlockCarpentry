@@ -152,4 +152,3 @@ public class FenceFrameBlock extends FenceBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

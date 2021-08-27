@@ -374,4 +374,3 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
         return ItemCameraTransforms.DEFAULT;
     }
 }
-//========SOLI DEO GLORIA========//

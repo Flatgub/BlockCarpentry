@@ -11,4 +11,3 @@ public class EditSignFrameScreen extends EditSignScreen {
         super(teSign);
     }
 }
-//========SOLI DEO GLORIA========//

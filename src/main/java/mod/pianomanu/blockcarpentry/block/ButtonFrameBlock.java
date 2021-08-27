@@ -162,4 +162,3 @@ public class ButtonFrameBlock extends WoodButtonBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

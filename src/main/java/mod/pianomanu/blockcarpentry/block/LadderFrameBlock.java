@@ -158,4 +158,3 @@ public class LadderFrameBlock extends LadderBlock {
         return true;
     }
 }
-//========SOLI DEO GLORIA========//

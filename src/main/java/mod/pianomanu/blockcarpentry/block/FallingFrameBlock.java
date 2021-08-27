@@ -176,4 +176,3 @@ public class FallingFrameBlock extends FallingBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
-//========SOLI DEO GLORIA========//

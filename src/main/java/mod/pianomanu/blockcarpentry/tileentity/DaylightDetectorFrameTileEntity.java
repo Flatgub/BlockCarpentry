@@ -389,4 +389,3 @@ public class DaylightDetectorFrameTileEntity extends TileEntity implements ITick
     }
 
 }
-//========SOLI DEO GLORIA========//

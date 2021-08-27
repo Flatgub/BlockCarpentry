@@ -76,4 +76,3 @@ public class BCModConfig {
     public static void onReload(final ModConfig.Reloading configEvent) {
     }
 }
-//========SOLI DEO GLORIA========//

@@ -46,4 +46,3 @@ public class TextureSetup {
         return new ResourceLocation(BlockCarpentryMain.MOD_ID, name);
     }
 }
-//========SOLI DEO GLORIA========//
