@@ -146,7 +146,7 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     }
 
     @Override
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
+    public void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof ChestFrameTileEntity) {

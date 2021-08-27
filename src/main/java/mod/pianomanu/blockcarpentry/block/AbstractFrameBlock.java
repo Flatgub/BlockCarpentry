@@ -60,77 +60,16 @@ public abstract class AbstractFrameBlock extends Block implements IFrameableBloc
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
-            BlockAppearanceHelper.setAppearanceDetails(world, item, state, pos, player, hand);
-
-            //attempt to insert the ItemStack
-            if(FramedBlockHelper.isItemStackValidInsertCandidate(item)) {
-                if(state.get(CONTAINS_BLOCK)) { return ActionResultType.PASS; }
-
-                TileEntity tileEntity = world.getTileEntity(pos);
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile) {
-                    attemptInsertBlock(world, item, state, pos,player, hand);
-                }
-            }
-
-            //hammer is needed to remove the block from the frame - you can change it in the config
-            if (item.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
-            }
-        }
-        return ActionResultType.SUCCESS;
+        return FramedBlockHelper.onRightClick(this, state, world, pos, player, hand, trace);
     }
 
-    /*
-     * Used on post-place to see if we should automatically set the contained block
-     */
+
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        if(!worldIn.isRemote) {
-            if(placer != null & placer instanceof ServerPlayerEntity) {
-                ServerPlayerEntity player = (ServerPlayerEntity) placer;
-                ItemStack offhandStack = player.getHeldItemOffhand();
-                if(FramedBlockHelper.isItemStackValidInsertCandidate(offhandStack)) {
-                    BlockItem offhandBlock = (BlockItem)offhandStack.getItem();
-                    TileEntity tileEntity = worldIn.getTileEntity(pos);
-
-                    //TODO: this will always subtract 1 and it shouldn't
-                    //either that or we dont do this behaviour on doors.
-                    attemptInsertBlock(worldIn, offhandStack, state, pos, player, Hand.OFF_HAND);
-
-                }
-            }
-        }
+        FramedBlockHelper.onPlace(this, worldIn, pos, state, placer, stack);
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
-                    frameTileEntity.clear();
-                    float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                    frameTileEntity.clear();
-                }
-            }
-        }
-    }
 
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
         if (state.get(LIGHT_LEVEL) > 15) {

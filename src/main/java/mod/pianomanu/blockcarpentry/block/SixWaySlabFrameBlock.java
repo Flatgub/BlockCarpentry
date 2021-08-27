@@ -192,7 +192,8 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
         return ActionResultType.SUCCESS;
     }
 
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
+    @Override
+    public void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof TwoBlocksFrameBlockTile) {

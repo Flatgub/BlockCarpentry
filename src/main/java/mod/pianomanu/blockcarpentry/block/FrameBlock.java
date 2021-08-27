@@ -4,9 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -49,7 +47,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * @version 1.9 06/06/21
  */
 @SuppressWarnings("deprecation")
-public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, IWaterLoggable {
+public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, IWaterLoggable, IFrameableBlock {
     /**
      * Block property (can be seed when pressing F3 in-game)
      * This is needed, because we need to detect whether the blockstate has changed
@@ -111,104 +109,19 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
         return new FrameBlockTile();
     }
 
-    /**
-     * Is called, whenever the block is right-clicked:
-     * First it is checked, whether the world is remote (this has to be done client-side only).
-     * Afterwards, we check, whether the held item is some sort of block item (e.g. logs, but not torches)
-     * If that's the case, we ask for the tile entity of the frame and if the frame is empty, we fill it with the held block and remove the item from the player's inventory
-     * If the frame is not empty and the player holds the hammer, the contained block is dropped into the world
-     *
-     * @param state  state of the block that is clicked
-     * @param world  world the block is placed in
-     * @param pos    position (x,y,z) of block
-     * @param player entity of the player that includes all important information (health, armor, inventory,
-     * @param hand   which hand is used (e.g. you have a sword in your main hand and an axe in your off-hand and right click a log -> you use the off-hand, not the main hand)
-     * @param trace  to determine which part of the block is clicked (upper half, lower half, right side, left side, corners...)
-     * @return see {@link ActionResultType}
-     */
+    // Overridden to add a call to checkForVisibility
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
-            if (item.getItem() instanceof BlockItem) {
-                if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                    return ActionResultType.PASS;
-                }
-                TileEntity tileEntity = world.getTileEntity(pos);
-                int count = player.getHeldItem(hand).getCount();
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                    insertBlock(world, pos, state, handBlockState);
-                    if (!player.isCreative())
-                        player.getHeldItem(hand).setCount(count - 1);
-                    checkForVisibility(state, world, pos, (FrameBlockTile) tileEntity);
-                }
-            }
-            //hammer is needed to remove the block from the frame - you can change it in the config
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
-            }
-        }
+    public ActionResultType attemptInsertBlock(World world, ItemStack item, BlockState state, BlockPos pos, PlayerEntity player, Hand hand) {
+        if(!super.attemptInsertBlock(world, item, state, pos, player, hand).isSuccess()) { return ActionResultType.FAIL; }
+
+        TileEntity tileEntity = world.getTileEntity(pos);
+        checkForVisibility(state, world, pos, (FrameBlockTile) tileEntity);
         return ActionResultType.SUCCESS;
     }
 
-    /**
-     * Used to drop the contained block
-     * We check the tile entity, get the block from the tile entity and drop it at the block pos plus some small random coords in the world
-     *
-     * @param worldIn the world where we drop the block
-     * @param pos     the block position where we drop the block
-     */
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
-                    frameTileEntity.clear();
-                    float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                    frameTileEntity.clear();
-                }
-            }
-        }
-    }
-
-    /**
-     * Used to place a block in a frame. Therefor we need the tile entity of the block and set its mimic to the given block state.
-     * Lastly, we update the block state (useful for observers or something, idk)
-     *
-     * @param worldIn   the world where we drop the block
-     * @param pos       the block position where we drop the block
-     * @param state     the old block state
-     * @param handBlock the block state of the held block - the block we want to insert into the frame
-     */
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
-        }
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+        return FramedBlockHelper.onRightClick(this, state, world, pos, player, hand, trace);
     }
 
     /**
@@ -230,6 +143,12 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
         if (state.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
+    }
+
+
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBlockHarvested(worldIn, pos, state, player);
     }
 
     //unused

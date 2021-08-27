@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.util;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -14,13 +15,17 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
+/**
+ * The interface for interacting with Frameable blocks.
+ * Because most kinds of frameable block have to extend their vanilla counterpart, shared code exists either here
+ * or in {@link FramedBlockHelper}. These methods can be overridden if necessary to achieve block specific behaviours
+ * but in most cases the default implementations should be sufficient or at least extendable while still calling the super.
+ */
 public interface IFrameableBlock {
     /**
      * The method to call when attempting to insert a block into a frame after all other checks have been performed.
      * By this point things like isItemStackValidInsertCandidate have already run and so this method is intended for
      * subclass specific behaviours where additional checks or success behaviours are necessary.
-     * In most cases the default implementation should be sufficient and in cases where it isn't the super should still
-     * be called.
      * 
      * @param world  the world the block is in
      * @param item   the ItemStack to insert
@@ -59,6 +64,35 @@ public interface IFrameableBlock {
             frameTileEntity.clear();
             frameTileEntity.setMimic(handBlock);
             worldIn.setBlockState(pos, state.with(BCBlockStateProperties.CONTAINS_BLOCK, Boolean.TRUE), Constants.BlockFlags.BLOCK_UPDATE);
+        }
+    }
+
+    /**
+     * Used to drop the contained block (the currently applied facade, if it exists)
+     *
+     * @param worldIn the world where we drop the block
+     * @param pos     the block position where we drop the block
+     */
+    default void dropContainedBlock(World worldIn, BlockPos pos) {
+        if (!worldIn.isRemote) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof FrameBlockTile) {
+                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
+                BlockState blockState = frameTileEntity.getMimic();
+                if (!(blockState == null)) {
+                    worldIn.playEvent(1010, pos, 0); // ???
+                    frameTileEntity.clear();
+                    float offset = 0.7F;
+                    double offx = (double) (worldIn.rand.nextFloat() * offset) + (double) 0.15F;
+                    double offy = (double) (worldIn.rand.nextFloat() * offset) + (double) 0.060000002F + 0.6D;
+                    double offz = (double) (worldIn.rand.nextFloat() * offset) + (double) 0.15F;
+                    ItemStack itemstack = new ItemStack(blockState.getBlock());
+                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + offx, (double) pos.getY() + offy, (double) pos.getZ() + offz, itemstack);
+                    itementity.setDefaultPickupDelay();
+                    worldIn.addEntity(itementity);
+                    frameTileEntity.clear();
+                }
+            }
         }
     }
 }
