@@ -23,8 +23,8 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
-<<<<<<< HEAD
+/images/*
 build.gradle
 /local things/
 =======
->>>>>>> Ported all features to 1.16.2 - might still be buggy
+
