@@ -75,7 +75,7 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
             if (item.getItem() instanceof BlockItem) {
                 if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     if (player.isAllowEdit()) {
-                        BlockState blockstate = state.func_235896_a_(INVERTED);
+                        BlockState blockstate = state.cycleValue(INVERTED);
                         world.setBlockState(pos, blockstate, 4);
                         updatePower(blockstate, world, pos);
                         return ActionResultType.CONSUME;
@@ -101,7 +101,7 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
                     return ActionResultType.SUCCESS;
                 }
                 if (player.isAllowEdit()) {
-                    BlockState blockstate = state.func_235896_a_(INVERTED);
+                    BlockState blockstate = state.cycleValue(INVERTED);
                     world.setBlockState(pos, blockstate, 4);
                     updatePower(blockstate, world, pos);
                     return ActionResultType.CONSUME;

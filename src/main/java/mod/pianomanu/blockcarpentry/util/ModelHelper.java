@@ -307,22 +307,22 @@ public class ModelHelper {
         TextureAtlasSprite textureUp = textureList.get(0);
         TextureAtlasSprite textureDown = textureList.get(0);
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
-            textureNorth = quad.func_187508_a();
+            textureNorth = quad.getSprite();
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
-            textureEast = quad.func_187508_a();
+            textureEast = quad.getSprite();
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
-            textureSouth = quad.func_187508_a();
+            textureSouth = quad.getSprite();
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
-            textureWest = quad.func_187508_a();
+            textureWest = quad.getSprite();
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
-            textureUp = quad.func_187508_a();
+            textureUp = quad.getSprite();
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
-            textureDown = quad.func_187508_a();
+            textureDown = quad.getSprite();
         }
         if (rotation == 0) {
             if (up) quads.add(createQuad(NWU, SWU, SEU, NEU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));

@@ -95,33 +95,33 @@ public class TextureHelper {
     public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, IModelData extraData, Random rand) {
         List<TextureAtlasSprite> textureList = new ArrayList<>();
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
-            if (!textureList.contains(quad.func_187508_a())) {
-                textureList.add(quad.func_187508_a());
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
             }
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
-            if (!textureList.contains(quad.func_187508_a())) {
-                textureList.add(quad.func_187508_a());
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
             }
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
-            if (!textureList.contains(quad.func_187508_a())) {
-                textureList.add(quad.func_187508_a());
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
             }
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
-            if (!textureList.contains(quad.func_187508_a())) {
-                textureList.add(quad.func_187508_a());
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
             }
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
-            if (!textureList.contains(quad.func_187508_a())) {
-                textureList.add(quad.func_187508_a());
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
             }
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
-            if (!textureList.contains(quad.func_187508_a())) {
-                textureList.add(quad.func_187508_a());
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
             }
         }
         return textureList;

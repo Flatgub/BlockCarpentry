@@ -47,7 +47,7 @@ public class ChestFrameScreen extends ContainerScreen<ChestFrameContainer> imple
     public void render(MatrixStack matrixStack, final int mouseX, final int mouseY, final float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.func_230459_a_(matrixStack, mouseX, mouseY);
+        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
     /**

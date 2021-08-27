@@ -99,7 +99,7 @@ public class ButtonFrameBlock extends WoodButtonBlock {
             if (state.get(POWERED)) {
                 return ActionResultType.CONSUME;
             } else {
-                this.func_226910_d_(state, world, pos);
+                this.powerBlock(state, world, pos);
                 this.playSound(player, world, pos, true);
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);

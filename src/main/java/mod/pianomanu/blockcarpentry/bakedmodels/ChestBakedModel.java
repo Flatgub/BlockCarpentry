@@ -201,7 +201,7 @@ public class ChestBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean func_230044_c_() {
+    public boolean isSideLit() {
         return false;
     }
 

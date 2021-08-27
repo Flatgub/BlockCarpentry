@@ -279,7 +279,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     @OnlyIn(Dist.CLIENT)
     public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
         boolean similarState = false;
-        if (adjacentBlockState.isIn(this)) {
+        if (adjacentBlockState.matchesBlock(this)) {
             similarState = state.get(FACING) == adjacentBlockState.get(FACING);
             if (similarState && state.get(DOUBLE_SLAB) != adjacentBlockState.get(DOUBLE_SLAB)) {
                 similarState = false;
