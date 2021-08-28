@@ -46,6 +46,7 @@ public class BlockAppearanceHelper {
         BlockAppearanceHelper.setRotation(world, pos, player, item);
     }
 
+    @Deprecated
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (item.getItem() == Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) < 13) {
             int count = player.getHeldItem(hand).getCount();

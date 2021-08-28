@@ -65,28 +65,26 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements IFrameableBlock
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         if (!world.isRemote) {
+
             ItemStack item = player.getHeldItem(hand);
-            // do trapdoor behaviour if the stack isn't a valid candidate
-            if (!FramedBlockHelper.isItemStackValidInsertCandidate(item)) {
-                //these still have to be done regardless of trapdoor behaviour
-                BlockAppearanceHelper.setAppearanceDetails(world, item, state, pos, player, hand);
 
-                if (state.get(OPEN)) {
-                    state = state.with(OPEN, false);
-                } else {
-                    state = state.with(OPEN, true);
-                }
-                if (state.get(WATERLOGGED)) {
-                    world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-                }
-                world.setBlockState(pos, state, Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS);
-                //TODO: trapdoor makes no sound
-                //TODO: cannot hammer trapdoor
-                world.playSound(null, pos, state.get(OPEN) ? SoundEvents.BLOCK_WOODEN_TRAPDOOR_OPEN : SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundCategory.BLOCKS,1f, 1f);
-
-            } else { //otherwise, do the regular stuff
-                FramedBlockHelper.doGenericRightClick(this, state, world, pos, player, hand, trace);
+            //attempt hammer/wrench/etc interaction
+            if(FramedBlockHelper.attemptToolUse(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
             }
+
+            //in the absence of a tool, attempt apply mimic
+            if(FramedBlockHelper.attemptApplyMimic(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
+            }
+
+            //in the absence of a tool or mimic, do usual trapdoor behaviour
+            state = state.with(OPEN, !state.get(OPEN));
+            if (state.get(WATERLOGGED)) {
+                world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            }
+            world.setBlockState(pos, state, Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS);
+            world.playSound(null, pos, state.get(OPEN) ? SoundEvents.BLOCK_WOODEN_TRAPDOOR_OPEN : SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundCategory.BLOCKS,1f, 1f);
         }
 
         return ActionResultType.SUCCESS;

@@ -37,6 +37,7 @@
   "item.blockcarpentry.chisel": "Chisel",
   "item.blockcarpentry.paintbrush": "Paintbrush",
   "message.blockcarpentry.light_level": "Light Level: %s",
+  "message.blockcarpentry.max_light_level": "You can't apply any more %s",
   "message.blockcarpentry.texture": "Texture: %s",
   "message.blockcarpentry.design": "Design: %s",
   "message.blockcarpentry.design_texture": "Design Texture: %s",

@@ -65,29 +65,28 @@ public class DoorFrameBlock extends DoorBlock implements IFrameableBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         if (!world.isRemote) {
             ItemStack item = player.getHeldItem(hand);
-            //TODO: can't interact with door when block is full but candidate is still valid
-            //do door behaviour if item isn't a valid candidate
-            if(!FramedBlockHelper.isItemStackValidInsertCandidate(item)) {
-                //these still have to be done regardless of gate behaviour
-                BlockAppearanceHelper.setAppearanceDetails(world, item, state, pos, player, hand);
 
-                BlockPos other = state.get(DoorBlock.HALF).equals(DoubleBlockHalf.LOWER) ? pos.up() : pos.down();
-
-
-                //toggle door state
-                if (state.get(DoorBlock.OPEN)) {
-                    state = state.with(OPEN, false);
-                } else {
-                    state = state.with(OPEN, true);
-                }
-                world.setBlockState(pos, state, Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS);
-                world.setBlockState(other, state, Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS);
-                world.playSound(null, pos, state.get(OPEN) ? SoundEvents.BLOCK_WOODEN_DOOR_OPEN : SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundCategory.BLOCKS,1f, 1f);
+            //attempt hammer/wrench/etc interaction
+            if(FramedBlockHelper.attemptToolUse(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
             }
-            else { //otherwise, do the regular stuff
-                //TODO: can't use hammer on fencegate??
-                FramedBlockHelper.doGenericRightClick(this, state, world, pos, player, hand, trace);
+
+            //in the absence of a tool, attempt apply mimic
+            if(FramedBlockHelper.attemptApplyMimic(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
             }
+
+            //in the absence of a tool or mimic, do usual door behaviour
+            BlockPos other = state.get(DoorBlock.HALF).equals(DoubleBlockHalf.LOWER) ? pos.up() : pos.down();
+            BlockState otherstate = world.getBlockState(other);
+
+            //FIXME: this *works*, but it causes the other half of the door to "lag behind" by a frame or so in an ugly way
+            state = state.with(OPEN, !state.get(DoorBlock.OPEN));
+            otherstate = otherstate.with(OPEN, !otherstate.get(DoorBlock.OPEN));
+            world.setBlockState(pos, state, Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS);
+            world.setBlockState(other, otherstate, Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS);
+            world.playSound(null, pos, state.get(OPEN) ? SoundEvents.BLOCK_WOODEN_DOOR_OPEN : SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundCategory.BLOCKS,1f, 1f);
+
         }
         return ActionResultType.SUCCESS;
     }

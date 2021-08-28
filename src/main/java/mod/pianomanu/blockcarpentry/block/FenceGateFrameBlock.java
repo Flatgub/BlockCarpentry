@@ -68,33 +68,32 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-
         if (!world.isRemote) {
             ItemStack item = player.getHeldItem(hand);
-            //TODO: can't interact with gate when block is full but candidate is still valid
-            if(!FramedBlockHelper.isItemStackValidInsertCandidate(item)) {
-                //these still have to be done regardless of gate behaviour
-                BlockAppearanceHelper.setAppearanceDetails(world, item, state, pos, player, hand);
 
-                //toggle gate state
-                if (state.get(OPEN)) {
-                    state = state.with(OPEN, Boolean.FALSE);
-                } else {
-                    Direction direction = player.getHorizontalFacing();
-                    if (state.get(HORIZONTAL_FACING) == direction.getOpposite()) {
-                        state = state.with(HORIZONTAL_FACING, direction);
-                    }
-                    state = state.with(OPEN, Boolean.TRUE);
+            //attempt hammer/wrench/etc interaction
+            if(FramedBlockHelper.attemptToolUse(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
+            }
+
+            //in the absence of a tool, attempt apply mimic
+            if(FramedBlockHelper.attemptApplyMimic(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
+            }
+
+            //in the absence of a tool or mimic, do usual gate behaviour
+            if (state.get(OPEN)) {
+                state = state.with(OPEN, Boolean.FALSE);
+            } else {
+                Direction direction = player.getHorizontalFacing();
+                if (state.get(HORIZONTAL_FACING) == direction.getOpposite()) {
+                    state = state.with(HORIZONTAL_FACING, direction);
                 }
-                world.setBlockState(pos, state, Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS);
-                world.playSound(null, pos, state.get(OPEN) ? SoundEvents.BLOCK_FENCE_GATE_OPEN : SoundEvents.BLOCK_FENCE_GATE_CLOSE, SoundCategory.BLOCKS,1f, 1f);
+                state = state.with(OPEN, Boolean.TRUE);
             }
-            else { //otherwise, do the regular stuff
-                //TODO: can't use hammer on fencegate??
-                FramedBlockHelper.doGenericRightClick(this, state, world, pos, player, hand, trace);
-            }
+            world.setBlockState(pos, state, Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS);
+            world.playSound(null, pos, state.get(OPEN) ? SoundEvents.BLOCK_FENCE_GATE_OPEN : SoundEvents.BLOCK_FENCE_GATE_CLOSE, SoundCategory.BLOCKS,1f, 1f);
         }
-
         return ActionResultType.SUCCESS;
     }
 
