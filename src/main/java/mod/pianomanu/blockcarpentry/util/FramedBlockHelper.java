@@ -4,6 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.IFrameEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -109,7 +110,7 @@ public class FramedBlockHelper {
                 if(state.get(CONTAINS_BLOCK)) { return ActionResultType.PASS; }
 
                 TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity instanceof FrameBlockTile) {
+                if (tileEntity instanceof IFrameEntity) {
                     return block.attemptInsertBlock(world, item, state, pos,player, hand);
                 }
             }
@@ -196,8 +197,6 @@ public class FramedBlockHelper {
                 ServerPlayerEntity player = (ServerPlayerEntity) placer;
                 ItemStack offhandStack = player.getHeldItemOffhand();
                 if(FramedBlockHelper.isItemStackValidInsertCandidate(offhandStack)) {
-                    //TODO: this will always subtract 1 and it shouldn't
-                    //either that or we dont do this behaviour on doors.
                     block.attemptInsertBlock(world, offhandStack, state, pos, player, Hand.OFF_HAND);
                 }
             }

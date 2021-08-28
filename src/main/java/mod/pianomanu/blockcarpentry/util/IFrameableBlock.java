@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.IFrameEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -36,7 +37,7 @@ public interface IFrameableBlock {
      * @return ActionResultType.SUCCESS if the insert succeeded.
      */
     default ActionResultType attemptInsertBlock(World world, ItemStack item, BlockState state, BlockPos pos, PlayerEntity player, Hand hand ) {
-        if(!(world.getTileEntity(pos) instanceof FrameBlockTile)) {
+        if(!(world.getTileEntity(pos) instanceof IFrameEntity)) {
             return ActionResultType.FAIL;
         }
 
@@ -59,8 +60,8 @@ public interface IFrameableBlock {
      */
     default void insertBlock (IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
+        if (tileentity instanceof IFrameEntity) {
+            IFrameEntity frameTileEntity = (IFrameEntity) tileentity;
             frameTileEntity.clear();
             frameTileEntity.setMimic(handBlock);
             worldIn.setBlockState(pos, state.with(BCBlockStateProperties.CONTAINS_BLOCK, Boolean.TRUE), Constants.BlockFlags.BLOCK_UPDATE);

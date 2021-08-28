@@ -45,7 +45,7 @@ import java.util.Objects;
  * @author PianoManu
  * @version 1.2 05/01/21
  */
-public class ChestFrameTileEntity extends ChestTileEntity {
+public class ChestFrameTileEntity extends ChestTileEntity implements IFrameEntity {
 
     private NonNullList<ItemStack> chestContents = NonNullList.withSize(27, ItemStack.EMPTY);
     /**

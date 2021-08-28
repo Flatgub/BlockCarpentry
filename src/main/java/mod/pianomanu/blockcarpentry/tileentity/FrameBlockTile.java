@@ -30,7 +30,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * @author PianoManu
  * @version 1.4 06/06/21
  */
-public class FrameBlockTile extends TileEntity {
+public class FrameBlockTile extends TileEntity implements IFrameEntity{
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();

@@ -26,7 +26,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
  * @author PianoManu
  * @version 1.2 05/01/21
  */
-public class BedFrameTile extends TileEntity {
+public class BedFrameTile extends TileEntity implements IFrameEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> PILLOW = new ModelProperty<>();

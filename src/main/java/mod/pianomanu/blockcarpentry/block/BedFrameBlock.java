@@ -21,13 +21,12 @@ import net.minecraft.state.*;
 import net.minecraft.state.properties.BedPart;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
 import net.minecraftforge.common.Tags;
@@ -76,75 +75,54 @@ public class BedFrameBlock extends BedBlock implements IFrameableBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            if ((state.get(CONTAINS_BLOCK) && !item.getItem().isIn(Tags.Items.DYES) && !item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) || item.isEmpty()) {
-                //Taken from BedBlock, should work similar to vanilla beds
-                if (state.get(PART) != BedPart.HEAD) {
-                    pos = pos.offset(state.get(HORIZONTAL_FACING));
-                    state = world.getBlockState(pos);
-                    if (!state.matchesBlock(this)) {
-                        return ActionResultType.CONSUME;
-                    }
-                }
 
-                if (!doesBedWork(world)) {
-                    world.removeBlock(pos, false);
-                    BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING).getOpposite());
-                    if (world.getBlockState(blockpos).matchesBlock(this)) {
-                        world.removeBlock(blockpos, false);
-                    }
+            //attempt hammer/wrench/etc interaction
+            if(FramedBlockHelper.attemptToolUse(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
+            }
 
-                    world.createExplosion((Entity) null, DamageSource.causeBedExplosionDamage(), (ExplosionContext) null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
-                    return ActionResultType.SUCCESS;
-                } else if (state.get(OCCUPIED)) {
-                    if (!this.tryWakeUpVillager(world, pos)) {
-                        player.sendStatusMessage(new TranslationTextComponent("block.minecraft.bed.occupied"), true);
-                    }
+            //in the absence of a tool, attempt apply mimic
+            if(FramedBlockHelper.attemptApplyMimic(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
+            }
 
-                    return ActionResultType.SUCCESS;
-                } else {
-                    player.trySleep(pos).ifLeft((p_220173_1_) -> {
-                        if (p_220173_1_ != null) {
-                            player.sendStatusMessage(p_220173_1_.getMessage(), true);
-                        }
-
-                    });
-                    return ActionResultType.SUCCESS;
+            //in the absence of a tool or mimic, attempt sleep behaviour
+            //Taken from BedBlock, should work similar to vanilla beds
+            if (state.get(PART) != BedPart.HEAD) {
+                pos = pos.offset(state.get(HORIZONTAL_FACING));
+                state = world.getBlockState(pos);
+                if (!state.matchesBlock(this)) {
+                    return ActionResultType.CONSUME;
                 }
             }
-            if (state.get(CONTAINS_BLOCK) && player.isSneaking()) {
-                this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
-            } else {
-                if (item.getItem() instanceof BlockItem) {
-                    if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                        return ActionResultType.PASS;
-                    }
-                    TileEntity tileEntity = world.getTileEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
-                    Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    if (tileEntity instanceof BedFrameTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                        insertBlock(world, pos, state, handBlockState);
-                        if (!player.isCreative())
-                            player.getHeldItem(hand).setCount(count - 1);
-                    }
+
+            if (!doesBedWork(world)) { //explode in the nether
+                world.removeBlock(pos, false);
+                BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING).getOpposite());
+                if (world.getBlockState(blockpos).matchesBlock(this)) {
+                    world.removeBlock(blockpos, false);
                 }
+
+                world.createExplosion((Entity)null, DamageSource.causeBedExplosionDamage(), (ExplosionContext)null, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+                return ActionResultType.SUCCESS;
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
+            else if (state.get(OCCUPIED)) {
+                if (!this.tryWakeUpVillager(world, pos)) {
+                    player.sendStatusMessage(new TranslationTextComponent("block.minecraft.bed.occupied"), true);
+                }
+
+                return ActionResultType.SUCCESS;
             }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setWoolColor(world, pos, player, hand);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
+            else {
+                player.trySleep(pos).ifLeft((result) -> {
+                    if (result != null) {
+                        player.sendStatusMessage(result.getMessage(), true);
+                    }
+
+                });
+            }
         }
+
         return ActionResultType.SUCCESS;
     }
 
