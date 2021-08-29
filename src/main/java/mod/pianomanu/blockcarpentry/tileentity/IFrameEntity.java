@@ -16,4 +16,6 @@ public interface IFrameEntity {
     int getDesignTexture();
     int getMaxDesignTextures();
     void setDesignTexture(int texture);
+    int getOverlay();
+    void setOverlay(int overlay);
 }

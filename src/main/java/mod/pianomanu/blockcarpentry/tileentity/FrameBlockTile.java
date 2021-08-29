@@ -190,11 +190,11 @@ public class FrameBlockTile extends TileEntity implements IFrameEntity{
         }
     }
 
-    public Integer getOverlay() {
+    public int getOverlay() {
         return this.overlay;
     }
 
-    public void setOverlay(Integer overlay) {
+    public void setOverlay(int overlay) {
         this.overlay = overlay;
         markDirty();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);

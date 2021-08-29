@@ -113,7 +113,15 @@ public class BedFrameTile extends TileEntity implements IFrameEntity {
 
     public int getMaxDesignTextures() {return 0; }
 
-    public void setDesignTexture(int designTexture) { };
+    public void setDesignTexture(int designTexture) { }
+
+    @Override
+    public int getOverlay() { return 0; }
+
+    @Override
+    public void setOverlay(int overlay) { }
+
+    ;
 
     public int getTexture() {
         return texture;

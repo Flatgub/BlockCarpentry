@@ -297,6 +297,13 @@ public class ChestFrameTileEntity extends ChestTileEntity implements IFrameEntit
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
+    @Override
+    public int getOverlay() { return 0;
+    }
+
+    @Override
+    public void setOverlay(int overlay) { }
+
     public int getTexture() {
         return this.texture;
     }

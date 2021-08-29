@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:vine",
+    "minecraft:gunpowder",
+    "minecraft:grass",
+    "minecraft:snowball",
+    "minecraft:crimson_roots",
+    "minecraft:warped_roots"
+  ]
+}

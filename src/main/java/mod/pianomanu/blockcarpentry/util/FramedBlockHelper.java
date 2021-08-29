@@ -16,9 +16,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.TextComponent;
@@ -38,6 +42,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
 public class FramedBlockHelper {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
+    public static final ITag.INamedTag<Item> OVERLAY_TAG =  ItemTags.makeWrapperTag("blockcarpentry:applies_overlay");
 
     /**
      * Used to check whether an ItemStack contains a valid block to be used as a framed block material
@@ -135,6 +140,7 @@ public class FramedBlockHelper {
         if (!world.isRemote) {
             ItemStack item = player.getHeldItem(hand);
             Item itemType = item.getItem();
+            TileEntity tileEntity = world.getTileEntity(pos);
 
             if(state.get(CONTAINS_BLOCK)) {
                 // Attempt hammer interaction, either via hammer or by shift rightclick if disabled in the config.
@@ -172,7 +178,6 @@ public class FramedBlockHelper {
                 // on frame blocks "swaps" which texture is showing on all sides
                 // on illusion blocks "rotates" the block to change which face each texture appears on
                 if (itemType == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() ) {
-                    TileEntity tileEntity = world.getTileEntity(pos);
 
                     // SWAP TEXTURE for framed blocks
                     if (mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
@@ -251,7 +256,6 @@ public class FramedBlockHelper {
                 // Attempt chisel interaction
                 // changes the model design on certain kinds of block
                 if (itemType == Registration.CHISEL.get() && !player.isSneaking()) {
-                    TileEntity tileEntity = world.getTileEntity(pos);
                     if (tileEntity instanceof IFrameEntity) {
                         IFrameEntity fte = (IFrameEntity) tileEntity;
                         if (fte.getDesign() < fte.getMaxDesigns()) {
@@ -290,7 +294,6 @@ public class FramedBlockHelper {
                 // Attempt paintbrush interaction
                 // changes the colour of details on certain kinds of block design
                 if (itemType == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
-                    TileEntity tileEntity = world.getTileEntity(pos);
                     if (tileEntity instanceof IFrameEntity) {
                         IFrameEntity fte = (IFrameEntity) tileEntity;
                         if (fte.getDesignTexture() < fte.getMaxDesignTextures()) {
@@ -304,8 +307,74 @@ public class FramedBlockHelper {
                     }
                 }
 
-                //TODO: MISSING OTHER INTERACTIONS
-                //BlockAppearanceHelper.setOverlay(world, pos, player, item);
+                // Attempt overlay interaction
+                // applies an overlay decal depending on the item used
+                // TODO: none of these have slab support, because it was too much code to duplicate
+                //  - come back once slabs are redone and add support here
+                if (itemType.isIn(OVERLAY_TAG)) {
+                    //apply grass overlay
+                    if(itemType.equals(Items.GRASS)) {
+                        if (tileEntity instanceof IFrameEntity) {
+                            IFrameEntity fte = (IFrameEntity) tileEntity;
+                            int newOverlay = fte.getOverlay() == BlockAppearanceHelper.GRASS_OVERLAY ? BlockAppearanceHelper.GRASS_LARGE_OVERLAY : BlockAppearanceHelper.GRASS_OVERLAY;
+                            String key = "message.blockcarpentry.grass_overlay" + ((fte.getOverlay() == BlockAppearanceHelper.GRASS_LARGE_OVERLAY) ? "_large" : "");
+                            fte.setOverlay(newOverlay);
+                            player.sendStatusMessage(new TranslationTextComponent(key), true);
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
+                    //apply snow overlay
+                    if(itemType.equals(Items.SNOWBALL)) {
+                        if (tileEntity instanceof IFrameEntity) {
+                            IFrameEntity fte = (IFrameEntity) tileEntity;
+                            int newOverlay = fte.getOverlay() == BlockAppearanceHelper.SNOW_OVERLAY ? BlockAppearanceHelper.SNOW_LARGE_OVERLAY : BlockAppearanceHelper.SNOW_OVERLAY;
+                            String key = "message.blockcarpentry.snow_overlay" + ((fte.getOverlay() == BlockAppearanceHelper.SNOW_OVERLAY) ? "_small" : "");
+                            fte.setOverlay(newOverlay);
+                            player.sendStatusMessage(new TranslationTextComponent(key), true);
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
+                    //apply grass overlay
+                    if(itemType.equals(Items.VINE)) {
+                        if (tileEntity instanceof IFrameEntity) {
+                            IFrameEntity fte = (IFrameEntity) tileEntity;
+                            fte.setOverlay(BlockAppearanceHelper.VINE_OVERLAY);
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.vine_overlay"), true);
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
+                    //apply brick overlay
+                    if(itemType.equals(Items.GUNPOWDER)) {
+                        if (tileEntity instanceof IFrameEntity) {
+                            IFrameEntity fte = (IFrameEntity) tileEntity;
+                            //FIXME: this is ugly
+                            int newOverlay = Math.max(BlockAppearanceHelper.STONE_BRICK_OVERLAY, fte.getOverlay() + 1);
+                            if(newOverlay > BlockAppearanceHelper.CHISELED_STONE_OVERLAY) {newOverlay = BlockAppearanceHelper.CHISELED_STONE_OVERLAY;}
+                            fte.setOverlay(newOverlay);
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.special_overlay", (fte.getOverlay() - 5)), true);
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
+                    //apply crimson overlay
+                    if(itemType.equals(Items.CRIMSON_ROOTS)) {
+                        if (tileEntity instanceof IFrameEntity) {
+                            IFrameEntity fte = (IFrameEntity) tileEntity;
+                            fte.setOverlay(BlockAppearanceHelper.CRIMSON_OVERLAY);
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.crimson_overlay"), true);
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
+                    //apply warped overlay
+                    if(itemType.equals(Items.WARPED_ROOTS)) {
+                        if (tileEntity instanceof IFrameEntity) {
+                            IFrameEntity fte = (IFrameEntity) tileEntity;
+                            fte.setOverlay(BlockAppearanceHelper.WARPED_OVERLAY);
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.warped_overlay"), true);
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
+
+                }
 
             }
         }

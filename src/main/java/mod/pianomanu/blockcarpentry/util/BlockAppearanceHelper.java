@@ -46,6 +46,19 @@ public class BlockAppearanceHelper {
         BlockAppearanceHelper.setRotation(world, pos, player, item);
     }
 
+    public static final int GRASS_OVERLAY = 1;
+    public static final int GRASS_LARGE_OVERLAY = 2;
+    public static final int SNOW_LARGE_OVERLAY = 3;
+    public static final int SNOW_OVERLAY = 4;
+    public static final int VINE_OVERLAY = 5;
+    public static final int STONE_BRICK_OVERLAY = 6;
+    public static final int BRICK_OVERLAY = 7;
+    public static final int SANDSTONE_OVERLAY = 8;
+    public static final int BOUNDARY_OVERLAY = 9;
+    public static final int CHISELED_STONE_OVERLAY = 10;
+    public static final int CRIMSON_OVERLAY = 11;
+    public static final int WARPED_OVERLAY = 12;
+
     @Deprecated
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (item.getItem() == Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) < 13) {
@@ -278,6 +291,7 @@ public class BlockAppearanceHelper {
         return 0;
     }
 
+    @Deprecated
     public static void setOverlay(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
         if (itemStack.getItem().equals(Items.GRASS)) {
             TileEntity tileEntity = world.getTileEntity(pos);
