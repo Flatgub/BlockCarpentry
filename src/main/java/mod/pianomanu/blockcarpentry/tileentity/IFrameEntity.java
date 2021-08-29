@@ -10,4 +10,7 @@ public interface IFrameEntity {
     void setTexture(int texture);
     int getRotation();
     void setRotation(int rotation);
+    int getDesign();
+    int getMaxDesigns();
+    void setDesign(int design);
 }

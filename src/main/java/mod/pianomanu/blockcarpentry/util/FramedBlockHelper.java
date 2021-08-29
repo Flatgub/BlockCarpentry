@@ -139,7 +139,7 @@ public class FramedBlockHelper {
             if(state.get(CONTAINS_BLOCK)) {
                 // Attempt hammer interaction, either via hammer or by shift rightclick if disabled in the config.
                 // removes the current mimic texture
-                if (item.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+                if (itemType == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                     if (!player.isCreative())
                         block.dropContainedBlock(world, pos);
                     state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
@@ -168,7 +168,7 @@ public class FramedBlockHelper {
                     }
                 }
 
-                // Attempt texture wrench
+                // Attempt texture wrench interaction
                 // on frame blocks "swaps" which texture is showing on all sides
                 // on illusion blocks "rotates" the block to change which face each texture appears on
                 if (itemType == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() ) {
@@ -248,9 +248,45 @@ public class FramedBlockHelper {
                     }
                 }
 
+                // Attempt chisel interaction
+                if (itemType == Registration.CHISEL.get() && !player.isSneaking()) {
+                    TileEntity tileEntity = world.getTileEntity(pos);
+                    if (tileEntity instanceof IFrameEntity) {
+                        IFrameEntity fte = (IFrameEntity) tileEntity;
+                        if (fte.getDesign() < fte.getMaxDesigns()) {
+                            fte.setDesign(fte.getDesign() + 1);
+                        } else {
+                            fte.setDesign(0);
+                        }
+                        player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
+                        return ActionResultType.SUCCESS;
+                    }
+
+                    //TODO: come back to this when slabs are redone
+                    if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                        TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
+                        if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                            if (fte.getDesign_1() < fte.maxDesigns) {
+                                fte.setDesign_1(fte.getDesign_1() + 1);
+                            } else {
+                                fte.setDesign_1(0);
+                            }
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign_1()), true);
+                            return ActionResultType.SUCCESS;
+                        } else {
+                            if (fte.getDesign_2() < fte.maxDesigns) {
+                                fte.setDesign_2(fte.getDesign_2() + 1);
+                            } else {
+                                fte.setDesign_2(0);
+                            }
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign_2()), true);
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
+
+                }
 
                 //TODO: MISSING OTHER INTERACTIONS
-                //BlockAppearanceHelper.setDesign(world, pos, player, item);
                 //BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
                 //BlockAppearanceHelper.setOverlay(world, pos, player, item);
 

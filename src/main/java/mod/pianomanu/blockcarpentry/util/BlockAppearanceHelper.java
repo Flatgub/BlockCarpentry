@@ -130,6 +130,7 @@ public class BlockAppearanceHelper {
         }
     }
 
+    @Deprecated
     public static void setDesign(World world, BlockPos pos, PlayerEntity player, ItemStack item) {
         if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
             TileEntity tileEntity = world.getTileEntity(pos);

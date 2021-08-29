@@ -95,11 +95,13 @@ public class BedFrameTile extends TileEntity implements IFrameEntity {
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
-    public Integer getDesign() {
+    public int getDesign() {
         return this.design;
     }
 
-    public void setDesign(Integer design) {
+    public int getMaxDesigns() {return this.maxDesigns;}
+
+    public void setDesign(int design) {
         this.design = design;
         markDirty();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
