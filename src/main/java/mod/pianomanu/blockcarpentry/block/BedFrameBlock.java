@@ -69,8 +69,6 @@ public class BedFrameBlock extends BedBlock implements IFrameableBlock {
         return new BedFrameTile();
     }
 
-    //TODO: adapt this to work the same way as the others
-    //note: this seems to just not work at all?? i can't apply anything to it?
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);

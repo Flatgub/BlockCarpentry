@@ -21,9 +21,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -67,58 +65,32 @@ public class ButtonFrameBlock extends WoodButtonBlock implements IFrameableBlock
         return new FrameBlockTile();
     }
 
-    //TODO: convert this
-    //FIXME: the button only makes a sound when popping outwards
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            //TODO clean up
-            if (!state.get(CONTAINS_BLOCK)) {
-                if (item.getItem() instanceof BlockItem) {
-                    if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                        return ActionResultType.PASS;
-                    }
-                    TileEntity tileEntity = world.getTileEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
-                        ((FrameBlockTile) tileEntity).clear();
-                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                        ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                        insertBlock(world, pos, state, handBlockState);
-                        if (!player.isCreative())
-                            player.getHeldItem(hand).setCount(count - 1);
-                        return ActionResultType.CONSUME;
-                    }
-                }
+            ItemStack item = player.getHeldItem(hand);
+
+            //attempt hammer/wrench/etc interaction
+            if(FramedBlockHelper.attemptToolUse(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
+
+            //in the absence of a tool, attempt apply mimic
+            if(FramedBlockHelper.attemptApplyMimic(this, state, world, pos, player, hand, trace).isSuccess()) {
+                return ActionResultType.SUCCESS;
             }
+
+            //in the absence of a tool or mimic, do button behaviour
             if (state.get(POWERED)) {
                 return ActionResultType.CONSUME;
             } else {
                 this.powerBlock(state, world, pos);
-                this.playSound(player, world, pos, true);
+                world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.6F);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }
 
-    //@Override
-    //@SuppressWarnings("deprecation")
-    //public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-    //    return FramedBlockHelper.doGenericRightClick(this, state, world, pos, player, hand, trace);
-    //}
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
