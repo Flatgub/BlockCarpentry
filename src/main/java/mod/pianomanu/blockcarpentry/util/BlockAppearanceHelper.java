@@ -69,6 +69,7 @@ public class BlockAppearanceHelper {
         return state.get(LIGHT_LEVEL);
     }
 
+    @Deprecated
     public static void setTexture(ItemStack item, BlockState state, World world, PlayerEntity player, BlockPos pos) {
         if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK) && mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
             TileEntity tileEntity = world.getTileEntity(pos);
@@ -441,6 +442,7 @@ public class BlockAppearanceHelper {
         return -1;
     }
 
+    @Deprecated
     public static void setRotation(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
         if (itemStack.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && mod.pianomanu.blockcarpentry.util.Tags.isIllusionBlock(world.getBlockState(pos).getBlock())) {
             TileEntity tileEntity = world.getTileEntity(pos);

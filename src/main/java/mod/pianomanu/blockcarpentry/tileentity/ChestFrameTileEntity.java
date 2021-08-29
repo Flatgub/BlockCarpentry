@@ -313,11 +313,11 @@ public class ChestFrameTileEntity extends ChestTileEntity implements IFrameEntit
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
-    public Integer getRotation() {
+    public int getRotation() {
         return rotation;
     }
 
-    public void setRotation(Integer rotation) {
+    public void setRotation(int rotation) {
         this.rotation = rotation;
         markDirty();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);

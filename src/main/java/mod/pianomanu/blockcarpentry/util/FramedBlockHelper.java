@@ -168,48 +168,91 @@ public class FramedBlockHelper {
                     }
                 }
 
-                // Attempt texture wrench interaction
-                // increases the light level of the frame by consuming coal, charcoal or glowstone dust
-                if (itemType == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
+                // Attempt texture wrench
+                // on frame blocks "swaps" which texture is showing on all sides
+                // on illusion blocks "rotates" the block to change which face each texture appears on
+                if (itemType == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() ) {
                     TileEntity tileEntity = world.getTileEntity(pos);
-                    if(tileEntity instanceof IFrameEntity) {
-                        IFrameEntity fte = (IFrameEntity) tileEntity;
-                        if (fte.getTexture() < 5) { //six sides possible
-                            fte.setTexture(fte.getTexture() + 1);
-                        } else {
-                            fte.setTexture(0);
+
+                    // SWAP TEXTURE for framed blocks
+                    if (mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
+                        if(tileEntity instanceof IFrameEntity) {
+                            IFrameEntity fte = (IFrameEntity) tileEntity;
+                            if (fte.getTexture() < 5) { //six sides possible
+                                fte.setTexture(fte.getTexture() + 1);
+                            } else {
+                                fte.setTexture(0);
+                            }
+                            //TODO: add a sound here
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                            return ActionResultType.SUCCESS;
                         }
-                        //TODO: add a sound here
-                        player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-                        return ActionResultType.SUCCESS;
+
+                        //TODO: come back to this when slabs are redone
+                        if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                            TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
+                            if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                                if (fte.getTexture_1() < 5) {
+                                    fte.setTexture_1(fte.getTexture_1() + 1);
+                                } else {
+                                    fte.setTexture_1(0);
+                                }
+                                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_1()), true);
+                                return ActionResultType.SUCCESS;
+                            } else {
+                                if (fte.getTexture_2() < 5) {
+                                    fte.setTexture_2(fte.getTexture_2() + 1);
+                                } else {
+                                    fte.setTexture_2(0);
+                                }
+                                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_2()), true);
+                                return ActionResultType.SUCCESS;
+                            }
+                        }
                     }
 
-                    //TODO: come back to this when slabs are redone
-                    if (tileEntity instanceof TwoBlocksFrameBlockTile) {
-                        TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                        if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                            if (fte.getTexture_1() < 5) {
-                                fte.setTexture_1(fte.getTexture_1() + 1);
+                    // ROTATE SIDES for illusion blocks
+                    if (mod.pianomanu.blockcarpentry.util.Tags.isIllusionBlock(state.getBlock())) {
+                        if (tileEntity instanceof IFrameEntity) {
+                            IFrameEntity fte = (IFrameEntity) tileEntity;
+                            if (fte.getRotation() < 7) {
+                                fte.setRotation(fte.getRotation() + 1);
                             } else {
-                                fte.setTexture_1(0);
+                                fte.setRotation(0);
                             }
-                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_1()), true);
-                        } else {
-                            if (fte.getTexture_2() < 5) {
-                                fte.setTexture_2(fte.getTexture_2() + 1);
+                            //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
+                        }
+
+                        //TODO: come back to this when slabs are redone
+                        if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                            TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
+                            if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                                if (fte.getRotation_1() < 7) {
+                                    fte.setRotation_1(fte.getRotation_1() + 1);
+                                } else {
+                                    fte.setRotation_1(0);
+                                }
+                                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation_1()), true);
+                                return ActionResultType.SUCCESS;
                             } else {
-                                fte.setTexture_2(0);
+                                if (fte.getRotation_2() < 7) {
+                                    fte.setRotation_2(fte.getRotation_2() + 1);
+                                } else {
+                                    fte.setRotation_2(0);
+                                }
+                                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation_2()), true);
+                                return ActionResultType.SUCCESS;
                             }
-                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_2()), true);
                         }
                     }
                 }
+
 
                 //TODO: MISSING OTHER INTERACTIONS
                 //BlockAppearanceHelper.setDesign(world, pos, player, item);
                 //BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
                 //BlockAppearanceHelper.setOverlay(world, pos, player, item);
-                //BlockAppearanceHelper.setRotation(world, pos, player, item);
 
             }
         }

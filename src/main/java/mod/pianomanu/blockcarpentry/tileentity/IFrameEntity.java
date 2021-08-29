@@ -8,4 +8,6 @@ public interface IFrameEntity {
     void setMimic(BlockState mimic);
     int getTexture();
     void setTexture(int texture);
+    int getRotation();
+    void setRotation(int rotation);
 }

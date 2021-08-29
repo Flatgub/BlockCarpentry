@@ -123,11 +123,11 @@ public class BedFrameTile extends TileEntity implements IFrameEntity {
         this.texture = texture;
     }
 
-    public Integer getRotation() {
+    public int getRotation() {
         return rotation;
     }
 
-    public void setRotation(Integer rotation) {
+    public void setRotation(int rotation) {
         this.rotation = rotation;
     }
 
