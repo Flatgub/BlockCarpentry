@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry;
 
+import mod.gubbybee.debug.DebugCommands;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.RenderSetup;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,6 +68,10 @@ public class BlockCarpentryMain
     private void setup(final FMLCommonSetupEvent event)
     {
         LOGGER.info("Setting up BlockCarpentry mod");
+
+        if(!FMLEnvironment.production) {
+            MinecraftForge.EVENT_BUS.register(DebugCommands.class);
+        }
     }
 
     /**
