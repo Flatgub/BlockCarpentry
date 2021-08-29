@@ -13,4 +13,7 @@ public interface IFrameEntity {
     int getDesign();
     int getMaxDesigns();
     void setDesign(int design);
+    int getDesignTexture();
+    int getMaxDesignTextures();
+    void setDesignTexture(int texture);
 }

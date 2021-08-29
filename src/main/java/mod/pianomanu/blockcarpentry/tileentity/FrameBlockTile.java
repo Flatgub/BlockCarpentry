@@ -93,11 +93,13 @@ public class FrameBlockTile extends TileEntity implements IFrameEntity{
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
-    public Integer getDesignTexture() {
+    public int getDesignTexture() {
         return this.designTexture;
     }
 
-    public void setDesignTexture(Integer designTexture) {
+    public int getMaxDesignTextures() {return this.maxDesignTextures; }
+
+    public void setDesignTexture(int designTexture) {
         this.designTexture = designTexture;
         markDirty();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);

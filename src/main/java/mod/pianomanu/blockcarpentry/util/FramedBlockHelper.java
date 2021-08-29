@@ -249,6 +249,7 @@ public class FramedBlockHelper {
                 }
 
                 // Attempt chisel interaction
+                // changes the model design on certain kinds of block
                 if (itemType == Registration.CHISEL.get() && !player.isSneaking()) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     if (tileEntity instanceof IFrameEntity) {
@@ -286,8 +287,24 @@ public class FramedBlockHelper {
 
                 }
 
+                // Attempt paintbrush interaction
+                // changes the colour of details on certain kinds of block design
+                if (itemType == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
+                    TileEntity tileEntity = world.getTileEntity(pos);
+                    if (tileEntity instanceof IFrameEntity) {
+                        IFrameEntity fte = (IFrameEntity) tileEntity;
+                        if (fte.getDesignTexture() < fte.getMaxDesignTextures()) {
+                            fte.setDesignTexture(fte.getDesignTexture() + 1);
+                        } else {
+                            fte.setDesignTexture(0);
+                        }
+                        //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                        player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
+                        return ActionResultType.SUCCESS;
+                    }
+                }
+
                 //TODO: MISSING OTHER INTERACTIONS
-                //BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
                 //BlockAppearanceHelper.setOverlay(world, pos, player, item);
 
             }

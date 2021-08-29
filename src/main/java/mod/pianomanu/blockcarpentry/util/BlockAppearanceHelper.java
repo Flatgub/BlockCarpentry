@@ -192,6 +192,7 @@ public class BlockAppearanceHelper {
         }
     }
 
+    @Deprecated
     public static void setDesignTexture(World world, BlockPos pos, PlayerEntity player, ItemStack item) {
         if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
             TileEntity tileEntity = world.getTileEntity(pos);
