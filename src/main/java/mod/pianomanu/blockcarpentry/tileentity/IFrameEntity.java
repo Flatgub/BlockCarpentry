@@ -6,4 +6,6 @@ import net.minecraft.block.BlockState;
 public interface IFrameEntity {
     void clear();
     void setMimic(BlockState mimic);
+    int getTexture();
+    void setTexture(int texture);
 }

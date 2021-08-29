@@ -1,10 +1,10 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.tileentity.IFrameEntity;
+import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -29,6 +29,7 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.CONTAINS_BLOCK;
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
 /**
@@ -167,8 +168,44 @@ public class FramedBlockHelper {
                     }
                 }
 
+                // Attempt texture wrench interaction
+                // increases the light level of the frame by consuming coal, charcoal or glowstone dust
+                if (itemType == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
+                    TileEntity tileEntity = world.getTileEntity(pos);
+                    if(tileEntity instanceof IFrameEntity) {
+                        IFrameEntity fte = (IFrameEntity) tileEntity;
+                        if (fte.getTexture() < 5) { //six sides possible
+                            fte.setTexture(fte.getTexture() + 1);
+                        } else {
+                            fte.setTexture(0);
+                        }
+                        //TODO: add a sound here
+                        player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                        return ActionResultType.SUCCESS;
+                    }
+
+                    //TODO: come back to this when slabs are redone
+                    if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                        TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
+                        if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                            if (fte.getTexture_1() < 5) {
+                                fte.setTexture_1(fte.getTexture_1() + 1);
+                            } else {
+                                fte.setTexture_1(0);
+                            }
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_1()), true);
+                        } else {
+                            if (fte.getTexture_2() < 5) {
+                                fte.setTexture_2(fte.getTexture_2() + 1);
+                            } else {
+                                fte.setTexture_2(0);
+                            }
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_2()), true);
+                        }
+                    }
+                }
+
                 //TODO: MISSING OTHER INTERACTIONS
-                //BlockAppearanceHelper.setTexture(item, state, world, player, pos);
                 //BlockAppearanceHelper.setDesign(world, pos, player, item);
                 //BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
                 //BlockAppearanceHelper.setOverlay(world, pos, player, item);
