@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.CONTAINS_BLOCK;
@@ -34,30 +35,27 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  */
 public class BlockAppearanceHelper {
 
-    /**
-     * Shorthand for applying all the appearance helpers at once
-     */
-    public static void setAppearanceDetails(World world, ItemStack item, BlockState state, BlockPos pos, PlayerEntity player, Hand hand ) {
-        BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-        BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-        BlockAppearanceHelper.setDesign(world, pos, player, item);
-        BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-        BlockAppearanceHelper.setOverlay(world, pos, player, item);
-        BlockAppearanceHelper.setRotation(world, pos, player, item);
-    }
+    public static final int NO_OVERLAY_ID = 0;
+    public static final int GRASS_OVERLAY_ID = 1;
+    public static final int GRASS_LARGE_OVERLAY_ID = 2;
+    public static final int SNOW_LARGE_OVERLAY_ID = 3;
+    public static final int SNOW_OVERLAY_ID = 4;
+    public static final int VINE_OVERLAY_ID = 5;
+    public static final int STONE_BRICK_OVERLAY_ID = 6;
+    public static final int BRICK_OVERLAY_ID = 7;
+    public static final int SANDSTONE_OVERLAY_ID = 8;
+    public static final int BOUNDARY_OVERLAY_ID = 9;
+    public static final int CHISELED_STONE_OVERLAY_ID = 10;
+    public static final int CRIMSON_OVERLAY_ID = 11;
+    public static final int WARPED_OVERLAY_ID = 12;
 
-    public static final int GRASS_OVERLAY = 1;
-    public static final int GRASS_LARGE_OVERLAY = 2;
-    public static final int SNOW_LARGE_OVERLAY = 3;
-    public static final int SNOW_OVERLAY = 4;
-    public static final int VINE_OVERLAY = 5;
-    public static final int STONE_BRICK_OVERLAY = 6;
-    public static final int BRICK_OVERLAY = 7;
-    public static final int SANDSTONE_OVERLAY = 8;
-    public static final int BOUNDARY_OVERLAY = 9;
-    public static final int CHISELED_STONE_OVERLAY = 10;
-    public static final int CRIMSON_OVERLAY = 11;
-    public static final int WARPED_OVERLAY = 12;
+    public static final OverlaySet NO_OVERLAY = new OverlaySet(NO_OVERLAY_ID);
+    public static final OverlaySet GRASS_OVERLAY = new OverlaySet(GRASS_OVERLAY_ID, GRASS_LARGE_OVERLAY_ID);
+    public static final OverlaySet SNOW_OVERLAY = new OverlaySet(SNOW_OVERLAY_ID, SNOW_LARGE_OVERLAY_ID);
+    public static final OverlaySet VINE_OVERLAY = new OverlaySet(VINE_OVERLAY_ID);
+    public static final OverlaySet GUNPOWDER_OVERLAY = new OverlaySet(STONE_BRICK_OVERLAY_ID,BRICK_OVERLAY_ID,SANDSTONE_OVERLAY_ID,BOUNDARY_OVERLAY_ID,CHISELED_STONE_OVERLAY_ID);
+    public static final OverlaySet CRIMSON_OVERLAY = new OverlaySet(CRIMSON_OVERLAY_ID);
+    public static final OverlaySet WARPED_OVERLAY = new OverlaySet(WARPED_OVERLAY_ID);
 
     @Deprecated
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -522,5 +520,32 @@ public class BlockAppearanceHelper {
                 player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
             }
         }
+    }
+}
+
+/**
+ * An immutable collection of overlay IDs, used to allow cycling between overlays with shared logic;
+ */
+class OverlaySet {
+    private ArrayList<Integer> set;
+
+    public OverlaySet(Integer... overlays) {
+        set = new ArrayList<Integer>(Arrays.asList(overlays));
+    }
+
+    public int first() {
+        return set.get(0);
+    }
+
+    public int next(Integer current) {
+        int index = set.indexOf(current);
+        if(index == -1) {
+            return set.get(0);
+        }
+        return set.get(index);
+    }
+
+    public int find(Integer id) {
+        return set.indexOf(id);
     }
 }

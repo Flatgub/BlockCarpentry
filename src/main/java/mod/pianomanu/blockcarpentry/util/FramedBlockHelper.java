@@ -312,70 +312,45 @@ public class FramedBlockHelper {
                 // TODO: none of these have slab support, because it was too much code to duplicate
                 //  - come back once slabs are redone and add support here
                 if (itemType.isIn(OVERLAY_TAG)) {
-                    //apply grass overlay
-                    if(itemType.equals(Items.GRASS)) {
-                        if (tileEntity instanceof IFrameEntity) {
-                            IFrameEntity fte = (IFrameEntity) tileEntity;
-                            int newOverlay = fte.getOverlay() == BlockAppearanceHelper.GRASS_OVERLAY ? BlockAppearanceHelper.GRASS_LARGE_OVERLAY : BlockAppearanceHelper.GRASS_OVERLAY;
-                            String key = "message.blockcarpentry.grass_overlay" + ((fte.getOverlay() == BlockAppearanceHelper.GRASS_LARGE_OVERLAY) ? "_large" : "");
-                            fte.setOverlay(newOverlay);
-                            player.sendStatusMessage(new TranslationTextComponent(key), true);
-                            return ActionResultType.SUCCESS;
-                        }
-                    }
-                    //apply snow overlay
-                    if(itemType.equals(Items.SNOWBALL)) {
-                        if (tileEntity instanceof IFrameEntity) {
-                            IFrameEntity fte = (IFrameEntity) tileEntity;
-                            int newOverlay = fte.getOverlay() == BlockAppearanceHelper.SNOW_OVERLAY ? BlockAppearanceHelper.SNOW_LARGE_OVERLAY : BlockAppearanceHelper.SNOW_OVERLAY;
-                            String key = "message.blockcarpentry.snow_overlay" + ((fte.getOverlay() == BlockAppearanceHelper.SNOW_OVERLAY) ? "_small" : "");
-                            fte.setOverlay(newOverlay);
-                            player.sendStatusMessage(new TranslationTextComponent(key), true);
-                            return ActionResultType.SUCCESS;
-                        }
-                    }
-                    //apply grass overlay
-                    if(itemType.equals(Items.VINE)) {
-                        if (tileEntity instanceof IFrameEntity) {
-                            IFrameEntity fte = (IFrameEntity) tileEntity;
-                            fte.setOverlay(BlockAppearanceHelper.VINE_OVERLAY);
-                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.vine_overlay"), true);
-                            return ActionResultType.SUCCESS;
-                        }
-                    }
-                    //apply brick overlay
-                    if(itemType.equals(Items.GUNPOWDER)) {
-                        if (tileEntity instanceof IFrameEntity) {
-                            IFrameEntity fte = (IFrameEntity) tileEntity;
-                            //FIXME: this is ugly
-                            int newOverlay = Math.max(BlockAppearanceHelper.STONE_BRICK_OVERLAY, fte.getOverlay() + 1);
-                            if(newOverlay > BlockAppearanceHelper.CHISELED_STONE_OVERLAY) {newOverlay = BlockAppearanceHelper.CHISELED_STONE_OVERLAY;}
-                            fte.setOverlay(newOverlay);
-                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.special_overlay", (fte.getOverlay() - 5)), true);
-                            return ActionResultType.SUCCESS;
-                        }
-                    }
-                    //apply crimson overlay
-                    if(itemType.equals(Items.CRIMSON_ROOTS)) {
-                        if (tileEntity instanceof IFrameEntity) {
-                            IFrameEntity fte = (IFrameEntity) tileEntity;
-                            fte.setOverlay(BlockAppearanceHelper.CRIMSON_OVERLAY);
-                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.crimson_overlay"), true);
-                            return ActionResultType.SUCCESS;
-                        }
-                    }
-                    //apply warped overlay
-                    if(itemType.equals(Items.WARPED_ROOTS)) {
-                        if (tileEntity instanceof IFrameEntity) {
-                            IFrameEntity fte = (IFrameEntity) tileEntity;
-                            fte.setOverlay(BlockAppearanceHelper.WARPED_OVERLAY);
-                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.warped_overlay"), true);
-                            return ActionResultType.SUCCESS;
-                        }
-                    }
+                    int newOverlay = -1;
+                    TranslationTextComponent message = null;
 
+                    if (tileEntity instanceof IFrameEntity) {
+                        IFrameEntity fte = (IFrameEntity) tileEntity;
+                        int curOverlay = fte.getOverlay();
+                        if(itemType.equals(Items.GRASS)) {
+                            newOverlay = BlockAppearanceHelper.GRASS_OVERLAY.next(curOverlay);
+                            message = new TranslationTextComponent("message.blockcarpentry.grass_overlay", BlockAppearanceHelper.GRASS_OVERLAY.find(newOverlay)+1);
+                        }
+                        if(itemType.equals(Items.SNOWBALL)) {
+                            newOverlay = BlockAppearanceHelper.SNOW_OVERLAY.next(curOverlay);
+                            message = new TranslationTextComponent("message.blockcarpentry.snow_overlay", BlockAppearanceHelper.SNOW_OVERLAY.find(newOverlay)+1);
+                        }
+                        if(itemType.equals(Items.VINE)) {
+                            newOverlay = BlockAppearanceHelper.VINE_OVERLAY.first();
+                            message = new TranslationTextComponent("message.blockcarpentry.vine_overlay");
+                        }
+                        if(itemType.equals(Items.GUNPOWDER)) {
+                            newOverlay = BlockAppearanceHelper.GUNPOWDER_OVERLAY.next(curOverlay);
+                            message = new TranslationTextComponent("message.blockcarpentry.special_overlay", BlockAppearanceHelper.GUNPOWDER_OVERLAY.find(newOverlay)+1);
+                        }
+                        if(itemType.equals(Items.CRIMSON_ROOTS)) {
+                            newOverlay = BlockAppearanceHelper.CRIMSON_OVERLAY.first();
+                            message = new TranslationTextComponent("message.blockcarpentry.crimson_overlay");
+                        }
+                        if(itemType.equals(Items.WARPED_ROOTS)) {
+                            newOverlay = BlockAppearanceHelper.WARPED_OVERLAY.first();
+                            message = new TranslationTextComponent("message.blockcarpentry.warped_overlay");
+                        }
+
+                        //if an item was matched
+                        if(newOverlay != -1) {
+                            fte.setOverlay(newOverlay);
+                            player.sendStatusMessage(message, true);
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
                 }
-
             }
         }
         return ActionResultType.PASS;
