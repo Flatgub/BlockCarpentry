@@ -53,192 +53,9 @@ public class BlockAppearanceHelper {
     public static final OverlaySet GRASS_OVERLAY = new OverlaySet(GRASS_OVERLAY_ID, GRASS_LARGE_OVERLAY_ID);
     public static final OverlaySet SNOW_OVERLAY = new OverlaySet(SNOW_OVERLAY_ID, SNOW_LARGE_OVERLAY_ID);
     public static final OverlaySet VINE_OVERLAY = new OverlaySet(VINE_OVERLAY_ID);
-    public static final OverlaySet GUNPOWDER_OVERLAY = new OverlaySet(STONE_BRICK_OVERLAY_ID,BRICK_OVERLAY_ID,SANDSTONE_OVERLAY_ID,BOUNDARY_OVERLAY_ID,CHISELED_STONE_OVERLAY_ID);
+    public static final OverlaySet GUNPOWDER_OVERLAY = new OverlaySet(STONE_BRICK_OVERLAY_ID, BRICK_OVERLAY_ID, SANDSTONE_OVERLAY_ID, BOUNDARY_OVERLAY_ID, CHISELED_STONE_OVERLAY_ID);
     public static final OverlaySet CRIMSON_OVERLAY = new OverlaySet(CRIMSON_OVERLAY_ID);
     public static final OverlaySet WARPED_OVERLAY = new OverlaySet(WARPED_OVERLAY_ID);
-
-    @Deprecated
-    public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
-        if (item.getItem() == Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) < 13) {
-            int count = player.getHeldItem(hand).getCount();
-            world.setBlockState(pos, state.with(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos) + 3));
-            player.getHeldItem(hand).setCount(count - 1);
-            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", (state.get(LIGHT_LEVEL) + 3)), true);
-        }
-        if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL) < 15) {
-            int count = player.getHeldItem(hand).getCount();
-            world.setBlockState(pos, state.with(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos) + 1));
-            player.getHeldItem(hand).setCount(count - 1);
-            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", (state.get(LIGHT_LEVEL) + 1)), true);
-        }
-        if (item.getItem() == Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) >= 13) {
-            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", state.get(LIGHT_LEVEL)), true);
-        }
-        if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL) == 15) {
-            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.light_level", state.get(LIGHT_LEVEL)), true);
-        }
-        return state.get(LIGHT_LEVEL);
-    }
-
-    @Deprecated
-    public static void setTexture(ItemStack item, BlockState state, World world, PlayerEntity player, BlockPos pos) {
-        if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK) && mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof BedFrameTile) {
-                BedFrameTile fte = (BedFrameTile) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof ChestFrameTileEntity) {
-                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof TwoBlocksFrameBlockTile) {
-                TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getTexture_1() < 5) {
-                        fte.setTexture_1(fte.getTexture_1() + 1);
-                    } else {
-                        fte.setTexture_1(0);
-                    }
-                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_1()), true);
-                } else {
-                    if (fte.getTexture_2() < 5) {
-                        fte.setTexture_2(fte.getTexture_2() + 1);
-                    } else {
-                        fte.setTexture_2(0);
-                    }
-                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_2()), true);
-                }
-            }
-            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
-                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-        }
-    }
-
-    @Deprecated
-    public static void setDesign(World world, BlockPos pos, PlayerEntity player, ItemStack item) {
-        if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                if (fte.getDesign() < fte.maxDesigns) {
-                    fte.setDesign(fte.getDesign() + 1);
-                } else {
-                    fte.setDesign(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
-            }
-            if (tileEntity instanceof BedFrameTile) {
-                BedFrameTile fte = (BedFrameTile) tileEntity;
-                if (fte.getDesign() < fte.maxDesigns) {
-                    fte.setDesign(fte.getDesign() + 1);
-                } else {
-                    fte.setDesign(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
-            }
-            if (tileEntity instanceof ChestFrameTileEntity) {
-                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
-                if (fte.getDesign() < fte.maxDesigns) {
-                    fte.setDesign(fte.getDesign() + 1);
-                } else {
-                    fte.setDesign(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
-            }
-            if (tileEntity instanceof TwoBlocksFrameBlockTile) {
-                TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                BlockState state = world.getBlockState(pos);
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getDesign_1() < fte.maxDesigns) {
-                        fte.setDesign_1(fte.getDesign_1() + 1);
-                    } else {
-                        fte.setDesign_1(0);
-                    }
-                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign_1()), true);
-                } else {
-                    if (fte.getDesign_2() < fte.maxDesigns) {
-                        fte.setDesign_2(fte.getDesign_2() + 1);
-                    } else {
-                        fte.setDesign_2(0);
-                    }
-                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign_2()), true);
-                }
-            }
-            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
-                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
-                if (fte.getDesign() < fte.maxDesigns) {
-                    fte.setDesign(fte.getDesign() + 1);
-                } else {
-                    fte.setDesign(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
-            }
-        }
-    }
-
-    @Deprecated
-    public static void setDesignTexture(World world, BlockPos pos, PlayerEntity player, ItemStack item) {
-        if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                if (fte.getDesignTexture() < fte.maxDesignTextures) {
-                    fte.setDesignTexture(fte.getDesignTexture() + 1);
-                } else {
-                    fte.setDesignTexture(0);
-                }
-                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
-            }
-            if (tileEntity instanceof BedFrameTile) {
-                BedFrameTile fte = (BedFrameTile) tileEntity;
-                if (fte.getDesignTexture() < 7) {
-                    fte.setDesignTexture(fte.getDesignTexture() + 1);
-                } else {
-                    fte.setDesignTexture(0);
-                }
-                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
-            }
-            if (tileEntity instanceof ChestFrameTileEntity) {
-                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
-                if (fte.getDesignTexture() < fte.maxDesignTextures) {
-                    fte.setDesignTexture(fte.getDesignTexture() + 1);
-                } else {
-                    fte.setDesignTexture(0);
-                }
-                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
-            }
-        }
-    }
 
     public static void setGlassColor(World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (BlockSavingHelper.isDyeItem(player.getHeldItem(hand).getItem())) {
@@ -289,6 +106,7 @@ public class BlockAppearanceHelper {
         return 0;
     }
 
+    // preserved to keep a copy of the original slab behaviour somewhere
     @Deprecated
     public static void setOverlay(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
         if (itemStack.getItem().equals(Items.GRASS)) {
@@ -455,72 +273,6 @@ public class BlockAppearanceHelper {
         }
         return -1;
     }
-
-    @Deprecated
-    public static void setRotation(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
-        if (itemStack.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && mod.pianomanu.blockcarpentry.util.Tags.isIllusionBlock(world.getBlockState(pos).getBlock())) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                if (fte.getRotation() < 7) {
-                    fte.setRotation(fte.getRotation() + 1);
-                } else {
-                    fte.setRotation(0);
-                }
-                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
-            }
-            if (tileEntity instanceof BedFrameTile) {
-                BedFrameTile fte = (BedFrameTile) tileEntity;
-                if (fte.getRotation() < 7) {
-                    fte.setRotation(fte.getRotation() + 1);
-                } else {
-                    fte.setRotation(0);
-                }
-                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
-            }
-            if (tileEntity instanceof ChestFrameTileEntity) {
-                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
-                if (fte.getRotation() < 7) {
-                    fte.setRotation(fte.getRotation() + 1);
-                } else {
-                    fte.setRotation(0);
-                }
-                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
-            }
-            if (tileEntity instanceof TwoBlocksFrameBlockTile) {
-                TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                BlockState state = world.getBlockState(pos);
-                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getRotation_1() < 7) {
-                        fte.setRotation_1(fte.getRotation_1() + 1);
-                    } else {
-                        fte.setRotation_1(0);
-                    }
-                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation_1()), true);
-                } else {
-                    if (fte.getRotation_2() < 7) {
-                        fte.setRotation_2(fte.getRotation_2() + 1);
-                    } else {
-                        fte.setRotation_2(0);
-                    }
-                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation_2()), true);
-                }
-            }
-            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
-                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
-                if (fte.getRotation() < 7) {
-                    fte.setRotation(fte.getRotation() + 1);
-                } else {
-                    fte.setRotation(0);
-                }
-                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
-            }
-        }
-    }
 }
 
 /**
@@ -537,12 +289,19 @@ class OverlaySet {
         return set.get(0);
     }
 
+    /**
+     * Finds the next overlay in this set.
+     * Loops back around to the start if next is called on the last overlay
+     * Will return the first overlay if current doesn't exist within the set
+     * @param current
+     * @return
+     */
     public int next(Integer current) {
         int index = set.indexOf(current);
-        if(index == -1) {
+        if(index == -1 || index+1 >= set.size()) {
             return set.get(0);
         }
-        return set.get(index);
+        return set.get(index+1);
     }
 
     public int find(Integer id) {
