@@ -586,62 +586,62 @@ public class ModelHelper {
         TextureAtlasSprite overlay = null;
         TextureAtlasSprite upOverlay = null;
         TextureAtlasSprite downOverlay = null;
-        if (overlayIndex == GRASS_OVERLAY) {
+        if (overlayIndex == GRASS_OVERLAY_ID) {
             tintIndex = 1;
             overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_side_overlay"));
             upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
         }
-        if (overlayIndex == GRASS_LARGE_OVERLAY) {
+        if (overlayIndex == GRASS_LARGE_OVERLAY_ID) {
             tintIndex = 1;
             overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_side_overlay_large"));
             upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
         }
-        if (overlayIndex == SNOW_LARGE_OVERLAY) {
+        if (overlayIndex == SNOW_LARGE_OVERLAY_ID) {
             tintIndex = -1;
             overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay"));
             upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/snow"));
         }
-        if (overlayIndex == SNOW_OVERLAY) {
+        if (overlayIndex == SNOW_OVERLAY_ID) {
             tintIndex = -1;
             overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay_small"));
             upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/snow"));
         }
-        if (overlayIndex == VINE_OVERLAY) {
+        if (overlayIndex == VINE_OVERLAY_ID) {
             tintIndex = 1;
             overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/vine"));
         }
-        if (overlayIndex >= STONE_BRICK_OVERLAY && overlayIndex <= CHISELED_STONE_OVERLAY) {
+        if (overlayIndex >= STONE_BRICK_OVERLAY_ID && overlayIndex <= CHISELED_STONE_OVERLAY_ID) {
             tintIndex = -1;
             doNotMoveOverlay = false;
-            if (overlayIndex == STONE_BRICK_OVERLAY) {
+            if (overlayIndex == STONE_BRICK_OVERLAY_ID) {
                 overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
                 upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
                 downOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
             }
-            if (overlayIndex == BRICK_OVERLAY) {
+            if (overlayIndex == BRICK_OVERLAY_ID) {
                 overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
                 upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
                 downOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
             }
-            if (overlayIndex == SANDSTONE_OVERLAY) {
+            if (overlayIndex == SANDSTONE_OVERLAY_ID) {
                 overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_sandstone_overlay"));
             }
-            if (overlayIndex == BOUNDARY_OVERLAY) {
+            if (overlayIndex == BOUNDARY_OVERLAY_ID) {
                 overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
                 upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
                 downOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
             }
-            if (overlayIndex == CHISELED_STONE_OVERLAY) {
+            if (overlayIndex == CHISELED_STONE_OVERLAY_ID) {
                 overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
                 upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
                 downOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
             }
         }
-        if (overlayIndex == CRIMSON_OVERLAY) {
+        if (overlayIndex == CRIMSON_OVERLAY_ID) {
             overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/crimson_overlay"));
             upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/crimson_nylium"));
         }
-        if (overlayIndex == WARPED_OVERLAY) {
+        if (overlayIndex == WARPED_OVERLAY_ID) {
             overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/warped_overlay"));
             upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/warped_nylium"));
         }

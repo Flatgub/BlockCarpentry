@@ -89,8 +89,8 @@ public class FallingFrameBlock extends FallingBlock {
                     }
                 }
             }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            //BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            //BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
                 //System.out.println("You should rotate now!");
             }

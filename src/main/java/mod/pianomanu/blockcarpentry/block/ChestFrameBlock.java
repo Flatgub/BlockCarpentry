@@ -134,11 +134,11 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable, IFram
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
+            //BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            //BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            //BlockAppearanceHelper.setDesign(world, pos, player, item);
+            //BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            //BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (tileEntity instanceof ChestFrameTileEntity && state.get(CONTAINS_BLOCK)) {
                 if (!(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
                     NetworkHooks.openGui((ServerPlayerEntity) player, (ChestFrameTileEntity) tileEntity, pos);

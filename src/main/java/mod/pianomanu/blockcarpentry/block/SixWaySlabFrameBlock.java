@@ -161,12 +161,12 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
+            //BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            //BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            //BlockAppearanceHelper.setDesign(world, pos, player, item);
+            //BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            //BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            //BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) && !state.get(DOUBLE_SLAB) || state.get(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return ActionResultType.PASS;
