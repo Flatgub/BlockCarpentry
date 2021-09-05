@@ -13,7 +13,6 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class FrameBlockTileEntity  extends TileEntity{
     private FrameAppearanceData appearanceData;
@@ -21,7 +20,7 @@ public class FrameBlockTileEntity  extends TileEntity{
     public FrameBlockTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn); //replace this with a reference to registration type
 
-        appearanceData = new FrameAppearanceData(); //with defaults (mimic, rotation, texture)
+        appearanceData = new FrameAppearanceData(); //with defaults (mimic, rotation, texture and overlay)
     }
 
     protected void notifySurrounding() {
@@ -41,8 +40,6 @@ public class FrameBlockTileEntity  extends TileEntity{
         appearanceData.setProperty(name, value);
         notifySurrounding();
     }
-
-    // getModelData is missing
 
     private static final String APPEARANCE_NBT_NAME = "appearance";
 

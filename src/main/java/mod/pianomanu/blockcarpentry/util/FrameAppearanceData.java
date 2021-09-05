@@ -1,6 +1,9 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +23,12 @@ public class FrameAppearanceData {
         return properties.containsKey(name);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getProperty(String name) {
         return (T) properties.get(name).getValue();
     }
 
+    @SuppressWarnings("unchecked")
     public <T> void setProperty(String name, T value) {
         AppearanceProperty<T> prop = (AppearanceProperty<T>) properties.get(name);
         prop.setValue(value);
@@ -54,6 +59,15 @@ public class FrameAppearanceData {
             }
         }
         return changed;
+    }
+
+    public IModelData toModelData() {
+        ModelDataMap.Builder builder = new ModelDataMap.Builder();
+        for(Map.Entry<String, AppearanceProperty<?>> property: properties.entrySet()) {
+            String name = property.getKey();
+            property.getValue().addToBuilder(builder, name);
+        }
+        return builder.build();
     }
 
     //private AppearanceProperty<BlockState> mimicProperty = new AppearanceProperty<>();

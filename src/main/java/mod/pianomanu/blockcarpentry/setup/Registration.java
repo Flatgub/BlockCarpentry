@@ -63,9 +63,10 @@ public class Registration {
     //public static final RegistryObject<Item> FALLING_FRAMEBLOCK_ITEM = ITEMS.register("falling_frameblock", () -> new BlockItem(FALLING_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     //public static final RegistryObject<TileEntityType<FrameBlockTile>> FALLING_FRAMEBLOCK_TILE = TILES.register("falling_frameblock", () -> TileEntityType.Builder.create(FrameBlockTile::new, FRAMEBLOCK.get()).build(null));
 
-    public static final RegistryObject<SixWaySlabFrameBlock> SLAB_FRAMEBLOCK = BLOCKS.register("frame_slab", () -> new SixWaySlabFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> SLAB_FRAME_ITEM = ITEMS.register("frame_slab", () -> new BlockItem(SLAB_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<TwoBlocksFrameBlockTile>> SLAB_FRAME_TILE = TILES.register("frame_slab", () -> TileEntityType.Builder.create(TwoBlocksFrameBlockTile::new, SLAB_FRAMEBLOCK.get()).build(null));
+    // TODO: recover slabs
+    //public static final RegistryObject<SixWaySlabFrameBlock> SLAB_FRAMEBLOCK = BLOCKS.register("frame_slab", () -> new SixWaySlabFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    //public static final RegistryObject<Item> SLAB_FRAME_ITEM = ITEMS.register("frame_slab", () -> new BlockItem(SLAB_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    //public static final RegistryObject<TileEntityType<TwoBlocksFrameBlockTile>> SLAB_FRAME_TILE = TILES.register("frame_slab", () -> TileEntityType.Builder.create(TwoBlocksFrameBlockTile::new, SLAB_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<FrameBlock> ILLUSION_BLOCK = BLOCKS.register("illusion_block", () -> new FrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> ILLUSION_BLOCK_ITEM = ITEMS.register("illusion_block", () -> new BlockItem(ILLUSION_BLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -137,9 +138,10 @@ public class Registration {
     public static final RegistryObject<Item> EDGED_SLOPE_FRAME_ITEM = ITEMS.register("frame_edged_slope", () -> new BlockItem(EDGED_SLOPE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> EDGED_SLOPE_FRAME_TILE = TILES.register("frame_edged_slope", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, EDGED_SLOPE_FRAMEBLOCK.get()).build(null));
 
-    public static final RegistryObject<SixWaySlabFrameBlock> SLAB_ILLUSIONBLOCK = BLOCKS.register("illusion_slab", () -> new SixWaySlabFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> SLAB_ILLUSION_ITEM = ITEMS.register("illusion_slab", () -> new BlockItem(SLAB_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> SLAB_ILLUSION_TILE = TILES.register("illusion_slab", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, SLAB_FRAMEBLOCK.get()).build(null));
+    // TODO: recover slabs
+    //public static final RegistryObject<SixWaySlabFrameBlock> SLAB_ILLUSIONBLOCK = BLOCKS.register("illusion_slab", () -> new SixWaySlabFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    //public static final RegistryObject<Item> SLAB_ILLUSION_ITEM = ITEMS.register("illusion_slab", () -> new BlockItem(SLAB_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    //public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> SLAB_ILLUSION_TILE = TILES.register("illusion_slab", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, SLAB_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<ButtonFrameBlock> BUTTON_ILLUSIONBLOCK = BLOCKS.register("illusion_button", () -> new ButtonFrameBlock(Block.Properties.from(FRAMEBLOCK.get()).notSolid().doesNotBlockMovement()));
     public static final RegistryObject<Item> BUTTON_ILLUSION_ITEM = ITEMS.register("illusion_button", () -> new BlockItem(BUTTON_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));

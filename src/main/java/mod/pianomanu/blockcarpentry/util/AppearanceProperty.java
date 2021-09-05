@@ -1,7 +1,8 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 
 public abstract class AppearanceProperty<T> {
     protected T value = null;
@@ -30,5 +31,12 @@ public abstract class AppearanceProperty<T> {
     public abstract CompoundNBT toNBT(CompoundNBT in);
 
     public abstract boolean fromNBT(CompoundNBT in);
+
+    // I don't know if this belongs here, but its the only location the type is known
+    @SuppressWarnings("unchecked")
+    public void addToBuilder(ModelDataMap.Builder builder, String as) {
+        ModelProperty<T> modelprop = (ModelProperty<T>) AppearencePropertyCollection.modelPropertyMapping.get(as);
+        builder.withInitial(modelprop, value);
+    }
 
 }
