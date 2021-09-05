@@ -181,20 +181,17 @@ public class FramedBlockHelper {
 
                     // SWAP TEXTURE for framed blocks
                     if (mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
-                        if(tileEntity instanceof IFrameEntity) {
-                            IFrameEntity fte = (IFrameEntity) tileEntity;
-                            if (fte.getTexture() < 5) { //six sides possible
-                                fte.setTexture(fte.getTexture() + 1);
-                            } else {
-                                fte.setTexture(0);
-                            }
+                        if(tileEntity instanceof ISupportsFaceTextures) {
+                            ISupportsFaceTextures fte = (ISupportsFaceTextures) tileEntity;
+                            fte.nextFaceTexture();
+
                             //TODO: add a sound here
-                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                            player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getFaceTexture()), true);
                             return ActionResultType.SUCCESS;
                         }
 
                         //TODO: come back to this when slabs are redone
-                        if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                        /*if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                             TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                             if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                                 if (fte.getTexture_1() < 5) {
@@ -213,24 +210,21 @@ public class FramedBlockHelper {
                                 player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_2()), true);
                                 return ActionResultType.SUCCESS;
                             }
-                        }
+                        }*/
                     }
 
                     // ROTATE SIDES for illusion blocks
                     if (mod.pianomanu.blockcarpentry.util.Tags.isIllusionBlock(state.getBlock())) {
-                        if (tileEntity instanceof IFrameEntity) {
-                            IFrameEntity fte = (IFrameEntity) tileEntity;
-                            if (fte.getRotation() < 7) {
-                                fte.setRotation(fte.getRotation() + 1);
-                            } else {
-                                fte.setRotation(0);
-                            }
+                        if (tileEntity instanceof ISupportsRotation) {
+                            ISupportsRotation fte = (ISupportsRotation) tileEntity;
+                            fte.nextRotation();
+
                             //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
                             player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
                         }
 
                         //TODO: come back to this when slabs are redone
-                        if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                        /*if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                             TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                             if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                                 if (fte.getRotation_1() < 7) {
@@ -249,26 +243,23 @@ public class FramedBlockHelper {
                                 player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation_2()), true);
                                 return ActionResultType.SUCCESS;
                             }
-                        }
+                        }*/
                     }
                 }
 
                 // Attempt chisel interaction
                 // changes the model design on certain kinds of block
                 if (itemType == Registration.CHISEL.get() && !player.isSneaking()) {
-                    if (tileEntity instanceof IFrameEntity) {
-                        IFrameEntity fte = (IFrameEntity) tileEntity;
-                        if (fte.getDesign() < fte.getMaxDesigns()) {
-                            fte.setDesign(fte.getDesign() + 1);
-                        } else {
-                            fte.setDesign(0);
-                        }
+                    if (tileEntity instanceof ISupportsDesigns) {
+                        ISupportsDesigns fte = (ISupportsDesigns) tileEntity;
+                        fte.nextDesign();
+
                         player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
                         return ActionResultType.SUCCESS;
                     }
 
                     //TODO: come back to this when slabs are redone
-                    if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                    /*if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                         TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                         if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                             if (fte.getDesign_1() < fte.maxDesigns) {
@@ -287,20 +278,17 @@ public class FramedBlockHelper {
                             player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign_2()), true);
                             return ActionResultType.SUCCESS;
                         }
-                    }
+                    }*/
 
                 }
 
                 // Attempt paintbrush interaction
                 // changes the colour of details on certain kinds of block design
                 if (itemType == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
-                    if (tileEntity instanceof IFrameEntity) {
-                        IFrameEntity fte = (IFrameEntity) tileEntity;
-                        if (fte.getDesignTexture() < fte.getMaxDesignTextures()) {
-                            fte.setDesignTexture(fte.getDesignTexture() + 1);
-                        } else {
-                            fte.setDesignTexture(0);
-                        }
+                    if (tileEntity instanceof ISupportsTexturedDesigns) {
+                        ISupportsTexturedDesigns fte = (ISupportsTexturedDesigns) tileEntity;
+                        fte.nextDesignTexture();
+
                         //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
                         player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
                         return ActionResultType.SUCCESS;
@@ -315,8 +303,8 @@ public class FramedBlockHelper {
                     int newOverlay = -1;
                     TranslationTextComponent message = null;
 
-                    if (tileEntity instanceof IFrameEntity) {
-                        IFrameEntity fte = (IFrameEntity) tileEntity;
+                    if (tileEntity instanceof ISupportsOverlays) {
+                        ISupportsOverlays fte = (ISupportsOverlays) tileEntity;
                         int curOverlay = fte.getOverlay();
                         if(itemType.equals(Items.GRASS)) {
                             newOverlay = BlockAppearanceHelper.GRASS_OVERLAY.next(curOverlay);

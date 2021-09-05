@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
+//import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
 
 /**
  * TileEntity for {@link mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock} and slopes (not yet implemented)

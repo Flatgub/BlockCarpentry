@@ -32,7 +32,7 @@ public class Tags {
     public static List<Block> createFrameBlockList() {
         frameBlocks.clear();
         frameBlocks.add(Registration.FRAMEBLOCK.get());
-        frameBlocks.add(Registration.SLAB_FRAMEBLOCK.get());
+        //frameBlocks.add(Registration.SLAB_FRAMEBLOCK.get());
         frameBlocks.add(Registration.BUTTON_FRAMEBLOCK.get());
         frameBlocks.add(Registration.PRESSURE_PLATE_FRAMEBLOCK.get());
         frameBlocks.add(Registration.STAIRS_FRAMEBLOCK.get());
@@ -52,7 +52,7 @@ public class Tags {
     public static List<Block> createIllusionBlockList() {
         illusionBlocks.clear();
         illusionBlocks.add(Registration.ILLUSION_BLOCK.get());
-        illusionBlocks.add(Registration.SLAB_ILLUSIONBLOCK.get());
+        //illusionBlocks.add(Registration.SLAB_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.BUTTON_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.PRESSURE_PLATE_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.STAIRS_ILLUSIONBLOCK.get());

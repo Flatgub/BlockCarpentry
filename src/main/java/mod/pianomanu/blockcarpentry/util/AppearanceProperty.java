@@ -35,7 +35,7 @@ public abstract class AppearanceProperty<T> {
     // I don't know if this belongs here, but its the only location the type is known
     @SuppressWarnings("unchecked")
     public void addToBuilder(ModelDataMap.Builder builder, String as) {
-        ModelProperty<T> modelprop = (ModelProperty<T>) AppearencePropertyCollection.modelPropertyMapping.get(as);
+        ModelProperty<T> modelprop = (ModelProperty<T>) AppearancePropertyCollection.modelPropertyMapping.get(as);
         builder.withInitial(modelprop, value);
     }
 

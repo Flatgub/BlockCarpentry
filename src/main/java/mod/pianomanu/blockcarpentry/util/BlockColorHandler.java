@@ -2,7 +2,7 @@ package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
+import mod.pianomanu.blockcarpentry.tileentity.IFrameEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.block.LeavesBlock;
@@ -33,9 +33,10 @@ public class BlockColorHandler implements IBlockColor {
         // DEBUG
         LOGGER.info("Registering block color handler");
 
+        //TODO: fix this and also at the very least uncomment the slab lines
         //Causing green color bug...
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.FRAMEBLOCK.get());
-        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLAB_FRAMEBLOCK.get());
+        //Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLAB_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.STAIRS_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.BUTTON_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DOOR_FRAMEBLOCK.get());
@@ -51,7 +52,7 @@ public class BlockColorHandler implements IBlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.EDGED_SLOPE_FRAMEBLOCK.get());
 
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.ILLUSION_BLOCK.get());
-        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLAB_ILLUSIONBLOCK.get());
+        //Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLAB_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.STAIRS_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.BUTTON_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DOOR_ILLUSIONBLOCK.get());
@@ -69,11 +70,12 @@ public class BlockColorHandler implements IBlockColor {
 
     @Override
     public int getColor(@Nonnull BlockState state, @Nullable IBlockDisplayReader lightReader, @Nullable BlockPos pos, int tintIndex) {
+
         //TODO does this work?
         if (Objects.requireNonNull(state.getBlock().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID) && lightReader != null && pos != null) {
             TileEntity te = lightReader.getTileEntity(pos);
-            if (te instanceof FrameBlockTile_OLD && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
-                BlockState containedBlock = ((FrameBlockTile_OLD) te).getMimic();
+            if (te instanceof IFrameEntity && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
+                BlockState containedBlock = ((IFrameEntity) te).getMimic();
                 if (containedBlock != null) {
                     if (containedBlock.getBlock() instanceof GrassBlock) {
                         return BiomeColors.getGrassColor(lightReader, pos);
@@ -84,6 +86,7 @@ public class BlockColorHandler implements IBlockColor {
                 //return Minecraft.getInstance().getBlockColors().getColor(containedBlock, lightReader, pos, tintIndex);
             }
         }
-        return BiomeColors.getGrassColor(Objects.requireNonNull(lightReader), Objects.requireNonNull(pos));
+        return -1; //in the absence of a meaningful colour, return no tint
+        //return BiomeColors.getGrassColor(Objects.requireNonNull(lightReader), Objects.requireNonNull(pos));
     }
 }

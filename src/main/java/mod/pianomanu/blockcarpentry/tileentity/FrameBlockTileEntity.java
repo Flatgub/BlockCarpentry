@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.util.FrameAppearanceData;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,31 +16,31 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FrameBlockTileEntity  extends TileEntity implements ISupportsRotation, ISupportsFaceTextures, ISupportsOverlays{
+public class FrameBlockTileEntity  extends TileEntity implements IFrameEntity, ISupportsRotation, ISupportsFaceTextures, ISupportsOverlays{
     private final FrameAppearanceData appearanceData;
 
-    public FrameBlockTileEntity(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn); //replace this with a reference to registration type
+    public FrameBlockTileEntity() {
+        super(Registration.FRAMEBLOCK_TILE.get());
 
         appearanceData = new FrameAppearanceData(); //with defaults (mimic, rotation, texture and overlay)
     }
 
-    protected void notifySurrounding() {
+    public void notifySurroundings() {
         markDirty();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
-    protected boolean hasProperty(String name) {
+    public boolean hasProperty(String name) {
         return appearanceData.hasProperty(name);
     }
 
-    protected <T> T getAppearanceProperty(String name) {
+    public <T> T getAppearanceProperty(String name) {
         return appearanceData.getProperty(name);
     }
 
-    protected <T> void setAppearanceProperty(String name, T value) {
+    public <T> void setAppearanceProperty(String name, T value) {
         appearanceData.setProperty(name, value);
-        notifySurrounding();
+        notifySurroundings();
     }
 
     private static final String APPEARANCE_NBT_NAME = "appearance";
@@ -63,7 +64,7 @@ public class FrameBlockTileEntity  extends TileEntity implements ISupportsRotati
         if(tag.contains(APPEARANCE_NBT_NAME)) {
             boolean changed = appearanceData.fromNBT(tag.getCompound(APPEARANCE_NBT_NAME));
             if(changed) {
-                notifySurrounding();
+                notifySurroundings();
                 ModelDataManager.requestModelDataRefresh(this);
             }
         }
@@ -85,6 +86,7 @@ public class FrameBlockTileEntity  extends TileEntity implements ISupportsRotati
 
     public void resetAppearance() {
         appearanceData.reset();
+        notifySurroundings();
     }
 
     @Override

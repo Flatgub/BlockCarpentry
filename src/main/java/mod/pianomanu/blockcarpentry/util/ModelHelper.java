@@ -2,7 +2,6 @@ package mod.pianomanu.blockcarpentry.util;
 
 import com.google.common.collect.ImmutableList;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -22,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.MIMIC_MODEL_PROPERTY;
 import static mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper.*;
 
 /**
@@ -310,22 +310,22 @@ public class ModelHelper {
         TextureAtlasSprite textureWest = textureList.get(0);
         TextureAtlasSprite textureUp = textureList.get(0);
         TextureAtlasSprite textureDown = textureList.get(0);
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.NORTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.NORTH, rand, extraData)) {
             textureNorth = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.EAST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.EAST, rand, extraData)) {
             textureEast = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.SOUTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.SOUTH, rand, extraData)) {
             textureSouth = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.WEST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.WEST, rand, extraData)) {
             textureWest = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.UP, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.UP, rand, extraData)) {
             textureUp = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.DOWN, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.DOWN, rand, extraData)) {
             textureDown = quad.getSprite();
         }
         if (rotation == 0) {

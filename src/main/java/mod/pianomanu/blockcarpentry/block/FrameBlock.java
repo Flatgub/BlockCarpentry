@@ -1,7 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTileEntity;
 import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -101,7 +101,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile_OLD();
+        return new FrameBlockTileEntity();
     }
 
     // Overridden to add a call to checkForVisibility
@@ -110,7 +110,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
         if(!super.attemptInsertBlock(world, item, state, pos, player, hand).isSuccess()) { return ActionResultType.FAIL; }
 
         TileEntity tileEntity = world.getTileEntity(pos);
-        checkForVisibility(state, world, pos, (FrameBlockTile_OLD) tileEntity);
+        //checkForVisibility(state, world, pos, (FrameBlockTile_OLD) tileEntity);
         return ActionResultType.SUCCESS;
     }
 
@@ -218,11 +218,14 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
         return adjacentBlockState.matchesBlock(this) || super.isSideInvisible(state, adjacentBlockState, side);// || BlockCullingHelper.skipSideRendering(adjacentBlockState);
     }
 
+    /* TODO: reimplement this
     private void checkForVisibility(BlockState state, World world, BlockPos pos, FrameBlockTile_OLD tileEntity) {
-        for (Direction d : Direction.values()) {
-            BlockPos.Mutable mutablePos = pos.toMutable();
-            BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
-            tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+        if(world.isRemote) {
+            for (Direction d : Direction.values()) {
+                BlockPos.Mutable mutablePos = pos.toMutable();
+                BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
+                tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+            }
         }
-    }
+    }*/
 }

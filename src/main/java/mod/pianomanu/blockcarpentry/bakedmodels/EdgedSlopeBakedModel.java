@@ -1,7 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -29,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
@@ -47,7 +46,7 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null && state!=null) {
@@ -64,11 +63,11 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile_OLD.DESIGN);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
+        Integer design = extraData.getData(DESIGN_MODEL_PROPERTY);
         if (mimic != null && state != null) {
             List<TextureAtlasSprite> texture = TextureHelper.getTextureFromModel(model, extraData, rand);
-            int index = extraData.getData(FrameBlockTile_OLD.TEXTURE);
+            int index = extraData.getData(TEXTURE_MODEL_PROPERTY);
             if (index >= texture.size()) {
                 index = 0;
             }

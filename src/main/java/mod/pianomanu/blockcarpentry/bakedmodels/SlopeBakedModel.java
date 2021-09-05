@@ -1,7 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -27,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
@@ -40,7 +39,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         //get block saved in frame tile
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
@@ -61,9 +60,9 @@ public class SlopeBakedModel implements IDynamicBakedModel {
 
     public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
         List<BakedQuad> quads = new ArrayList<>();
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
         List<TextureAtlasSprite> texture = TextureHelper.getTextureFromModel(model, extraData, rand);
-        int index = extraData.getData(FrameBlockTile_OLD.TEXTURE);
+        int index = extraData.getData(TEXTURE_MODEL_PROPERTY);
         if (index >= texture.size()) {
             index = 0;
         }

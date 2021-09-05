@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.util;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +11,7 @@ public class FrameAppearanceData {
     private HashMap<String, AppearanceProperty<?>> properties;
 
     public FrameAppearanceData() {
-        properties = AppearencePropertyCollection.newCollection().withDefaults().get();
+        properties = AppearancePropertyCollection.newCollection().withDefaults().get();
     }
 
     public FrameAppearanceData(HashMap<String, AppearanceProperty<?>> collection) {

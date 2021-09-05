@@ -1,9 +1,9 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.SixSideSet;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 /**
  * Contains all information for the block model
  * See {@link ModelHelper} for more information
@@ -43,9 +43,9 @@ public class CarpetBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile_OLD.DESIGN);
-        Integer desTex = extraData.getData(FrameBlockTile_OLD.DESIGN_TEXTURE);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
+        Integer design = extraData.getData(DESIGN_MODEL_PROPERTY);
+        Integer desTex = extraData.getData(DESIGN_TEXTURE_MODEL_PROPERTY);
         if (side != null) {
             return Collections.emptyList();
         }
@@ -55,14 +55,14 @@ public class CarpetBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
                 TextureAtlasSprite texture;
-                TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile_OLD.GLASS_COLOR));
-                int woolInt = extraData.getData(FrameBlockTile_OLD.GLASS_COLOR) - 1;
+                TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(COLOR_MODEL_PROPERTY).getId());
+                int woolInt = extraData.getData(COLOR_MODEL_PROPERTY).getId() - 1; //why is this -1?
                 if (woolInt < 0)
                     woolInt = 0;
                 TextureAtlasSprite wool = TextureHelper.getWoolTextures().get(woolInt);
-                Integer tex = extraData.getData(FrameBlockTile_OLD.TEXTURE);
+                Integer tex = extraData.getData(TEXTURE_MODEL_PROPERTY);
                 if (textureList.size() <= tex) {
-                    extraData.setData(FrameBlockTile_OLD.TEXTURE, 0);
+                    extraData.setData(TEXTURE_MODEL_PROPERTY, 0);
                     tex = 0;
                 }
                 if (textureList.size() == 0) {
@@ -75,10 +75,11 @@ public class CarpetBakedModel implements IDynamicBakedModel {
                     //return Collections.emptyList();
                 }
                 texture = textureList.get(tex);
-                boolean renderNorth = extraData.getData(FrameBlockTile_OLD.NORTH_VISIBLE);
-                boolean renderEast = extraData.getData(FrameBlockTile_OLD.EAST_VISIBLE);
-                boolean renderSouth = extraData.getData(FrameBlockTile_OLD.SOUTH_VISIBLE);
-                boolean renderWest = extraData.getData(FrameBlockTile_OLD.WEST_VISIBLE);
+                SixSideSet vis = extraData.getData(SIDE_VISIBILITY_MODEL_PROPERTY);
+                boolean renderNorth = vis.test(Direction.NORTH);
+                boolean renderEast = vis.test(Direction.EAST);
+                boolean renderSouth = vis.test(Direction.SOUTH);
+                boolean renderWest = vis.test(Direction.WEST);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
                 List<BakedQuad> quads = new ArrayList<>();
                 if (design == 0) {
@@ -112,7 +113,7 @@ public class CarpetBakedModel implements IDynamicBakedModel {
 
                     quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 0f, 1 / 16f, 2 / 16f, 14 / 16f, wool, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
                 }
-                int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
+                int overlayIndex = extraData.getData(OVERLAY_MODEL_PROPERTY);
                 if (overlayIndex != 0) {
                     quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
                 }

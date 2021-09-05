@@ -2,7 +2,6 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.BedFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -26,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 
 /**
  * Contains all information for the block model
@@ -70,7 +71,7 @@ public class BedBakedModel implements IDynamicBakedModel {
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
                 //texture = textureList.get(0);
-                extraData.setData(FrameBlockTile_OLD.TEXTURE, 0);
+                extraData.setData(TEXTURE_MODEL_PROPERTY, 0);
                 tex = 0;
             }
             if (textureList.size() == 0) {

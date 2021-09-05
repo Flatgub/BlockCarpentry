@@ -56,6 +56,7 @@ public class BlockAppearanceHelper {
     public static void setGlassColor(World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (BlockSavingHelper.isDyeItem(player.getHeldItem(hand).getItem())) {
             TileEntity tileEntity = world.getTileEntity(pos);
+            /* TODO: recover this behaviour
             if (tileEntity instanceof FrameBlockTile_OLD) {
                 FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
                 fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
@@ -65,7 +66,7 @@ public class BlockAppearanceHelper {
                 DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
                 fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
                 //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
-            }
+            }*/
         }
     }
 
@@ -103,6 +104,7 @@ public class BlockAppearanceHelper {
     }
 
     // preserved to keep a copy of the original slab behaviour somewhere
+    /*
     @Deprecated
     public static void setOverlay(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
         if (itemStack.getItem().equals(Items.GRASS)) {
@@ -261,7 +263,7 @@ public class BlockAppearanceHelper {
             }
         }
     }
-
+    */
     public static int setTintIndex(BlockState state) {
         Block b = state.getBlock();
         if (b instanceof GrassBlock || b instanceof LeavesBlock) {

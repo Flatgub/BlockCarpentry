@@ -1,7 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 /**
  * Contains all information for the block model
  * See {@link ModelHelper} for more information
@@ -43,7 +42,7 @@ public class LadderBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
@@ -62,8 +61,8 @@ public class LadderBakedModel implements IDynamicBakedModel {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
-        int tex = extraData.getData(FrameBlockTile_OLD.TEXTURE);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
+        int tex = extraData.getData(TEXTURE_MODEL_PROPERTY);
         if (mimic != null && state != null) {
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             List<TextureAtlasSprite> designTextureList = new ArrayList<>();
@@ -80,13 +79,13 @@ public class LadderBakedModel implements IDynamicBakedModel {
             designTextureList.addAll(TextureHelper.getMetalTextures());
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
-                extraData.setData(FrameBlockTile_OLD.TEXTURE, 0);
+                extraData.setData(TEXTURE_MODEL_PROPERTY, 0);
                 tex = 0;
             }
             texture = textureList.get(tex);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-            int design = extraData.getData(FrameBlockTile_OLD.DESIGN);
-            int desTex = extraData.getData(FrameBlockTile_OLD.DESIGN_TEXTURE);
+            int design = extraData.getData(DESIGN_MODEL_PROPERTY);
+            int desTex = extraData.getData(DESIGN_TEXTURE_MODEL_PROPERTY);
             TextureAtlasSprite designTexture = designTextureList.get(desTex);
             List<BakedQuad> quads = new ArrayList<>();
             if (design == 5) { //do we use that? I don't really like it
@@ -285,7 +284,7 @@ public class LadderBakedModel implements IDynamicBakedModel {
                         break;
                 }
             }
-            int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
+            int overlayIndex = extraData.getData(OVERLAY_MODEL_PROPERTY);
             if (overlayIndex != 0) {
                 switch (state.get(LadderBlock.FACING)) {
                     case NORTH:

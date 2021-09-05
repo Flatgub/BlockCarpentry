@@ -1,9 +1,9 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.SixSideSet;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 /**
  * Contains all information for the block model
  * See {@link ModelHelper} for more information
@@ -43,24 +43,25 @@ public class IllusionCarpetBakedModel implements IDynamicBakedModel {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile_OLD.DESIGN);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
+        Integer design = extraData.getData(DESIGN_MODEL_PROPERTY);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
-                    TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile_OLD.GLASS_COLOR));
-                    int woolInt = extraData.getData(FrameBlockTile_OLD.GLASS_COLOR) - 1;
+                    TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(COLOR_MODEL_PROPERTY).getId());
+                    int woolInt = extraData.getData(COLOR_MODEL_PROPERTY).getId() - 1; // why is this -1?
                     if (woolInt < 0)
                         woolInt = 0;
                     TextureAtlasSprite wool = TextureHelper.getWoolTextures().get(woolInt);
                     int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-                    boolean renderNorth = extraData.getData(FrameBlockTile_OLD.NORTH_VISIBLE);
-                    boolean renderEast = extraData.getData(FrameBlockTile_OLD.EAST_VISIBLE);
-                    boolean renderSouth = extraData.getData(FrameBlockTile_OLD.SOUTH_VISIBLE);
-                    boolean renderWest = extraData.getData(FrameBlockTile_OLD.WEST_VISIBLE);
-                    int rotation = extraData.getData(FrameBlockTile_OLD.ROTATION);
+                    SixSideSet vis = extraData.getData(SIDE_VISIBILITY_MODEL_PROPERTY);
+                    boolean renderNorth = vis.test(Direction.NORTH);
+                    boolean renderEast = vis.test(Direction.EAST);
+                    boolean renderSouth = vis.test(Direction.SOUTH);
+                    boolean renderWest = vis.test(Direction.WEST);
+                    int rotation = extraData.getData(ROTATION_MODEL_PROPERTY);
                     List<BakedQuad> quads = new ArrayList<>();
                     if (design == 0) {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -93,7 +94,7 @@ public class IllusionCarpetBakedModel implements IDynamicBakedModel {
 
                         quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 0f, 1 / 16f, 2 / 16f, 14 / 16f, wool, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
                     }
-                    int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
+                    int overlayIndex = extraData.getData(OVERLAY_MODEL_PROPERTY);
                     if (overlayIndex != 0) {
                         quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
                     }

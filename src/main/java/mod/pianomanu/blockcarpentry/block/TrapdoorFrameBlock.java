@@ -1,6 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTileEntity;
 import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -51,7 +51,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements IFrameableBlock
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile_OLD();
+        return new FrameBlockTileEntity();
     }
 
     @Override

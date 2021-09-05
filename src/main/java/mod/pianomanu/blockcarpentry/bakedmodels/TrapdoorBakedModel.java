@@ -4,7 +4,6 @@ import mod.pianomanu.blockcarpentry.bakedmodels.helper.HandleBakedModel;
 import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.block.TrapdoorFrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
@@ -47,7 +46,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         //get block saved in frame tile
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
@@ -67,16 +66,16 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
 
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
-        int tex = extraData.getData(FrameBlockTile_OLD.TEXTURE);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
+        int tex = extraData.getData(TEXTURE_MODEL_PROPERTY);
         if (mimic != null && state != null) {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
-            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(FrameBlockTile_OLD.GLASS_COLOR));
+            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(COLOR_MODEL_PROPERTY).getId());
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
-                extraData.setData(FrameBlockTile_OLD.TEXTURE, 0);
+                extraData.setData(TEXTURE_MODEL_PROPERTY, 0);
                 tex = 0;
             }
             if (textureList.size() == 0) {
@@ -99,8 +98,8 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
             Direction east = Direction.EAST;
             Direction north = Direction.NORTH;
             Direction south = Direction.SOUTH;
-            int design = extraData.getData(FrameBlockTile_OLD.DESIGN);
-            int desTex = extraData.getData(FrameBlockTile_OLD.DESIGN_TEXTURE);
+            int design = extraData.getData(DESIGN_MODEL_PROPERTY);
+            int desTex = extraData.getData(DESIGN_TEXTURE_MODEL_PROPERTY);
 
             if (design == 0 || design == 1) {
                 if (dir == north && open) {
@@ -344,7 +343,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                     }
                 }
             }
-            int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
+            int overlayIndex = extraData.getData(OVERLAY_MODEL_PROPERTY);
             if (overlayIndex != 0) {
                 if (dir == north && open) {
                     quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));

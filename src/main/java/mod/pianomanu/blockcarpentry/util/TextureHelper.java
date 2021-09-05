@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -13,6 +12,8 @@ import net.minecraftforge.client.model.data.IModelData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.MIMIC_MODEL_PROPERTY;
 
 /**
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
@@ -94,32 +95,32 @@ public class TextureHelper {
 
     public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, IModelData extraData, Random rand) {
         List<TextureAtlasSprite> textureList = new ArrayList<>();
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.UP, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.UP, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.DOWN, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.DOWN, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.NORTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.NORTH, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.EAST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.EAST, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.SOUTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.SOUTH, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.WEST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(MIMIC_MODEL_PROPERTY), Direction.WEST, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }

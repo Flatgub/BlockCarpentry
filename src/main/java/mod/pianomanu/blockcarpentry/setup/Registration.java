@@ -6,8 +6,7 @@ import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
 import mod.pianomanu.blockcarpentry.container.IllusionChestContainer;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
-import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.SoundType;
@@ -56,7 +55,7 @@ public class Registration {
             .variableOpacity()
             .notSolid()));
     public static final RegistryObject<Item> FRAMEBLOCK_ITEM = ITEMS.register("frameblock", () -> new BlockItem(FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> FRAMEBLOCK_TILE = TILES.register("frameblock", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> FRAMEBLOCK_TILE = TILES.register("frameblock", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, FRAMEBLOCK.get()).build(null));
 
     //fixme or deleteme
     //public static final RegistryObject<FallingFrameBlock> FALLING_FRAMEBLOCK = BLOCKS.register("falling_frameblock", () -> new FallingFrameBlock(Block.Properties.from(FRAMEBLOCK.get()).notSolid()));
@@ -70,31 +69,31 @@ public class Registration {
 
     public static final RegistryObject<FrameBlock> ILLUSION_BLOCK = BLOCKS.register("illusion_block", () -> new FrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> ILLUSION_BLOCK_ITEM = ITEMS.register("illusion_block", () -> new BlockItem(ILLUSION_BLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> ILLUSION_BLOCK_TILE = TILES.register("illusion_block", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, ILLUSION_BLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> ILLUSION_BLOCK_TILE = TILES.register("illusion_block", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, ILLUSION_BLOCK.get()).build(null));
 
     public static final RegistryObject<ButtonFrameBlock> BUTTON_FRAMEBLOCK = BLOCKS.register("frame_button", () -> new ButtonFrameBlock(Block.Properties.from(FRAMEBLOCK.get()).notSolid().doesNotBlockMovement()));
     public static final RegistryObject<Item> BUTTON_FRAME_ITEM = ITEMS.register("frame_button", () -> new BlockItem(BUTTON_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> BUTTON_FRAME_TILE = TILES.register("frame_button", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, BUTTON_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> BUTTON_FRAME_TILE = TILES.register("frame_button", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, BUTTON_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<PressurePlateFrameBlock> PRESSURE_PLATE_FRAMEBLOCK = BLOCKS.register("frame_pressure_plate", () -> new PressurePlateFrameBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.from(FRAMEBLOCK.get()).notSolid().doesNotBlockMovement()));
     public static final RegistryObject<Item> PRESSURE_PLATE_FRAME_ITEM = ITEMS.register("frame_pressure_plate", () -> new BlockItem(PRESSURE_PLATE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> PRESSURE_PLATE_FRAME_TILE = TILES.register("frame_pressure_plate", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, BUTTON_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> PRESSURE_PLATE_FRAME_TILE = TILES.register("frame_pressure_plate", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, BUTTON_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<StairsFrameBlock> STAIRS_FRAMEBLOCK = BLOCKS.register("frame_stairs", () -> new StairsFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> STAIRS_FRAME_ITEM = ITEMS.register("frame_stairs", () -> new BlockItem(STAIRS_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> STAIRS_FRAME_TILE = TILES.register("frame_stairs", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, STAIRS_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> STAIRS_FRAME_TILE = TILES.register("frame_stairs", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, STAIRS_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<DoorFrameBlock> DOOR_FRAMEBLOCK = BLOCKS.register("frame_door", () -> new DoorFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> DOOR_FRAME_ITEM = ITEMS.register("frame_door", () -> new BlockItem(DOOR_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> DOOR_FRAME_TILE = TILES.register("frame_door", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, DOOR_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> DOOR_FRAME_TILE = TILES.register("frame_door", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, DOOR_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<TrapdoorFrameBlock> TRAPDOOR_FRAMEBLOCK = BLOCKS.register("frame_trapdoor", () -> new TrapdoorFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> TRAPDOOR_FRAME_ITEM = ITEMS.register("frame_trapdoor", () -> new BlockItem(TRAPDOOR_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> TRAPDOOR_FRAME_TILE = TILES.register("frame_trapdoor", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> TRAPDOOR_FRAME_TILE = TILES.register("frame_trapdoor", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<FenceFrameBlock> FENCE_FRAMEBLOCK = BLOCKS.register("frame_fence", () -> new FenceFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> FENCE_FRAME_ITEM = ITEMS.register("frame_fence", () -> new BlockItem(FENCE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> FENCE_FRAME_TILE = TILES.register("frame_fence", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, FENCE_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> FENCE_FRAME_TILE = TILES.register("frame_fence", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, FENCE_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<BedFrameBlock> BED_FRAMEBLOCK = BLOCKS.register("frame_bed", () -> new BedFrameBlock(DyeColor.BROWN, Block.Properties.from(FRAMEBLOCK.get()).notSolid()));
     public static final RegistryObject<Item> BED_FRAME_ITEM = ITEMS.register("frame_bed", () -> new BlockItem(BED_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -104,11 +103,11 @@ public class Registration {
 
     public static final RegistryObject<WallFrameBlock> WALL_FRAMEBLOCK = BLOCKS.register("frame_wall", () -> new WallFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> WALL_FRAME_ITEM = ITEMS.register("frame_wall", () -> new BlockItem(WALL_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> WALL_FRAME_TILE = TILES.register("frame_wall", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, WALL_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> WALL_FRAME_TILE = TILES.register("frame_wall", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, WALL_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<LadderFrameBlock> LADDER_FRAMEBLOCK = BLOCKS.register("frame_ladder", () -> new LadderFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> LADDER_FRAME_ITEM = ITEMS.register("frame_ladder", () -> new BlockItem(LADDER_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> LADDER_FRAME_TILE = TILES.register("frame_ladder", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, LADDER_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> LADDER_FRAME_TILE = TILES.register("frame_ladder", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, LADDER_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<ChestFrameBlock> CHEST_FRAMEBLOCK = BLOCKS.register("frame_chest", () -> new ChestFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> CHEST_FRAME_ITEM = ITEMS.register("frame_chest", () -> new BlockItem(CHEST_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -117,7 +116,7 @@ public class Registration {
 
     public static final RegistryObject<FenceGateFrameBlock> FENCE_GATE_FRAMEBLOCK = BLOCKS.register("frame_fence_gate", () -> new FenceGateFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> FENCE_GATE_FRAME_ITEM = ITEMS.register("frame_fence_gate", () -> new BlockItem(FENCE_GATE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> FENCE_GATE_FRAME_TILE = TILES.register("frame_fence_gate", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, FENCE_GATE_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> FENCE_GATE_FRAME_TILE = TILES.register("frame_fence_gate", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, FENCE_GATE_FRAMEBLOCK.get()).build(null));
 
     //disabled signs - TODO fix signs
     //public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
@@ -127,45 +126,45 @@ public class Registration {
 
     public static final RegistryObject<CarpetFrameBlock> CARPET_FRAMEBLOCK = BLOCKS.register("frame_carpet", () -> new CarpetFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> CARPET_FRAME_ITEM = ITEMS.register("frame_carpet", () -> new BlockItem(CARPET_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> CARPET_FRAME_TILE = TILES.register("frame_carpet", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, CARPET_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> CARPET_FRAME_TILE = TILES.register("frame_carpet", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, CARPET_FRAMEBLOCK.get()).build(null));
 
     //TODO WIP - may be removed or rewritten in the future
     public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> SLOPE_FRAME_ITEM = ITEMS.register("frame_slope", () -> new BlockItem(SLOPE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> SLOPE_FRAME_TILE = TILES.register("frame_slope", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, SLOPE_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> SLOPE_FRAME_TILE = TILES.register("frame_slope", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, SLOPE_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<SlopeFrameBlock> EDGED_SLOPE_FRAMEBLOCK = BLOCKS.register("frame_edged_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> EDGED_SLOPE_FRAME_ITEM = ITEMS.register("frame_edged_slope", () -> new BlockItem(EDGED_SLOPE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> EDGED_SLOPE_FRAME_TILE = TILES.register("frame_edged_slope", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, EDGED_SLOPE_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> EDGED_SLOPE_FRAME_TILE = TILES.register("frame_edged_slope", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, EDGED_SLOPE_FRAMEBLOCK.get()).build(null));
 
     // TODO: recover slabs
     //public static final RegistryObject<SixWaySlabFrameBlock> SLAB_ILLUSIONBLOCK = BLOCKS.register("illusion_slab", () -> new SixWaySlabFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     //public static final RegistryObject<Item> SLAB_ILLUSION_ITEM = ITEMS.register("illusion_slab", () -> new BlockItem(SLAB_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    //public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> SLAB_ILLUSION_TILE = TILES.register("illusion_slab", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, SLAB_FRAMEBLOCK.get()).build(null));
+    //public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> SLAB_ILLUSION_TILE = TILES.register("illusion_slab", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, SLAB_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<ButtonFrameBlock> BUTTON_ILLUSIONBLOCK = BLOCKS.register("illusion_button", () -> new ButtonFrameBlock(Block.Properties.from(FRAMEBLOCK.get()).notSolid().doesNotBlockMovement()));
     public static final RegistryObject<Item> BUTTON_ILLUSION_ITEM = ITEMS.register("illusion_button", () -> new BlockItem(BUTTON_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> BUTTON_ILLUSION_TILE = TILES.register("illusion_button", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, BUTTON_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> BUTTON_ILLUSION_TILE = TILES.register("illusion_button", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, BUTTON_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<PressurePlateFrameBlock> PRESSURE_PLATE_ILLUSIONBLOCK = BLOCKS.register("illusion_pressure_plate", () -> new PressurePlateFrameBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.from(FRAMEBLOCK.get()).notSolid().doesNotBlockMovement()));
     public static final RegistryObject<Item> PRESSURE_PLATE_ILLUSION_ITEM = ITEMS.register("illusion_pressure_plate", () -> new BlockItem(PRESSURE_PLATE_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> PRESSURE_PLATE_ILLUSION_TILE = TILES.register("illusion_pressure_plate", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, BUTTON_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> PRESSURE_PLATE_ILLUSION_TILE = TILES.register("illusion_pressure_plate", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, BUTTON_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<StairsFrameBlock> STAIRS_ILLUSIONBLOCK = BLOCKS.register("illusion_stairs", () -> new StairsFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> STAIRS_ILLUSION_ITEM = ITEMS.register("illusion_stairs", () -> new BlockItem(STAIRS_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> STAIRS_ILLUSION_TILE = TILES.register("illusion_stairs", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, STAIRS_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> STAIRS_ILLUSION_TILE = TILES.register("illusion_stairs", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, STAIRS_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<DoorFrameBlock> DOOR_ILLUSIONBLOCK = BLOCKS.register("illusion_door", () -> new DoorFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> DOOR_ILLUSION_ITEM = ITEMS.register("illusion_door", () -> new BlockItem(DOOR_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> DOOR_ILLUSION_TILE = TILES.register("illusion_door", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, DOOR_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> DOOR_ILLUSION_TILE = TILES.register("illusion_door", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, DOOR_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<TrapdoorFrameBlock> TRAPDOOR_ILLUSIONBLOCK = BLOCKS.register("illusion_trapdoor", () -> new TrapdoorFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> TRAPDOOR_ILLUSION_ITEM = ITEMS.register("illusion_trapdoor", () -> new BlockItem(TRAPDOOR_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> TRAPDOOR_ILLUSION_TILE = TILES.register("illusion_trapdoor", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> TRAPDOOR_ILLUSION_TILE = TILES.register("illusion_trapdoor", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<FenceFrameBlock> FENCE_ILLUSIONBLOCK = BLOCKS.register("illusion_fence", () -> new FenceFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> FENCE_ILLUSION_ITEM = ITEMS.register("illusion_fence", () -> new BlockItem(FENCE_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> FENCE_ILLUSION_TILE = TILES.register("illusion_fence", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, FENCE_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> FENCE_ILLUSION_TILE = TILES.register("illusion_fence", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, FENCE_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<BedFrameBlock> BED_ILLUSIONBLOCK = BLOCKS.register("illusion_bed", () -> new BedFrameBlock(DyeColor.BROWN, Block.Properties.from(FRAMEBLOCK.get()).notSolid()));
     public static final RegistryObject<Item> BED_ILLUSION_ITEM = ITEMS.register("illusion_bed", () -> new BlockItem(BED_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -174,11 +173,11 @@ public class Registration {
 
     public static final RegistryObject<WallFrameBlock> WALL_ILLUSIONBLOCK = BLOCKS.register("illusion_wall", () -> new WallFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> WALL_ILLUSION_ITEM = ITEMS.register("illusion_wall", () -> new BlockItem(WALL_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> WALL_ILLUSION_TILE = TILES.register("illusion_wall", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, WALL_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> WALL_ILLUSION_TILE = TILES.register("illusion_wall", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, WALL_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<LadderFrameBlock> LADDER_ILLUSIONBLOCK = BLOCKS.register("illusion_ladder", () -> new LadderFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> LADDER_ILLUSION_ITEM = ITEMS.register("illusion_ladder", () -> new BlockItem(LADDER_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> LADDER_ILLUSION_TILE = TILES.register("illusion_ladder", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, LADDER_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> LADDER_ILLUSION_TILE = TILES.register("illusion_ladder", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, LADDER_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<ChestFrameBlock> CHEST_ILLUSIONBLOCK = BLOCKS.register("illusion_chest", () -> new ChestFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> CHEST_ILLUSION_ITEM = ITEMS.register("illusion_chest", () -> new BlockItem(CHEST_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -187,11 +186,11 @@ public class Registration {
 
     public static final RegistryObject<FenceGateFrameBlock> FENCE_GATE_ILLUSIONBLOCK = BLOCKS.register("illusion_fence_gate", () -> new FenceGateFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> FENCE_GATE_ILLUSION_ITEM = ITEMS.register("illusion_fence_gate", () -> new BlockItem(FENCE_GATE_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> FENCE_GATE_ILLUSION_TILE = TILES.register("illusion_fence_gate", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, FENCE_GATE_ILLUSIONBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> FENCE_GATE_ILLUSION_TILE = TILES.register("illusion_fence_gate", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, FENCE_GATE_ILLUSIONBLOCK.get()).build(null));
 
     public static final RegistryObject<CarpetFrameBlock> CARPET_ILLUSION_BLOCK = BLOCKS.register("illusion_carpet", () -> new CarpetFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> CARPET_ILLUSION_ITEM = ITEMS.register("illusion_carpet", () -> new BlockItem(CARPET_ILLUSION_BLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<TileEntityType<FrameBlockTile_OLD>> CARPET_ILLUSION_TILE = TILES.register("illusion_carpet", () -> TileEntityType.Builder.create(FrameBlockTile_OLD::new, CARPET_ILLUSION_BLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTileEntity>> CARPET_ILLUSION_TILE = TILES.register("illusion_carpet", () -> TileEntityType.Builder.create(FrameBlockTileEntity::new, CARPET_ILLUSION_BLOCK.get()).build(null));
 
     public static void init() {
         LOGGER.info("Registering blocks from BlockCarpentry");

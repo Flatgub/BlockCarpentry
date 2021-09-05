@@ -1,13 +1,12 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import net.minecraft.block.BlockState;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraft.item.DyeColor;
 import net.minecraftforge.client.model.data.ModelProperty;
 
 import java.util.HashMap;
 
-public class AppearencePropertyCollection {
+public class AppearancePropertyCollection {
 
     public static final int MAX_ROTATIONS = 6;
     public static final int MAX_FACE_TEXTURES = 8; //i dont know why? maybe this should be 6 as well
@@ -18,6 +17,8 @@ public class AppearencePropertyCollection {
     public static final String OVERLAY_PROPERTY = "overlay";
     public static final String DESIGN_PROPERTY = "design";
     public static final String DESIGN_TEXTURE_PROPERTY = "design_texture";
+    public static final String COLOR_PROPERTY = "color";
+    public static final String SIDE_VISIBILITY_PROPERTY = "visible_sides";
 
     public static final HashMap<String, ModelProperty<?>> modelPropertyMapping = new HashMap<>();
 
@@ -25,12 +26,14 @@ public class AppearencePropertyCollection {
     public static final ModelProperty<BlockState> MIMIC_MODEL_PROPERTY = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE_MODEL_PROPERTY = new ModelProperty<>();
     public static final ModelProperty<Integer> ROTATION_MODEL_PROPERTY = new ModelProperty<>();
+    public static final ModelProperty<Integer> OVERLAY_MODEL_PROPERTY = new ModelProperty<>();
+    public static final ModelProperty<SixSideSet> SIDE_VISIBILITY_MODEL_PROPERTY = new ModelProperty<>();
 
     //commonly used (a large number of blocks)
-    public static final ModelProperty<Integer> OVERLAY_MODEL_PROPERTY = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN_MODEL_PROPERTY = new ModelProperty<>(); //DEFAULT MAX 4
     public static final ModelProperty<Integer> DESIGN_TEXTURE_MODEL_PROPERTY = new ModelProperty<>(); //DEFAULT MAX 4
-    //public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
+    public static final ModelProperty<DyeColor> COLOR_MODEL_PROPERTY = new ModelProperty<>();
+
 
     static {
         modelPropertyMapping.put(MIMIC_PROPERTY, MIMIC_MODEL_PROPERTY);
@@ -39,6 +42,8 @@ public class AppearencePropertyCollection {
         modelPropertyMapping.put(OVERLAY_PROPERTY, OVERLAY_MODEL_PROPERTY);
         modelPropertyMapping.put(DESIGN_PROPERTY, DESIGN_MODEL_PROPERTY);
         modelPropertyMapping.put(DESIGN_TEXTURE_PROPERTY, DESIGN_TEXTURE_MODEL_PROPERTY);
+        modelPropertyMapping.put(COLOR_PROPERTY, COLOR_MODEL_PROPERTY);
+        modelPropertyMapping.put(SIDE_VISIBILITY_PROPERTY, SIDE_VISIBILITY_MODEL_PROPERTY);
     }
 
     //public static final ModelProperty<Boolean> NORTH_VISIBLE = new ModelProperty<>();
@@ -72,6 +77,7 @@ public class AppearencePropertyCollection {
             properties.put(TEXTURE_PROPERTY, new IntegerAppearanceProperty(0));
             properties.put(ROTATION_PROPERTY, new IntegerAppearanceProperty(0));
             properties.put(OVERLAY_PROPERTY, new IntegerAppearanceProperty(0));
+            properties.put(SIDE_VISIBILITY_PROPERTY, new SideSetAppearanceProperty(new SixSideSet(true))); //all sides visible by default
             return this;
         }
 

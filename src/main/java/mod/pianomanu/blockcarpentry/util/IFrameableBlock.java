@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.tileentity.IFrameEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -62,7 +61,7 @@ public interface IFrameableBlock {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof IFrameEntity) {
             IFrameEntity frameTileEntity = (IFrameEntity) tileentity;
-            frameTileEntity.clear();
+            frameTileEntity.resetAppearance();
             frameTileEntity.setMimic(handBlock);
             worldIn.setBlockState(pos, state.with(BCBlockStateProperties.CONTAINS_BLOCK, Boolean.TRUE), Constants.BlockFlags.BLOCK_UPDATE);
         }
@@ -77,12 +76,11 @@ public interface IFrameableBlock {
     default void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof FrameBlockTile_OLD) {
-                FrameBlockTile_OLD frameTileEntity = (FrameBlockTile_OLD) tileentity;
+            if (tileentity instanceof IFrameEntity) {
+                IFrameEntity frameTileEntity = (IFrameEntity) tileentity;
                 BlockState blockState = frameTileEntity.getMimic();
                 if (!(blockState == null)) {
                     worldIn.playEvent(1010, pos, 0); // ???
-                    frameTileEntity.clear();
                     float offset = 0.7F;
                     double offx = (double) (worldIn.rand.nextFloat() * offset) + (double) 0.15F;
                     double offy = (double) (worldIn.rand.nextFloat() * offset) + (double) 0.060000002F + 0.6D;
@@ -91,7 +89,7 @@ public interface IFrameableBlock {
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + offx, (double) pos.getY() + offy, (double) pos.getZ() + offz, itemstack);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
-                    frameTileEntity.clear();
+                    frameTileEntity.resetAppearance();
                 }
             }
         }

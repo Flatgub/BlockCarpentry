@@ -1,9 +1,9 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.SixSideSet;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
@@ -43,9 +43,9 @@ public class FrameBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile_OLD.DESIGN);
-        Integer desTex = extraData.getData(FrameBlockTile_OLD.DESIGN_TEXTURE);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
+        Integer design = extraData.getData(DESIGN_MODEL_PROPERTY);
+        Integer desTex = extraData.getData(DESIGN_TEXTURE_MODEL_PROPERTY);
         if (side == null) {
             return Collections.emptyList();
         }
@@ -55,9 +55,9 @@ public class FrameBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
                 TextureAtlasSprite texture;
-                Integer tex = extraData.getData(FrameBlockTile_OLD.TEXTURE);
+                Integer tex = extraData.getData(TEXTURE_MODEL_PROPERTY);
                 if (textureList.size() <= tex) {
-                    extraData.setData(FrameBlockTile_OLD.TEXTURE, 0);
+                    extraData.setData(TEXTURE_MODEL_PROPERTY, 0);
                     tex = 0;
                 }
                 if (textureList.size() == 0) {
@@ -70,15 +70,16 @@ public class FrameBakedModel implements IDynamicBakedModel {
                     //return Collections.emptyList();
                 }
                 texture = textureList.get(tex);
-                boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile_OLD.NORTH_VISIBLE);
-                boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile_OLD.EAST_VISIBLE);
-                boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile_OLD.SOUTH_VISIBLE);
-                boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile_OLD.WEST_VISIBLE);
-                boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile_OLD.UP_VISIBLE);
-                boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile_OLD.DOWN_VISIBLE);
+                SixSideSet vis = extraData.getData(SIDE_VISIBILITY_MODEL_PROPERTY);
+                boolean renderNorth = vis.test(Direction.NORTH);
+                boolean renderEast = vis.test(Direction.EAST);
+                boolean renderSouth = vis.test(Direction.SOUTH);
+                boolean renderWest = vis.test(Direction.WEST);
+                boolean renderUp = vis.test(Direction.UP);
+                boolean renderDown = vis.test(Direction.DOWN);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
                 List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown));
-                int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
+                int overlayIndex = extraData.getData(OVERLAY_MODEL_PROPERTY);
                 if (overlayIndex != 0) {
                     //TODO fix overlay for transparent blocks - then also use transparent overlay
                     quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, true, true, renderEast, renderWest, renderUp, renderDown, true));

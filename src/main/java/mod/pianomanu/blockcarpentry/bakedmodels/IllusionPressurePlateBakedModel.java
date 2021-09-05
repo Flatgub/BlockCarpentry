@@ -1,7 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.block.BlockState;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
@@ -33,7 +32,7 @@ public class IllusionPressurePlateBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
@@ -50,13 +49,13 @@ public class IllusionPressurePlateBakedModel implements IDynamicBakedModel {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        BlockState mimic = extraData.getData(MIMIC_MODEL_PROPERTY);
         if (mimic != null && state != null) {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-            int rotation = extraData.getData(FrameBlockTile_OLD.ROTATION);
+            int rotation = extraData.getData(ROTATION_MODEL_PROPERTY);
             List<BakedQuad> quads = new ArrayList<>();
             quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-            int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
+            int overlayIndex = extraData.getData(OVERLAY_MODEL_PROPERTY);
             if (overlayIndex != 0) {
                 quads.addAll(ModelHelper.createOverlay(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, overlayIndex));
             }

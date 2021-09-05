@@ -1,9 +1,8 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
-import mod.pianomanu.blockcarpentry.util.AppearencePropertyCollection;
 import mod.pianomanu.blockcarpentry.util.FrameAppearanceData;
 
-import static mod.pianomanu.blockcarpentry.util.AppearencePropertyCollection.DESIGN_PROPERTY;
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.DESIGN_PROPERTY;
 
 public interface ISupportsDesigns {
     int getMaxDesigns();
@@ -14,6 +13,7 @@ public interface ISupportsDesigns {
 
     default void setDesign(int face) {
         getAppearanceData().setProperty(DESIGN_PROPERTY, face);
+        notifySurroundings();
     }
 
     default void nextDesign() {
@@ -27,4 +27,5 @@ public interface ISupportsDesigns {
     }
 
     FrameAppearanceData getAppearanceData();
+    void notifySurroundings();
 }
