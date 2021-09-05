@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -56,20 +57,18 @@ public class BlockAppearanceHelper {
     public static void setGlassColor(World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (BlockSavingHelper.isDyeItem(player.getHeldItem(hand).getItem())) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            /* TODO: recover this behaviour
-            if (tileEntity instanceof FrameBlockTile_OLD) {
-                FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
-                fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
-                //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
+            if (tileEntity instanceof ISupportsColor) {
+                ISupportsColor fte = (ISupportsColor) tileEntity;
+                DyeColor itemCol = DyeColor.getColor(player.getHeldItem(hand));
+                if(itemCol != null) {
+                    fte.setColor(itemCol);
+                }
             }
-            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
-                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
-                fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
-                //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
-            }*/
         }
     }
 
+    //TODO: come back and repair this
+    /*
     public static void setWoolColor(World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (BlockSavingHelper.isDyeItem(player.getHeldItem(hand).getItem())) {
             TileEntity tileEntity = world.getTileEntity(pos);
@@ -84,24 +83,7 @@ public class BlockAppearanceHelper {
                 //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
             }
         }
-    }
-
-    //reminder to myself: DO NOT USE, CAUSES SERVER CRASHES, fix or remove
-    private static String glassColorToString(int glassColor) {
-        List<String> colors = new ArrayList<>();
-        for (Item item : Tags.Items.DYES.getAllElements()) {
-            colors.add(item.getName().getString());
-        }
-        return colors.get(glassColor);
-    }
-
-    public static Integer dyeItemToInt(Item item) {
-        List<Item> colors = new ArrayList<>(BlockSavingHelper.getDyeItems());
-        if (colors.contains(item)) {
-            return colors.indexOf(item);
-        }
-        return 0;
-    }
+    }*/
 
     // preserved to keep a copy of the original slab behaviour somewhere
     /*

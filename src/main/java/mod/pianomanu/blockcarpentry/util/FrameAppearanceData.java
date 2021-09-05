@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FrameAppearanceData {
+    public static final String APPEARANCE_NBT_NAME = "appearance";
     private HashMap<String, AppearanceProperty<?>> properties;
 
     public FrameAppearanceData() {
@@ -68,32 +69,4 @@ public class FrameAppearanceData {
         }
         return builder.build();
     }
-
-    //private AppearanceProperty<BlockState> mimicProperty = new AppearanceProperty<>();
-    //private AppearanceProperty<Integer> designProperty = new AppearanceProperty<>(0);
-    //public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
-    //public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
-    //public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
-    //public static final ModelProperty<Integer> DESIGN_TEXTURE = new ModelProperty<>();
-    //currently only for doors and trapdoors
-    //public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
-    //public static final ModelProperty<Integer> OVERLAY = new ModelProperty<>();
-    //public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> NORTH_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> EAST_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> SOUTH_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> WEST_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> UP_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> DOWN_VISIBLE = new ModelProperty<>();
-
-    //private BlockState mimic;
-    //private Integer texture = 0;
-    //private Integer design = 0;
-    //private Integer designTexture = 0;
-    //private Integer glassColor = 0;
-    //private Integer overlay = 0;
-    //private Integer rotation = 0;
-
-
-
 }

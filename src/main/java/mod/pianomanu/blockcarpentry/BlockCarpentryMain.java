@@ -37,8 +37,8 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
 @Mod(MOD_ID)
 public class BlockCarpentryMain
 {
-    private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "blockcarpentry";
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     //TODO main klasse aufräumen - check
     //TODO Hauptverzeichnis aufräumen
 

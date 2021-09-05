@@ -1,6 +1,8 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
+import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
@@ -19,6 +21,9 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.DESIGN_PROPERTY;
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.OVERLAY_PROPERTY;
+import static mod.pianomanu.blockcarpentry.util.FrameAppearanceData.APPEARANCE_NBT_NAME;
 
 /**
  * TileEntity for frame beds, you can customize both pillow and blanket
@@ -26,117 +31,76 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
  * @author PianoManu
  * @version 1.2 05/01/21
  */
-public class BedFrameTile extends TileEntity implements IFrameEntity {
-    public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
-    public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
-    public static final ModelProperty<Integer> PILLOW = new ModelProperty<>();
-    public static final ModelProperty<Integer> BLANKET = new ModelProperty<>();
-    public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
-    public static final ModelProperty<Integer> DESIGN_TEXTURE = new ModelProperty<>();
-    public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
+public class BedFrameTile extends TileEntity implements IFrameEntity, ISupportsDesigns, ISupportsRotation, ISupportsFaceTextures {
+
+    //custom appearence properties
+    public static final String PILLOW_COLOR_PROPERTY = "pillow_color";
+    public static final String BLANKET_COLOR_PROPERTY = "blanket_color";
+    public static final ModelProperty<DyeColor> PILLOW_COLOR_MODEL_PROPERTY = new ModelProperty<>();
+    public static final ModelProperty<DyeColor> BLANKET_COLOR_MODEL_PROPERTY = new ModelProperty<>();
+
+    static {
+        AppearancePropertyCollection.declareModelProperty(PILLOW_COLOR_PROPERTY, PILLOW_COLOR_MODEL_PROPERTY);
+        AppearancePropertyCollection.declareModelProperty(BLANKET_COLOR_PROPERTY, BLANKET_COLOR_MODEL_PROPERTY);
+    }
 
     public final int maxTextures = 6;
-    public final int maxDesigns = 4;
+    public final int maxDesigns = 6;
 
-    private BlockState mimic;
-    private Integer texture = 0;
-    private Integer pillowColor = 0;
-    private Integer blanketColor = 0;
-    private Integer design = 0;
-    private Integer designTexture = 0;
-    private Integer rotation = 0;
-
-    private static final Logger LOGGER = LogManager.getLogger();
+    private final FrameAppearanceData appearanceData;
 
     public BedFrameTile() {
         super(BED_FRAME_TILE.get());
+
+        appearanceData = new FrameAppearanceData(
+                AppearancePropertyCollection.newCollection()
+                        .withDefaults() //mimic, rotation, face texture, overlay, side visibility
+                        .without(OVERLAY_PROPERTY) //beds don't support overlays
+                        .with(DESIGN_PROPERTY, new IntegerAppearanceProperty(0))
+                        .with(PILLOW_COLOR_PROPERTY, new DyeColorAppearanceProperty(DyeColor.WHITE))
+                        .with(BLANKET_COLOR_PROPERTY, new DyeColorAppearanceProperty(DyeColor.WHITE))
+                        .get());
     }
 
-    public void setMimic(BlockState mimic) {
-        this.mimic = mimic;
+    @Override
+    public FrameAppearanceData getAppearanceData() {
+        return appearanceData;
+    }
+
+    @Override
+    public void notifySurroundings() {
         markDirty();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
-    public BlockState getMimic() {
-        return this.mimic;
+    @Override
+    public void resetAppearance() {
+        appearanceData.reset();
     }
 
-    private static Integer readInteger(CompoundNBT tag) {
-        if (!tag.contains("number", 8)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(tag.getString("number"));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
-                return 0;
-            }
-        }
+    public DyeColor getPillowColor() {
+        return appearanceData.getProperty(PILLOW_COLOR_PROPERTY);
     }
 
-    public Integer getPillowColor() {
-        return this.pillowColor;
+    public void setPillowColor(DyeColor pillowColor) {
+        appearanceData.setProperty(PILLOW_COLOR_PROPERTY, pillowColor);
+        notifySurroundings();
+
     }
 
-    public void setPillowColor(Integer pillowColor) {
-        this.pillowColor = pillowColor;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-    }
-
-    public Integer getBlanketColor() {
-        return this.blanketColor;
+    public DyeColor getBlanketColor() {
+        return appearanceData.getProperty(BLANKET_COLOR_PROPERTY);
     }
 
     public void setBlanketColor(Integer blanketColor) {
-        this.blanketColor = blanketColor;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-    }
-
-    public int getDesign() {
-        return this.design;
+        appearanceData.setProperty(PILLOW_COLOR_PROPERTY, blanketColor);
+        notifySurroundings();
     }
 
     public int getMaxDesigns() {return this.maxDesigns;}
 
-    public void setDesign(int design) {
-        this.design = design;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-    }
-
-    public int getDesignTexture() {
-        return 0;
-    }
-
-    public int getMaxDesignTextures() {return 0; }
-
-    public void setDesignTexture(int designTexture) { }
-
-    @Override
-    public int getOverlay() { return 0; }
-
-    @Override
-    public void setOverlay(int overlay) { }
-
-    ;
-
-    public int getTexture() {
-        return texture;
-    }
-
-    public void setTexture(int texture) {
-        this.texture = texture;
-    }
-
-    public int getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
+    public int getMaxTextures() {
+        return maxTextures;
     }
 
     @Nullable
@@ -148,87 +112,18 @@ public class BedFrameTile extends TileEntity implements IFrameEntity {
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT tag = super.getUpdateTag();
-        if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (blanketColor != null) {
-            tag.put("blanket", writeInteger(blanketColor));
-        }
-        if (pillowColor != null) {
-            tag.put("pillow", writeInteger(pillowColor));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
+        tag.put(FrameAppearanceData.APPEARANCE_NBT_NAME, appearanceData.toNBT());
         return tag;
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        BlockState oldMimic = mimic;
-        Integer oldTexture = texture;
-        Integer oldPillow = pillowColor;
-        Integer oldBlanket = blanketColor;
-        Integer oldDesign = design;
-        Integer oldDesignTexture = designTexture;
-        Integer oldRotation = rotation;
         CompoundNBT tag = pkt.getNbtCompound();
-        if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
-            if (!Objects.equals(oldMimic, mimic)) {
+        if(tag.contains(FrameAppearanceData.APPEARANCE_NBT_NAME)) {
+            boolean changed = appearanceData.fromNBT(tag.getCompound(FrameAppearanceData.APPEARANCE_NBT_NAME));
+            if(changed) {
+                notifySurroundings();
                 ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-            if (!Objects.equals(oldTexture, texture)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("blanket")) {
-            blanketColor = readInteger(tag.getCompound("blanket"));
-            if (!Objects.equals(oldBlanket, blanketColor)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("pillow")) {
-            pillowColor = readInteger(tag.getCompound("pillow"));
-            if (!Objects.equals(oldPillow, pillowColor)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-            if (!Objects.equals(oldDesign, design)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-            if (!Objects.equals(oldDesignTexture, designTexture)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-            if (!Objects.equals(oldRotation, rotation)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
     }
@@ -236,83 +131,21 @@ public class BedFrameTile extends TileEntity implements IFrameEntity {
     @Nonnull
     @Override
     public IModelData getModelData() {
-        return new ModelDataMap.Builder()
-                .withInitial(MIMIC, mimic)
-                .withInitial(TEXTURE, texture)
-                .withInitial(BLANKET, blanketColor)
-                .withInitial(PILLOW, pillowColor)
-                .withInitial(DESIGN, design)
-                .withInitial(DESIGN_TEXTURE, designTexture)
-                .withInitial(ROTATION, rotation)
-                .build();
+        return appearanceData.toModelData();
     }
 
     @Override
     public void read(BlockState state, CompoundNBT tag) {
         super.read(state, tag);
-        if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-        }
-        if (tag.contains("blanket")) {
-            blanketColor = readInteger(tag.getCompound("blanket"));
-        }
-        if (tag.contains("pillow")) {
-            pillowColor = readInteger(tag.getCompound("pillow"));
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
+        if(tag.contains(FrameAppearanceData.APPEARANCE_NBT_NAME)) {
+            appearanceData.fromNBT(tag.getCompound(FrameAppearanceData.APPEARANCE_NBT_NAME));
         }
     }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
-        super.write(tag);
-        if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (blanketColor != null) {
-            tag.put("blanket", writeInteger(blanketColor));
-        }
-        if (pillowColor != null) {
-            tag.put("pillow", writeInteger(pillowColor));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
-        return tag;
+        tag.put(APPEARANCE_NBT_NAME, appearanceData.toNBT());
+        return super.write(tag);
     }
 
-    private static CompoundNBT writeInteger(Integer tag) {
-        CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
-    }
-
-    public void clear() {
-        this.setMimic(null);
-        this.setTexture(0);
-        this.setBlanketColor(0);
-        this.setPillowColor(0);
-        this.setDesign(0);
-        this.setDesignTexture(0);
-        this.setRotation(0);
-    }
 }

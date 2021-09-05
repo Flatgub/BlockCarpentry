@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.DyeColor;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -44,6 +45,14 @@ public class AppearancePropertyCollection {
         modelPropertyMapping.put(DESIGN_TEXTURE_PROPERTY, DESIGN_TEXTURE_MODEL_PROPERTY);
         modelPropertyMapping.put(COLOR_PROPERTY, COLOR_MODEL_PROPERTY);
         modelPropertyMapping.put(SIDE_VISIBILITY_PROPERTY, SIDE_VISIBILITY_MODEL_PROPERTY);
+    }
+
+    public static void declareModelProperty(String name, ModelProperty<?> prop) {
+        if(modelPropertyMapping.containsKey(name)) { BlockCarpentryMain.LOGGER.error("Tried to declare model property with conflicting name '"+name+"'");}
+        else {
+            modelPropertyMapping.put(name, prop);
+        }
+
     }
 
     //public static final ModelProperty<Boolean> NORTH_VISIBLE = new ModelProperty<>();
