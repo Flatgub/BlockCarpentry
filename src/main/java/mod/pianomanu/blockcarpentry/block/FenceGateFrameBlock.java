@@ -1,11 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
-import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.FramedBlockHelper;
 import mod.pianomanu.blockcarpentry.util.IFrameableBlock;
 import net.minecraft.block.Block;
@@ -13,11 +8,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
@@ -63,7 +56,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+        return new FrameBlockTile_OLD();
     }
 
     @Override

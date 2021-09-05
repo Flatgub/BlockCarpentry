@@ -1,8 +1,9 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 
-public class AppearanceProperty<T> {
+public abstract class AppearanceProperty<T> {
     protected T value = null;
     protected T defaultValue = null;
 
@@ -23,5 +24,11 @@ public class AppearanceProperty<T> {
     public void reset() {
         value = defaultValue;
     }
+
+    public abstract CompoundNBT toNewNBT();
+
+    public abstract CompoundNBT toNBT(CompoundNBT in);
+
+    public abstract boolean fromNBT(CompoundNBT in);
 
 }

@@ -1,19 +1,14 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import com.google.common.collect.ImmutableMap;
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
-import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallBlock;
 import net.minecraft.block.WallHeight;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
@@ -27,12 +22,10 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -134,7 +127,7 @@ public class WallFrameBlock extends WallBlock implements IFrameableBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+        return new FrameBlockTile_OLD();
     }
 
     @Override

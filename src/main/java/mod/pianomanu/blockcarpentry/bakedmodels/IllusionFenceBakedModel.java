@@ -2,7 +2,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FenceFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.block.BlockState;
@@ -34,7 +34,7 @@ public class IllusionFenceBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
@@ -51,11 +51,11 @@ public class IllusionFenceBakedModel implements IDynamicBakedModel {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile.DESIGN);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        Integer design = extraData.getData(FrameBlockTile_OLD.DESIGN);
         if (mimic != null && state != null) {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-            int rotation = extraData.getData(FrameBlockTile.ROTATION);
+            int rotation = extraData.getData(FrameBlockTile_OLD.ROTATION);
             List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(6 / 16f, 10 / 16f, 0f, 1f, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
 
             if (design == 0) {
@@ -160,7 +160,7 @@ public class IllusionFenceBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 14 / 16f, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
             }
-            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
             if (overlayIndex != 0) {
                 quads.addAll(ModelHelper.createOverlay(6 / 16f, 10 / 16f, 0f, 1f, 6 / 16f, 10 / 16f, overlayIndex));
             }

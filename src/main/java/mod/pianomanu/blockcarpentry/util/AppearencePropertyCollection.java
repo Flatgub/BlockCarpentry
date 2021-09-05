@@ -30,7 +30,7 @@ public class AppearencePropertyCollection {
         }
 
         public unfinishedPropertyCollection withDefaults() {
-            properties.put(MIMIC_PROPERTY, new AppearanceProperty<BlockState>(null));
+            properties.put(MIMIC_PROPERTY, new BlockstateAppearanceProperty(null));
             properties.put(TEXTURE_PROPERTY, new IntegerAppearanceProperty(0));
             properties.put(ROTATION_PROPERTY, new IntegerAppearanceProperty(0));
             return this;
@@ -40,6 +40,12 @@ public class AppearencePropertyCollection {
             properties.put(name, prop);
             return this;
         }
+
+        public unfinishedPropertyCollection without(String name) {
+            properties.remove(name);
+            return this;
+        }
+
 
         public HashMap<String, AppearanceProperty<?>> get() {
             return properties;

@@ -1,7 +1,7 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.block.BlockState;
@@ -45,7 +45,7 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null && state != null) {
@@ -60,14 +60,14 @@ public class IllusionFenceGateBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, IModelData extraData, IBakedModel model) {
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile.DESIGN);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        Integer design = extraData.getData(FrameBlockTile_OLD.DESIGN);
         if (side != null) {
             return Collections.emptyList();
         }
         if (mimic != null && state != null) {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-            int rotation = extraData.getData(FrameBlockTile.ROTATION);
+            int rotation = extraData.getData(FrameBlockTile_OLD.ROTATION);
             float w = 0;
             if (state.get(FenceGateBlock.IN_WALL)) {
                 w = -3 / 16f;

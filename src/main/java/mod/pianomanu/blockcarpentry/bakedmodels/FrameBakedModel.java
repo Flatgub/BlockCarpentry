@@ -1,7 +1,7 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -43,9 +43,9 @@ public class FrameBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile.DESIGN);
-        Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        Integer design = extraData.getData(FrameBlockTile_OLD.DESIGN);
+        Integer desTex = extraData.getData(FrameBlockTile_OLD.DESIGN_TEXTURE);
         if (side == null) {
             return Collections.emptyList();
         }
@@ -55,9 +55,9 @@ public class FrameBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
                 TextureAtlasSprite texture;
-                Integer tex = extraData.getData(FrameBlockTile.TEXTURE);
+                Integer tex = extraData.getData(FrameBlockTile_OLD.TEXTURE);
                 if (textureList.size() <= tex) {
-                    extraData.setData(FrameBlockTile.TEXTURE, 0);
+                    extraData.setData(FrameBlockTile_OLD.TEXTURE, 0);
                     tex = 0;
                 }
                 if (textureList.size() == 0) {
@@ -70,15 +70,15 @@ public class FrameBakedModel implements IDynamicBakedModel {
                     //return Collections.emptyList();
                 }
                 texture = textureList.get(tex);
-                boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-                boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile.EAST_VISIBLE);
-                boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-                boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile.WEST_VISIBLE);
-                boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile.UP_VISIBLE);
-                boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile.DOWN_VISIBLE);
+                boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile_OLD.NORTH_VISIBLE);
+                boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile_OLD.EAST_VISIBLE);
+                boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile_OLD.SOUTH_VISIBLE);
+                boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile_OLD.WEST_VISIBLE);
+                boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile_OLD.UP_VISIBLE);
+                boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile_OLD.DOWN_VISIBLE);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
                 List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown));
-                int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+                int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
                 if (overlayIndex != 0) {
                     //TODO fix overlay for transparent blocks - then also use transparent overlay
                     quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, true, true, renderEast, renderWest, renderUp, renderDown, true));

@@ -2,7 +2,6 @@ package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.block.BedFrameBlock;
 import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
-import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,9 +22,6 @@ import net.minecraftforge.common.Tags;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.CONTAINS_BLOCK;
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
 /**
  * Util class for certain frame block things like light level and textures
@@ -60,8 +56,8 @@ public class BlockAppearanceHelper {
     public static void setGlassColor(World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (BlockSavingHelper.isDyeItem(player.getHeldItem(hand).getItem())) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+            if (tileEntity instanceof FrameBlockTile_OLD) {
+                FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
                 fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
                 //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
             }
@@ -111,8 +107,8 @@ public class BlockAppearanceHelper {
     public static void setOverlay(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
         if (itemStack.getItem().equals(Items.GRASS)) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+            if (tileEntity instanceof FrameBlockTile_OLD) {
+                FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
                 if (fte.getOverlay() == 1) {
                     fte.setOverlay(2);
                     player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.grass_overlay_large"), true);
@@ -145,8 +141,8 @@ public class BlockAppearanceHelper {
         }
         if (itemStack.getItem().equals(Items.SNOWBALL)) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+            if (tileEntity instanceof FrameBlockTile_OLD) {
+                FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
                 if (fte.getOverlay() == 3) {
                     fte.setOverlay(4);
                     player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.snow_overlay_small"), true);
@@ -180,8 +176,8 @@ public class BlockAppearanceHelper {
         }
         if (itemStack.getItem().equals(Items.VINE)) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+            if (tileEntity instanceof FrameBlockTile_OLD) {
+                FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
                 fte.setOverlay(5);
                 player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.vine_overlay"), true);
             }
@@ -200,8 +196,8 @@ public class BlockAppearanceHelper {
         }
         if (itemStack.getItem().equals(Items.GUNPOWDER)) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+            if (tileEntity instanceof FrameBlockTile_OLD) {
+                FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
                 if (fte.getOverlay() > 5 && fte.getOverlay() < 10) {
                     fte.setOverlay(fte.getOverlay() + 1);
                 } else fte.setOverlay(6);
@@ -226,8 +222,8 @@ public class BlockAppearanceHelper {
         }
         if (itemStack.getItem().equals(Items.CRIMSON_ROOTS)) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+            if (tileEntity instanceof FrameBlockTile_OLD) {
+                FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
                 fte.setOverlay(11);
                 player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.crimson_overlay"), true);
             }
@@ -246,8 +242,8 @@ public class BlockAppearanceHelper {
         }
         if (itemStack.getItem().equals(Items.WARPED_ROOTS)) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+            if (tileEntity instanceof FrameBlockTile_OLD) {
+                FrameBlockTile_OLD fte = (FrameBlockTile_OLD) tileEntity;
                 fte.setOverlay(12);
                 player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.warped_overlay"), true);
             }

@@ -2,7 +2,7 @@ package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.block.LeavesBlock;
@@ -72,8 +72,8 @@ public class BlockColorHandler implements IBlockColor {
         //TODO does this work?
         if (Objects.requireNonNull(state.getBlock().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID) && lightReader != null && pos != null) {
             TileEntity te = lightReader.getTileEntity(pos);
-            if (te instanceof FrameBlockTile && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
-                BlockState containedBlock = ((FrameBlockTile) te).getMimic();
+            if (te instanceof FrameBlockTile_OLD && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
+                BlockState containedBlock = ((FrameBlockTile_OLD) te).getMimic();
                 if (containedBlock != null) {
                     if (containedBlock.getBlock() instanceof GrassBlock) {
                         return BiomeColors.getGrassColor(lightReader, pos);

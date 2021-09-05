@@ -1,7 +1,7 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -43,7 +43,7 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
         //Block in Slab
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             //location of blockModel of block in Slab
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
@@ -62,14 +62,14 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        int tex = extraData.getData(FrameBlockTile.TEXTURE);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        int tex = extraData.getData(FrameBlockTile_OLD.TEXTURE);
         if (mimic != null) {
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
                 //texture = textureList.get(0);
-                extraData.setData(FrameBlockTile.TEXTURE, 0);
+                extraData.setData(FrameBlockTile_OLD.TEXTURE, 0);
                 tex = 0;
             }
             if (textureList.size() == 0) {
@@ -84,7 +84,7 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>();
             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
-            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
             if (overlayIndex != 0) {
                 quads.addAll(ModelHelper.createOverlay(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, overlayIndex));
             }

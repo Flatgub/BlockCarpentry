@@ -1,7 +1,7 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -43,9 +43,9 @@ public class CarpetBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile.DESIGN);
-        Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
+        Integer design = extraData.getData(FrameBlockTile_OLD.DESIGN);
+        Integer desTex = extraData.getData(FrameBlockTile_OLD.DESIGN_TEXTURE);
         if (side != null) {
             return Collections.emptyList();
         }
@@ -55,14 +55,14 @@ public class CarpetBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
                 TextureAtlasSprite texture;
-                TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile.GLASS_COLOR));
-                int woolInt = extraData.getData(FrameBlockTile.GLASS_COLOR) - 1;
+                TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile_OLD.GLASS_COLOR));
+                int woolInt = extraData.getData(FrameBlockTile_OLD.GLASS_COLOR) - 1;
                 if (woolInt < 0)
                     woolInt = 0;
                 TextureAtlasSprite wool = TextureHelper.getWoolTextures().get(woolInt);
-                Integer tex = extraData.getData(FrameBlockTile.TEXTURE);
+                Integer tex = extraData.getData(FrameBlockTile_OLD.TEXTURE);
                 if (textureList.size() <= tex) {
-                    extraData.setData(FrameBlockTile.TEXTURE, 0);
+                    extraData.setData(FrameBlockTile_OLD.TEXTURE, 0);
                     tex = 0;
                 }
                 if (textureList.size() == 0) {
@@ -75,10 +75,10 @@ public class CarpetBakedModel implements IDynamicBakedModel {
                     //return Collections.emptyList();
                 }
                 texture = textureList.get(tex);
-                boolean renderNorth = extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-                boolean renderEast = extraData.getData(FrameBlockTile.EAST_VISIBLE);
-                boolean renderSouth = extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-                boolean renderWest = extraData.getData(FrameBlockTile.WEST_VISIBLE);
+                boolean renderNorth = extraData.getData(FrameBlockTile_OLD.NORTH_VISIBLE);
+                boolean renderEast = extraData.getData(FrameBlockTile_OLD.EAST_VISIBLE);
+                boolean renderSouth = extraData.getData(FrameBlockTile_OLD.SOUTH_VISIBLE);
+                boolean renderWest = extraData.getData(FrameBlockTile_OLD.WEST_VISIBLE);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
                 List<BakedQuad> quads = new ArrayList<>();
                 if (design == 0) {
@@ -112,7 +112,7 @@ public class CarpetBakedModel implements IDynamicBakedModel {
 
                     quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 0f, 1 / 16f, 2 / 16f, 14 / 16f, wool, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
                 }
-                int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+                int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
                 if (overlayIndex != 0) {
                     quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
                 }

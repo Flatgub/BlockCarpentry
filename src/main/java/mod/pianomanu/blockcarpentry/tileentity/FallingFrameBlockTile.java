@@ -20,7 +20,7 @@ import java.util.Objects;
  * @author PianoManu
  * @version 1.0 08/29/20
  */
-public class FallingFrameBlockTile extends FrameBlockTile {
+public class FallingFrameBlockTile extends FrameBlockTile_OLD {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
 
     private BlockState mimic;

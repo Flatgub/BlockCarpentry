@@ -1,6 +1,6 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.tileentity.IFrameEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -77,8 +77,8 @@ public interface IFrameableBlock {
     default void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
+            if (tileentity instanceof FrameBlockTile_OLD) {
+                FrameBlockTile_OLD frameTileEntity = (FrameBlockTile_OLD) tileentity;
                 BlockState blockState = frameTileEntity.getMimic();
                 if (!(blockState == null)) {
                     worldIn.playEvent(1010, pos, 0); // ???

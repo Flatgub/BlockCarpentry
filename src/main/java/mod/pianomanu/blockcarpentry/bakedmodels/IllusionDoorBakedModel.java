@@ -3,7 +3,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.bakedmodels.helper.DoorKnobBakedModel;
 import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -39,7 +39,7 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
@@ -56,10 +56,10 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
         if (mimic != null && state != null) {
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
-            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR));
+            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(FrameBlockTile_OLD.GLASS_COLOR));
             List<BakedQuad> quads = new ArrayList<>();
             Direction dir = state.get(DoorFrameBlock.FACING);
             boolean open = state.get(DoorFrameBlock.OPEN);
@@ -70,13 +70,13 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
             Direction south = Direction.SOUTH;
             DoorHingeSide left = DoorHingeSide.LEFT;
             DoorHingeSide right = DoorHingeSide.RIGHT;
-            int design = extraData.getData(FrameBlockTile.DESIGN);//int design = state.get(DoorFrameBlock.DESIGN);
-            int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE); //state.get(DoorFrameBlock.DESIGN_TEXTURE);
+            int design = extraData.getData(FrameBlockTile_OLD.DESIGN);//int design = state.get(DoorFrameBlock.DESIGN);
+            int desTex = extraData.getData(FrameBlockTile_OLD.DESIGN_TEXTURE); //state.get(DoorFrameBlock.DESIGN_TEXTURE);
             DoubleBlockHalf half = state.get(DoorBlock.HALF);
             DoubleBlockHalf lower = DoubleBlockHalf.LOWER;
             DoubleBlockHalf upper = DoubleBlockHalf.UPPER;
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-            int rotation = extraData.getData(FrameBlockTile.ROTATION);
+            int rotation = extraData.getData(FrameBlockTile_OLD.ROTATION);
             boolean northSide = (dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left);
             boolean westSide = (dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left);
             boolean eastSide = (dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left);
@@ -286,7 +286,7 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                 }
             }
-            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
             if (overlayIndex != 0) {
                 if (northSide) {
                     quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));

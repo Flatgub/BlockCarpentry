@@ -1,7 +1,7 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.block.BlockState;
@@ -40,22 +40,22 @@ public class IllusionBlockBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        BlockState mimic = extraData.getData(FrameBlockTile_OLD.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
                     int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-                    boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-                    boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile.EAST_VISIBLE);
-                    boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-                    boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile.WEST_VISIBLE);
-                    boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile.UP_VISIBLE);
-                    boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile.DOWN_VISIBLE);
-                    int rotation = extraData.getData(FrameBlockTile.ROTATION);
+                    boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile_OLD.NORTH_VISIBLE);
+                    boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile_OLD.EAST_VISIBLE);
+                    boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile_OLD.SOUTH_VISIBLE);
+                    boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile_OLD.WEST_VISIBLE);
+                    boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile_OLD.UP_VISIBLE);
+                    boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile_OLD.DOWN_VISIBLE);
+                    int rotation = extraData.getData(FrameBlockTile_OLD.ROTATION);
                     List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, rotation));
-                    int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+                    int overlayIndex = extraData.getData(FrameBlockTile_OLD.OVERLAY);
                     if (overlayIndex != 0) {
                         //TODO fix overlay for transparent blocks - then also use transparent overlay
                         quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, true, true, renderEast, renderWest, renderUp, renderDown, true));

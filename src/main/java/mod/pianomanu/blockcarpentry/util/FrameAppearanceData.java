@@ -1,5 +1,7 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import net.minecraft.nbt.CompoundNBT;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,20 +20,40 @@ public class FrameAppearanceData {
         return properties.containsKey(name);
     }
 
-    public Integer getIntegerProperty(String name) {
-        IntegerAppearanceProperty prop = (IntegerAppearanceProperty) properties.get(name);
-        return prop.getValue();
+    public <T> T getProperty(String name) {
+        return (T) properties.get(name).getValue();
     }
 
-    public void setIntegerProperty(String name,Integer value) {
-        IntegerAppearanceProperty prop = (IntegerAppearanceProperty) properties.get(name);
+    public <T> void setProperty(String name, T value) {
+        AppearanceProperty<T> prop = (AppearanceProperty<T>) properties.get(name);
         prop.setValue(value);
     }
 
-    public void clear() {
+    public void reset() {
         for(Map.Entry<String, AppearanceProperty<?>> entry: properties.entrySet()) {
             entry.getValue().reset();
         }
+    }
+
+    public CompoundNBT toNBT() {
+        CompoundNBT tag = new CompoundNBT();
+        for(Map.Entry<String, AppearanceProperty<?>> entry: properties.entrySet()) {
+            tag.put(entry.getKey(), entry.getValue().toNewNBT());
+        }
+        return tag;
+    }
+
+    public boolean fromNBT(CompoundNBT in) {
+        boolean changed = false;
+        for(Map.Entry<String, AppearanceProperty<?>> entry: properties.entrySet()) {
+            AppearanceProperty<?> prop = entry.getValue();
+            if(in.contains(entry.getKey())) {
+                if(prop.fromNBT(in.getCompound(entry.getKey()))) {
+                    changed = true;
+                }
+            }
+        }
+        return changed;
     }
 
     //private AppearanceProperty<BlockState> mimicProperty = new AppearanceProperty<>();

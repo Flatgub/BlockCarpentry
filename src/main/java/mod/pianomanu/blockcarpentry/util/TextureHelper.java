@@ -1,6 +1,6 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile_OLD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -94,32 +94,32 @@ public class TextureHelper {
 
     public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, IModelData extraData, Random rand) {
         List<TextureAtlasSprite> textureList = new ArrayList<>();
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.UP, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.DOWN, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.NORTH, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.EAST, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.SOUTH, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile_OLD.MIMIC), Direction.WEST, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {
                 textureList.add(quad.getSprite());
             }
