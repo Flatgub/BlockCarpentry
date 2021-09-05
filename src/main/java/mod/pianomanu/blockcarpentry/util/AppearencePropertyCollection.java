@@ -9,6 +9,9 @@ import java.util.HashMap;
 
 public class AppearencePropertyCollection {
 
+    public static final int MAX_ROTATIONS = 6;
+    public static final int MAX_FACE_TEXTURES = 8; //i dont know why? maybe this should be 6 as well
+
     public static final String MIMIC_PROPERTY = "mimic";
     public static final String TEXTURE_PROPERTY = "texture";
     public static final String ROTATION_PROPERTY = "rotation";
@@ -25,8 +28,8 @@ public class AppearencePropertyCollection {
 
     //commonly used (a large number of blocks)
     public static final ModelProperty<Integer> OVERLAY_MODEL_PROPERTY = new ModelProperty<>();
-    public static final ModelProperty<Integer> DESIGN_MODEL_PROPERTY = new ModelProperty<>();
-    public static final ModelProperty<Integer> DESIGN_TEXTURE_MODEL_PROPERTY = new ModelProperty<>();
+    public static final ModelProperty<Integer> DESIGN_MODEL_PROPERTY = new ModelProperty<>(); //DEFAULT MAX 4
+    public static final ModelProperty<Integer> DESIGN_TEXTURE_MODEL_PROPERTY = new ModelProperty<>(); //DEFAULT MAX 4
     //public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
 
     static {

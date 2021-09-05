@@ -1,21 +1,22 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
-import mcp.MethodsReturnNonnullByDefault;
 import mod.pianomanu.blockcarpentry.util.FrameAppearanceData;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class FrameBlockTileEntity  extends TileEntity{
-    private FrameAppearanceData appearanceData;
+public class FrameBlockTileEntity  extends TileEntity implements ISupportsRotation, ISupportsFaceTextures, ISupportsOverlays{
+    private final FrameAppearanceData appearanceData;
 
     public FrameBlockTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn); //replace this with a reference to registration type
@@ -85,4 +86,52 @@ public class FrameBlockTileEntity  extends TileEntity{
     public void resetAppearance() {
         appearanceData.reset();
     }
+
+    @Override
+    public FrameAppearanceData getAppearanceData() {
+        return appearanceData;
+    }
+
+    /* THESE COME FROM THE ORIGINAL FRAMEBLOCKTILE
+    public void setVisibileSides(Direction dir, boolean isVisible) {
+        switch (dir) {
+            case DOWN:
+                downVisible = isVisible;
+                break;
+            case UP:
+                upVisible = isVisible;
+                break;
+            case NORTH:
+                northVisible = isVisible;
+                break;
+            case WEST:
+                westVisible = isVisible;
+                break;
+            case SOUTH:
+                southVisible = isVisible;
+                break;
+            case EAST:
+                eastVisible = isVisible;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public List<Direction> getVisibleSides() {
+        List<Direction> dir = new ArrayList<>();
+        if (northVisible)
+            dir.add(Direction.NORTH);
+        if (eastVisible)
+            dir.add(Direction.EAST);
+        if (southVisible)
+            dir.add(Direction.SOUTH);
+        if (westVisible)
+            dir.add(Direction.WEST);
+        if (upVisible)
+            dir.add(Direction.UP);
+        if (downVisible)
+            dir.add(Direction.DOWN);
+        return dir;
+    }*/
 }
