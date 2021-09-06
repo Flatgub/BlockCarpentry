@@ -55,13 +55,6 @@ public class AppearancePropertyCollection {
 
     }
 
-    //public static final ModelProperty<Boolean> NORTH_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> EAST_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> SOUTH_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> WEST_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> UP_VISIBLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> DOWN_VISIBLE = new ModelProperty<>();
-
     public static unfinishedPropertyCollection newCollection() {
         return new unfinishedPropertyCollection();
     }

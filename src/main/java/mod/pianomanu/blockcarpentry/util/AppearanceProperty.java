@@ -26,6 +26,8 @@ public abstract class AppearanceProperty<T> {
         value = defaultValue;
     }
 
+    public boolean isSet() {return value != null;}
+
     public abstract CompoundNBT toNewNBT();
 
     public abstract CompoundNBT toNBT(CompoundNBT in);

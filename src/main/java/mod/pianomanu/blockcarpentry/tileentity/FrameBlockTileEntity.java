@@ -77,8 +77,12 @@ public class FrameBlockTileEntity  extends TileEntity implements IFrameEntity, I
     @Override
     public void read(BlockState state, CompoundNBT tag) {
         super.read(state, tag);
+
         if(tag.contains(APPEARANCE_NBT_NAME)) {
             appearanceData.fromNBT(tag.getCompound(APPEARANCE_NBT_NAME));
+        }
+        else {
+            appearanceData.fromLegacyNBT(tag);
         }
     }
 
@@ -98,46 +102,4 @@ public class FrameBlockTileEntity  extends TileEntity implements IFrameEntity, I
         return appearanceData;
     }
 
-    /* THESE COME FROM THE ORIGINAL FRAMEBLOCKTILE
-    public void setVisibileSides(Direction dir, boolean isVisible) {
-        switch (dir) {
-            case DOWN:
-                downVisible = isVisible;
-                break;
-            case UP:
-                upVisible = isVisible;
-                break;
-            case NORTH:
-                northVisible = isVisible;
-                break;
-            case WEST:
-                westVisible = isVisible;
-                break;
-            case SOUTH:
-                southVisible = isVisible;
-                break;
-            case EAST:
-                eastVisible = isVisible;
-                break;
-            default:
-                break;
-        }
-    }
-
-    public List<Direction> getVisibleSides() {
-        List<Direction> dir = new ArrayList<>();
-        if (northVisible)
-            dir.add(Direction.NORTH);
-        if (eastVisible)
-            dir.add(Direction.EAST);
-        if (southVisible)
-            dir.add(Direction.SOUTH);
-        if (westVisible)
-            dir.add(Direction.WEST);
-        if (upVisible)
-            dir.add(Direction.UP);
-        if (downVisible)
-            dir.add(Direction.DOWN);
-        return dir;
-    }*/
 }
