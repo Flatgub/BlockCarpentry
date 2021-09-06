@@ -99,10 +99,6 @@ public class BedFrameTile extends TileEntity implements IFrameEntity, ISupportsD
 
     public int getMaxDesigns() {return this.maxDesigns;}
 
-    public int getMaxTextures() {
-        return maxTextures;
-    }
-
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
@@ -139,6 +135,10 @@ public class BedFrameTile extends TileEntity implements IFrameEntity, ISupportsD
         super.read(state, tag);
         if(tag.contains(FrameAppearanceData.APPEARANCE_NBT_NAME)) {
             appearanceData.fromNBT(tag.getCompound(FrameAppearanceData.APPEARANCE_NBT_NAME));
+        }
+        else {
+            //this doesn't preserve pillow or blanket colour, but is better than nothing
+            appearanceData.fromLegacyNBT(tag);
         }
     }
 
