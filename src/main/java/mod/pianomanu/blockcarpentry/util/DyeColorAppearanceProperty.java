@@ -20,20 +20,32 @@ public class DyeColorAppearanceProperty extends AppearanceProperty<DyeColor>  {
     @Override
     public CompoundNBT toNewNBT() {
         CompoundNBT tag = new CompoundNBT();
-        tag.putInt("value", value.getId());
+        if(value != null) {
+            tag.putInt("value", value.getId());
+        }
         return tag;
     }
 
     @Override
     public CompoundNBT toNBT(CompoundNBT in) {
-        in.putInt("value", value.getId());
+        if(value != null) {
+            in.putInt("value", value.getId());
+        }
         return in;
     }
 
     @Override
     public boolean fromNBT(CompoundNBT in) {
         DyeColor old = value;
-        value = DyeColor.byId(in.getInt("value"));
+        if(in.contains("value")) {
+            value = DyeColor.byId(in.getInt("value"));
+        }
+        else {
+            value = null;
+        }
+        if(old == null) {
+            return value != null;
+        }
         return !old.equals(value);
     }
 

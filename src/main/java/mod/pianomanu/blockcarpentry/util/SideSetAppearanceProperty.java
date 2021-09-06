@@ -1,9 +1,9 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 
 public class SideSetAppearanceProperty extends AppearanceProperty<SixSideSet>  {
+    SixSideSet value = new SixSideSet();
 
     public SideSetAppearanceProperty() {
         super();
@@ -11,6 +11,11 @@ public class SideSetAppearanceProperty extends AppearanceProperty<SixSideSet>  {
 
     public SideSetAppearanceProperty(SixSideSet defaultval) {
         super(defaultval);
+    }
+
+    @Override
+    public void reset() {
+        value = new SixSideSet();
     }
 
     @Override

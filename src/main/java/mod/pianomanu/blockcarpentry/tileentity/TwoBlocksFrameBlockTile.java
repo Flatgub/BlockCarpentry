@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
@@ -23,6 +24,8 @@ import java.util.Objects;
 
 //import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
 
+//TODO: come back and reimplement slabs
+
 /**
  * TileEntity for {@link mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock} and slopes (not yet implemented)
  * Contains all information about the block and the mimicked block
@@ -31,6 +34,10 @@ import java.util.Objects;
  * @version 1.0 08/13/21
  */
 public class TwoBlocksFrameBlockTile extends TileEntity {
+    public TwoBlocksFrameBlockTile(TileEntityType<?> tileEntityTypeIn) {
+        super(tileEntityTypeIn);
+    }
+
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE_1 = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN_1 = new ModelProperty<>();
@@ -52,6 +59,8 @@ public class TwoBlocksFrameBlockTile extends TileEntity {
     public static final ModelProperty<Boolean> UP_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> DOWN_VISIBLE = new ModelProperty<>();
 
+
+    /*
     private static final Logger LOGGER = LogManager.getLogger();
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
@@ -539,5 +548,5 @@ public class TwoBlocksFrameBlockTile extends TileEntity {
         this.setDesign_2(0);
         this.setOverlay_2(0);
         this.setRotation_2(0);
-    }
+    }*/
 }

@@ -37,7 +37,9 @@ public class SixSideSet {
     }
 
     public int toInt() {
-        return bits.toByteArray()[0];
+        byte[] arr = bits.toByteArray();
+        if(arr.length == 0) {return 0;}
+        return arr[0];
     }
 
     public void fromInt(int in) {
