@@ -79,22 +79,6 @@ public class FramedBlockHelper {
         if (!world.isRemote) {
             Item item = itemstack.getItem();
 
-            //debug BAP
-            if(item == Items.STICK && !FMLEnvironment.production) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-
-                if(tileEntity instanceof IFrameEntity) {
-                    world.playSound(null,pos,SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1,1);
-                    IFrameEntity fte = (IFrameEntity) tileEntity;
-                    ITextComponent tagstring = fte.getAppearanceData().toNBT().toFormattedComponent();
-                    ITextComponent msg = new StringTextComponent("appearanceNBT: ").appendSibling(tagstring);
-                    player.sendMessage(msg, Util.DUMMY_UUID);
-
-                    return ActionResultType.SUCCESS;
-                }
-            }
-
-
             //attempt hammer/wrench/etc interaction
             if(attemptToolUse(block, state, world, pos, player, hand, trace).isSuccess()) {
                 return ActionResultType.SUCCESS;
@@ -152,6 +136,21 @@ public class FramedBlockHelper {
             ItemStack item = player.getHeldItem(hand);
             Item itemType = item.getItem();
             TileEntity tileEntity = world.getTileEntity(pos);
+
+
+            //debug BAP
+            if(itemType == Items.STICK && !FMLEnvironment.production) {
+
+                if(tileEntity instanceof IFrameEntity) {
+                    world.playSound(null,pos,SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1,1);
+                    IFrameEntity fte = (IFrameEntity) tileEntity;
+                    ITextComponent tagstring = fte.getAppearanceData().toNBT().toFormattedComponent();
+                    ITextComponent msg = new StringTextComponent("appearanceNBT: ").appendSibling(tagstring);
+                    player.sendMessage(msg, Util.DUMMY_UUID);
+
+                    return ActionResultType.SUCCESS;
+                }
+            }
 
             if(state.get(CONTAINS_BLOCK)) {
                 // Attempt hammer interaction, either via hammer or by shift rightclick if disabled in the config.

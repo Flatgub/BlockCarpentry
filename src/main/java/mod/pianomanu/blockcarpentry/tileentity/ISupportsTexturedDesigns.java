@@ -13,7 +13,7 @@ public interface ISupportsTexturedDesigns extends ISupportsDesigns {
     }
 
     default void setDesignTexture(int face) {
-        getAppearanceData().setProperty(DESIGN_PROPERTY, face);
+        getAppearanceData().setProperty(DESIGN_TEXTURE_PROPERTY, face);
         notifySurroundings();
     }
 

@@ -21,8 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
-import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.DESIGN_PROPERTY;
-import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.OVERLAY_PROPERTY;
+import static mod.pianomanu.blockcarpentry.util.AppearancePropertyCollection.*;
 import static mod.pianomanu.blockcarpentry.util.FrameAppearanceData.APPEARANCE_NBT_NAME;
 
 /**
@@ -31,7 +30,7 @@ import static mod.pianomanu.blockcarpentry.util.FrameAppearanceData.APPEARANCE_N
  * @author PianoManu
  * @version 1.2 05/01/21
  */
-public class BedFrameTile extends TileEntity implements IFrameEntity, ISupportsDesigns, ISupportsRotation, ISupportsFaceTextures {
+public class BedFrameTile extends TileEntity implements IFrameEntity, ISupportsTexturedDesigns, ISupportsRotation, ISupportsFaceTextures {
 
     //custom appearence properties
     public static final String PILLOW_COLOR_PROPERTY = "pillow_color";
@@ -45,7 +44,7 @@ public class BedFrameTile extends TileEntity implements IFrameEntity, ISupportsD
     }
 
     public final int maxTextures = 6;
-    public final int maxDesigns = 6;
+    public final int maxDesigns = 5;
 
     private final FrameAppearanceData appearanceData;
 
@@ -57,10 +56,12 @@ public class BedFrameTile extends TileEntity implements IFrameEntity, ISupportsD
                         .withDefaults() //mimic, rotation, face texture, overlay, side visibility
                         .without(OVERLAY_PROPERTY) //beds don't support overlays
                         .with(DESIGN_PROPERTY, new IntegerAppearanceProperty(0))
+                        .with(DESIGN_TEXTURE_PROPERTY, new IntegerAppearanceProperty(0))
                         .with(PILLOW_COLOR_PROPERTY, new DyeColorAppearanceProperty(DyeColor.WHITE))
                         .with(BLANKET_COLOR_PROPERTY, new DyeColorAppearanceProperty(DyeColor.WHITE))
                         .get());
     }
+
 
     @Override
     public FrameAppearanceData getAppearanceData() {
@@ -98,6 +99,10 @@ public class BedFrameTile extends TileEntity implements IFrameEntity, ISupportsD
     }
 
     public int getMaxDesigns() {return this.maxDesigns;}
+
+    @Override
+    public int getMaxDesignTextures() { return maxTextures;}
+
 
     @Nullable
     @Override
