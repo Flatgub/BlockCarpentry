@@ -1,6 +1,9 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import net.minecraft.nbt.CompoundNBT;
+import mod.gubbybee.util.NBT;
+import net.minecraft.nbt.*;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.util.Constants;
 
 public class SideSetAppearanceProperty extends AppearanceProperty<SixSideSet>  {
     SixSideSet value = new SixSideSet();
@@ -21,20 +24,31 @@ public class SideSetAppearanceProperty extends AppearanceProperty<SixSideSet>  {
     @Override
     public CompoundNBT toNewNBT() {
         CompoundNBT tag = new CompoundNBT();
-        tag.putInt("value", value.toInt());
+        toNBT(tag);
         return tag;
     }
 
     @Override
     public CompoundNBT toNBT(CompoundNBT in) {
-        in.putInt("value", value.toInt());
+        ListNBT faces = new ListNBT();
+        for(Direction face : value) {
+            faces.add(StringNBT.valueOf(face.getName2()));
+        }
+        in.put("value", faces);
         return in;
     }
 
     @Override
     public boolean fromNBT(CompoundNBT in) {
         SixSideSet old = value;
-        value = SixSideSet.newFromInt(in.getInt("value"));
+        value = new SixSideSet();
+        if(in.contains("value")) {
+            ListNBT faces = in.getList("value", Constants.NBT.TAG_STRING);
+            for(INBT face : faces) {
+                String facename = face.getString();
+                value.set(Direction.byName(facename),true);
+            }
+        }
         return !old.equals(value);
     }
 

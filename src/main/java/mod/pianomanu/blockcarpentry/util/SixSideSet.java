@@ -3,55 +3,49 @@ package mod.pianomanu.blockcarpentry.util;
 import net.minecraft.util.Direction;
 
 import java.util.BitSet;
+import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.Objects;
 
-public class SixSideSet {
-    private BitSet bits;
+public class SixSideSet implements Iterable<Direction>{
+    private final EnumSet<Direction> faces;
 
     public SixSideSet() {
-         bits = new BitSet(5);
+         faces = EnumSet.noneOf(Direction.class);
+    }
+
+    public SixSideSet(EnumSet<Direction> initial) {
+        faces = EnumSet.copyOf(initial);
     }
 
     public SixSideSet(boolean initial) {
-         bits = new BitSet(5);
-         bits.set(0,5,initial);
+        faces = initial ? EnumSet.allOf(Direction.class) : EnumSet.noneOf(Direction.class);
     }
 
     public void set(Direction face, boolean value) {
         if(value) {
-            bits.set(face.getIndex());
+            faces.add(face);
         }
         else {
-            bits.clear(face.getIndex());
+            faces.remove(face);
         }
     }
 
     public boolean test(Direction face) {
-        return bits.get(face.getIndex());
-    }
-
-    public static SixSideSet newFromInt(int in) {
-        SixSideSet set = new SixSideSet();
-        set.bits = BitSet.valueOf(new byte[]{(byte) in});
-        return set;
-    }
-
-    public int toInt() {
-        byte[] arr = bits.toByteArray();
-        if(arr.length == 0) {return 0;}
-        return arr[0];
-    }
-
-    public void fromInt(int in) {
-        bits = BitSet.valueOf(new byte[]{(byte) in});
+        return faces.contains(face);
     }
 
     @Override
     public boolean equals(Object o) {
         if(o instanceof SixSideSet) {
             SixSideSet os = (SixSideSet) o;
-            return bits.equals(os.bits);
+            return faces.equals(os.faces);
         }
         return Objects.equals(this, o);
+    }
+
+    @Override
+    public Iterator<Direction> iterator() {
+        return faces.iterator();
     }
 }
