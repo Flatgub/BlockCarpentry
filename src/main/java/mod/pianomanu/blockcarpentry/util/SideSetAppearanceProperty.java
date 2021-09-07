@@ -1,13 +1,10 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.gubbybee.util.NBT;
 import net.minecraft.nbt.*;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.util.Constants;
 
 public class SideSetAppearanceProperty extends AppearanceProperty<SixSideSet>  {
-    SixSideSet value = new SixSideSet();
-
     public SideSetAppearanceProperty() {
         super();
     }
@@ -18,7 +15,7 @@ public class SideSetAppearanceProperty extends AppearanceProperty<SixSideSet>  {
 
     @Override
     public void reset() {
-        value = new SixSideSet();
+        value = new SixSideSet(defaultValue);
     }
 
     @Override

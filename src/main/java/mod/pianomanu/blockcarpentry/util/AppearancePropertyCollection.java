@@ -3,8 +3,10 @@ package mod.pianomanu.blockcarpentry.util;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.DyeColor;
+import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.ModelProperty;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 
 public class AppearancePropertyCollection {
@@ -79,7 +81,7 @@ public class AppearancePropertyCollection {
             properties.put(TEXTURE_PROPERTY, new IntegerAppearanceProperty(0));
             properties.put(ROTATION_PROPERTY, new IntegerAppearanceProperty(0));
             properties.put(OVERLAY_PROPERTY, new IntegerAppearanceProperty(0));
-            properties.put(SIDE_VISIBILITY_PROPERTY, new SideSetAppearanceProperty(new SixSideSet(true))); //all sides visible by default
+            properties.put(SIDE_VISIBILITY_PROPERTY, new SideSetAppearanceProperty(new SixSideSet(EnumSet.allOf(Direction.class)))); //all sides visible by default
             return this;
         }
 

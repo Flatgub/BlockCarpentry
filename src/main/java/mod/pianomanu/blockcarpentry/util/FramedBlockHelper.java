@@ -12,20 +12,22 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nullable;
+import java.text.StringCharacterIterator;
 import java.util.Objects;
 
 /**
@@ -73,8 +75,25 @@ public class FramedBlockHelper {
      * @return the resulting {@link ActionResultType}
      */
     public static ActionResultType doGenericRightClick(IFrameableBlock block, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
+        ItemStack itemstack = player.getHeldItem(hand);
         if (!world.isRemote) {
+            Item item = itemstack.getItem();
+
+            //debug BAP
+            if(item == Items.STICK && !FMLEnvironment.production) {
+                TileEntity tileEntity = world.getTileEntity(pos);
+
+                if(tileEntity instanceof IFrameEntity) {
+                    world.playSound(null,pos,SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1,1);
+                    IFrameEntity fte = (IFrameEntity) tileEntity;
+                    ITextComponent tagstring = fte.getAppearanceData().toNBT().toFormattedComponent();
+                    ITextComponent msg = new StringTextComponent("appearanceNBT: ").appendSibling(tagstring);
+                    player.sendMessage(msg, Util.DUMMY_UUID);
+
+                    return ActionResultType.SUCCESS;
+                }
+            }
+
 
             //attempt hammer/wrench/etc interaction
             if(attemptToolUse(block, state, world, pos, player, hand, trace).isSuccess()) {

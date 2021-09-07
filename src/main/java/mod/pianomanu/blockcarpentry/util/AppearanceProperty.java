@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;

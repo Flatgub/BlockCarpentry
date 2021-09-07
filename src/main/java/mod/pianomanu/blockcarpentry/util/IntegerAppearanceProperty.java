@@ -3,11 +3,11 @@ package mod.pianomanu.blockcarpentry.util;
 import net.minecraft.nbt.CompoundNBT;
 
 public class IntegerAppearanceProperty extends AppearanceProperty<Integer>  {
-    Integer value = 0;
-    Integer defaultValue = 0;
 
     public IntegerAppearanceProperty() {
         super();
+        value = 0;
+        defaultValue = 0;
     }
 
     public IntegerAppearanceProperty(Integer defaultval) {

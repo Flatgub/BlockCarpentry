@@ -14,6 +14,10 @@ public class SixSideSet implements Iterable<Direction>{
          faces = EnumSet.noneOf(Direction.class);
     }
 
+    public SixSideSet(SixSideSet clone) {
+        faces = EnumSet.copyOf(clone.faces);
+    }
+
     public SixSideSet(EnumSet<Direction> initial) {
         faces = EnumSet.copyOf(initial);
     }
